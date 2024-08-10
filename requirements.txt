@@ -8,3 +8,4 @@ cryptography
 django-cities-light
 django-ninja
 django-phonenumber-field
+secrets

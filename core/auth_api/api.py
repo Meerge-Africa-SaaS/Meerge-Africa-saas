@@ -223,7 +223,7 @@ def deliveryagent_signup(request, data: SignupRequestSchema):
         return JsonResponse({"message": "email sent"})
     else:
         return 404, NotFoundSchema(message = f"Delivery agents {data.email} not saved")
-    
+
 ### Chef Signup  ###
 @router.post("/chef_signup", response={200: SignupResponseSchema, 404: NotFoundSchema}, tags=["Manual Signup"])
 def chef_signup(request, data: SignupRequestSchema):

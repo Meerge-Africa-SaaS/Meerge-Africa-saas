@@ -9,6 +9,7 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin
 
 # External
 from phonenumber_field.modelfields import PhoneNumberField
+import secrets
 
 USERNAME_REGEX = '^[a-zA-Z0-9.@_]*$'
 
@@ -68,7 +69,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
             "unique": _("A user with that username already exists."),
         },)
     phone_number = PhoneNumberField(
-        blank=False, null=False, unique=True,
+        #blank=False, null=False, unique=True,
         verbose_name=_("phone number"),
         error_messages={
             "unique": _("A user with that phone number already exists."),
