@@ -48,6 +48,7 @@ INSTALLED_APPS = [
                      # packages
                      'rest_framework',
                      'django_htmx',
+                     'phonenumber_field',
                  ] + [
                      # core
                      "core.apps.CoreConfig",

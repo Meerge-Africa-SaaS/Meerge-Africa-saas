@@ -7,6 +7,9 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 
+# External
+from phonenumber_field.modelfields import PhoneNumberField
+
 USERNAME_REGEX = '^[a-zA-Z0-9.@_]*$'
 
 
@@ -64,6 +67,14 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         error_messages={
             "unique": _("A user with that username already exists."),
         },)
+    phone_number = PhoneNumberField(
+        blank=False, null=False, unique=True,
+        verbose_name=_("phone number"),
+        error_messages={
+            "unique": _("A user with that phone number already exists."),
+        },
+        )
+    
 
     class Meta:
         db_table = 'users'
@@ -99,3 +110,56 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
 
     def get_htmx_delete_url(self):
         return reverse("core_User_htmx_delete", args=(self.pk,))
+
+
+class Bank(models.Model):
+    # Possibly get the api of lists of banks through which we can link the account table/model to
+    pass
+
+class Account(models.Model):
+    
+    # Can be a name that is pre-saved in our database or be a relationship to the bank table. Whichever way, both requires the banks to be populated in the database.
+    #name = models.CharField(max_length=100)
+    #name = models.ForeignKey(Bank, on_delete=models.DO_NOTHING)
+    
+    # The idea behind this is to probably save the name on the account name field from the directly from bank. (May not be needed if bvn field is populated)
+    #account_name = models.CharField(max_length=100)
+    
+    # While the bank owner is the account tied to this model/table
+    account_user = models.ForeignKey("core.User", models.CASCADE)
+    account_number = models.IntegerField(max_length=10)
+    bvn = models.IntegerField(max_length=11)
+
+    class Meta:
+        db_table = "accounts"
+        verbose_name = _("account")
+        verbose_name_plural = _("accounts")
+
+    def __str__(self):
+        return self.account_user
+
+    def get_absolute_url(self):
+        return reverse("account_detail", kwargs={"pk": self.pk})
+
+
+class EmailVerification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "email_verification_codes")
+    email_code = models.CharField(max_length=6, default=secrets.token_hex(3))
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.user.email
+    
+class SmsVerification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
+    phone_number = PhoneNumberField()
+    sms_code = models.CharField(max_length=6, default=secrets.token_hex(3))
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+    
+    def __str__(self):
+        if user:
+            return self.user.email or self.user.phone_number
+        else:
+            return phone_number
