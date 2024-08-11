@@ -161,6 +161,6 @@ class SmsVerification(models.Model):
     
     def __str__(self):
         if user:
-            return self.user.email or self.user.phone_number
+            return self.user.email or self.user.phone_number or None
         else:
-            return phone_number
+            return phone_number or None
