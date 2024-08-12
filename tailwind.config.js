@@ -1,6 +1,7 @@
 module.exports = {
     content: [
-        '*.html',
+        './config/templates/**/*.html',
+        './inventory/templates/**/*.html',
         './node_modules/flowbite/**/*.js'
     ],
     plugins: [
