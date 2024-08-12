@@ -29,6 +29,11 @@
         <link rel="stylesheet" type="text/css" href="{% static 'vendor/tailwind.out.css' %}">
         {% endcompress %}
 
+        {# HTMX #}
+        {% compress javascript %}
+        <script type="text/javascript" src="{% static 'vendor/htmx.min.js' %}"></script>
+        {% endcompress %}
+
         {# Flowbite #}
         {% compress javascript %}
         <script type="text/javascript" src="{% static 'vendor/flowbite.min.js' %}"></script>
