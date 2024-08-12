@@ -1,10 +1,8 @@
 from django.conf import settings
-from django.urls import include, path
 from django.contrib import admin
-from django.views.generic import TemplateView
-
-from wagtail.admin import urls as wagtailadmin_urls
+from django.urls import include, path
 from wagtail import urls as wagtail_urls
+from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from config import api
@@ -15,13 +13,12 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
-
-    path('', include('home.urls')),
-    path('', include(api)),
-    path('core/', include('core.urls')),
-    path('restaurant/', include('restaurants.urls')),
-    path('customers/', include('customers.urls')),
-    path('inventory/', include('inventory.urls')),
+    path("", include("home.urls")),
+    path("", include(api)),
+    path("core/", include("core.urls")),
+    path("restaurant/", include("restaurants.urls")),
+    path("customers/", include("customers.urls")),
+    path("inventory/", include("inventory.urls")),
 ]
 
 
@@ -32,6 +29,9 @@ if settings.DEBUG:
     # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns.append(
+        path("__reload__/", include("django_browser_reload.urls"))
+    )
 
 urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to
