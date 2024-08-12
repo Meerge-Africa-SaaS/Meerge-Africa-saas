@@ -1,0 +1,261 @@
+<div class="flex-col w-full justify-start items-center" id="body">
+  <div class="text-center">
+    <p class="text-2xl font-bold">Almost There!</p>
+    <p class="text-lg text-gray-700">Complete your business details to get started right away.</p>
+  </div>
+  <form class="" hx-post="{% url 'inventory_Supplier_htmx_create' %}" hx-target="#body" hx-swap="outerHTML" novalidate>
+    <div class="hidden">
+      {{ form.errors }}
+    </div>
+    {% csrf_token %}
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% endif %}
+
+    {% comment %} business name field {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% with field=form.name %}
+        {% include 'components/field-label.html' %}
+        <input
+          type="text"
+          class="w-full"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="{{ field.label }}"
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          />
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+    {% comment %}phone number input{% endcomment %}
+    <div class="form-group min-w-full">
+      {% with field=form.phone_number %}
+        {% include 'components/field-label.html' %}
+        <div class="gap-2 w-full" id="phone-input">
+          <div class="border-r-2 p-0 pr-4 border-gray-400 m-0">
+            <svg width="28" height="22" viewBox="0 0 33 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <mask id="mask0_3268_512" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="33" height="27">
+                <path d="M0 5.5C0 2.73858 2.23858 0.5 5 0.5H28C30.7614 0.5 33 2.73858 33 5.5V21.24C33 24.0014 30.7614 26.24 28 26.24H5C2.23858 26.24 0 24.0014 0 21.24V5.5Z" fill="#D9D9D9" />
+              </mask>
+              <g mask="url(#mask0_3268_512)">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M-1.32031 -0.160156H34.3197V26.2398H-1.32031V-0.160156Z" fill="white" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M22.436 -0.160156H34.3197V26.2398H22.436V-0.160156ZM-1.32031 -0.160156H10.5578V26.2398H-1.32031V-0.160156Z" fill="#008753" />
+              </g>
+            </svg>
+          </div>
+          <p class="text-gray-700">+234</p>
+          <input
+            type="tel"
+            id="{{ field.id_for_label }}"
+            name="{{ field.html_name }}"
+            value="{{ field.value|default:'' }}"
+            {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+            {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+            {% if field.field.required %}required{% endif %}
+            class="focus-visible:outline-none ml-4"
+            placeholder="Enter your phone number"
+          />
+        </div>
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+    {% comment %} business email {% endcomment %}
+    <div class="form-group min-w-full">
+      {% with field=form.email %}
+        {% include 'components/field-label.html' %}
+        <input
+          type="email"
+          class="w-full"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="Enter your email address"
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          />
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+    {% comment %} business address {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% with field=form.business_address %}
+        {% include 'components/field-label.html' %}
+        <input
+          type="text"
+          class="w-full"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="{{ field.label }}"
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          />
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+
+    {% comment %} supplier category {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% with field=form.supplier_category %}
+        {% include 'components/field-label.html' %}
+        <select
+          class="w-full"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="{{ field.label }}"
+          multiple
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          >
+          {% for category in field.field.choices %}
+          <option class="" value="{{ category.0 }}">{{ category.1 }}</option>
+          {% endfor %}
+        </select>
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+
+    {% comment %} bank name {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% with field=form.bank_name %}
+        {% include 'components/field-label.html' %}
+        <input
+          type="text"
+          class="w-full"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="{{ field.label }}"
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          />
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+
+    {% comment %} account number {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% with field=form.account_number %}
+        {% include 'components/field-label.html' %}
+        <input
+          type="text"
+          class="w-full"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="{{ field.label }}"
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          />
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+
+    {% comment %} account name {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% with field=form.account_name %}
+        {% include 'components/field-label.html' %}
+        <input
+          type="text"
+          class="w-full"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="{{ field.label }}"
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          />
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+  
+    {% comment %} business registration number {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% with field=form.business_registration_number %}
+        {% include 'components/field-label.html' %}
+        <input
+          type="text"
+          class="w-full"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="{{ field.label }}"
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          />
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+  
+    {% comment %} business document {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% with field=form.business_document %}
+        {% include 'components/field-label.html' %}
+        <input
+          type="file"
+          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="{{ field.label }}"
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          />
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+
+    {% comment %} premises license {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% with field=form.premises_license %}
+        {% include 'components/field-label.html' %}
+        <input
+          type="file"
+          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+          id="{{ field.id_for_label }}"
+          name="{{ field.html_name }}"
+          value="{{ field.value|default:'' }}"
+          placeholder="{{ field.label }}"
+          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+          {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+          {% if field.field.required %}required{% endif %}
+          />
+        {% include 'components/field-errors.html' %}
+        {% include 'components/field-help.html' %}
+      {% endwith %}
+    </div>
+  
+    <button type="submit" class="primary w-full mt-4 flex items-center justify-center gap-2">
+      <svg class="animate-spin htmx-indicator" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+      </svg>
+      Create Account
+    </button>
+    <div class="pl-2 mb-4">
+      <p class="text-gray-700 text-xs">Already have an account? <a href="#" class="text-secondary">Login</a></p>
+    </div>
+  </form>
+</div>
