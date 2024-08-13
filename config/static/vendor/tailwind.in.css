@@ -6,32 +6,106 @@
     @apply text-xs text-gray-500
 }
 
+label.required:after {
+    content: "*";
+    @apply text-secondary text-xs ml-0.5;
+}
+
 label {
-    @apply block mb-2 text-lg font-medium text-gray-900
+    @apply block mb-2 text-sm font-medium text-gray-900
 }
 
 input[type="text"],input[type="email"],input[type="password"] {
     @apply bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 focus-visible:ring-2 focus-visible:ring-blue-500
 }
 
+input[type="file"] {
+    @apply block w-full text-sm text-gray-900 border
+    border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none
+}
+
 .password-input-group {
-    @apply bg-gray-50 border border-gray-300 p-2.5 rounded-lg flex text-gray-900 focus-within:ring focus-within:ring-blue-500
+    @apply pr-2.5 bg-gray-50 border border-gray-300
+    rounded-lg flex text-gray-900 max-w-full
+    focus-within:ring focus-within:ring-blue-500;
+}
+
+.password-input-group > * {
+    @apply py-2.5;
 }
 
 .password-input-group input {
-    @apply w-full border-none p-0 m-0 focus-visible:ring-0 focus-within:ring-0 focus:ring-0 block
+    @apply w-full border-none m-0 focus-visible:ring-0
+    focus-within:ring-0 focus:ring-0 block rounded-l-lg rounded-r-none;
 }
 
 .phone-input-group {
-    @apply bg-gray-50 border border-gray-300 p-2.5 rounded-lg flex text-gray-900 focus-within:ring focus-within:ring-blue-500
+    @apply bg-gray-50 border border-gray-300 pl-2.5
+    rounded-lg flex text-gray-900 focus-within:ring
+    focus-within:ring-blue-500 max-w-full;
+}
+
+.phone-input-group > * {
+    @apply py-2.5;
 }
 
 .phone-input-group input {
-    @apply w-full border-none p-0 m-0 focus-visible:ring-0 focus-within:ring-0 focus:ring-0 block
+    @apply w-full border-none m-0 focus-visible:ring-0
+    focus-within:ring-0 focus:ring-0 block rounded-r-lg rounded-l-none;
+}
+
+textarea {
+    @apply bg-gray-50 border border-gray-300 text-gray-900
+    rounded-lg block w-full p-2.5 focus-visible:ring-2
+    focus-visible:ring-blue-500;
+}
+
+select {
+    @apply bg-gray-50 border border-gray-300 text-gray-900
+    !rounded-lg block w-full p-2.5 focus-visible:ring-2
+    scroll-m-3
+    focus-visible:ring-blue-500;
+}
+
+button {
+    @apply px-5 py-2.5 mx-2.5 my-0 rounded-lg font-medium
+    text-sm focus:ring-4 focus:outline-none text-center
 }
 
 button[type="submit"] {
-    @apply w-full text-white bg-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center
+    @apply w-full text-white bg-primary hover:bg-primary
+    focus:ring-blue-500
+}
+
+button.btn-primary {
+    @apply bg-primary text-white border
+    border-primary focus:ring-primary hover:bg-primary/80
+}
+
+button.btn-primary.btn-outline {
+    @apply bg-white text-primary border
+    border-primary focus:ring-primary hover:bg-primary/10
+}
+
+button.btn-secondary {
+    @apply bg-secondary text-white border
+    border-secondary focus:ring-secondary hover:bg-secondary/80
+}
+
+button.btn-secondary.btn-outline {
+    @apply bg-white text-secondary border
+    border-secondary focus:ring-secondary hover:bg-secondary/10
+}
+
+.form-group {
+    @apply mb-4
+}
+
+.htmx-indicator{
+    display: none;
+}
+.htmx-request .htmx-indicator{
+    display:block;
 }
 
 .gradient {
@@ -39,7 +113,7 @@ button[type="submit"] {
 }
 
 .w-required-mark {
-    @apply text-secondary ml-0.5;
+    @apply text-secondary ml-0.5 text-sm;
 }
 
 .w-field__errors-icon {
@@ -64,8 +138,4 @@ button[type="submit"] {
 
 .alert[role="alert"].alert-error > button {
     @apply bg-red-50 text-red-500 focus:ring-red-400 hover:bg-red-200
-}
-
-a {
-    @apply underline
 }
