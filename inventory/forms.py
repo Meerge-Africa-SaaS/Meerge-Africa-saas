@@ -27,6 +27,29 @@ SUPPLIER_CATEGORIES = [
     ("Others", "Others"),
 ]
 
+LABELS = {
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "phone_number": "Phone Number",
+    "email": "Email Address",
+    "password": "Password",
+    "name": "Registered Business Name",
+    "business_phone_number": "Business Phone Number",
+    "business_email": "Business Email Address",
+    "business_address": "Business Address",
+    "supplier_category": "Supplier Category",
+    "bank_name": "Bank Name",
+    "account_number": "Account Number",
+    "account_name": "Account Name",
+    "business_registration_number": "CAC Registration Number",
+    "business_document": "Business Document",
+    "premises_license": "Food business premises license",
+}
+
+
+def add_placeholder(field: str, form: forms.Form) -> None:
+    form.fields[field].widget.attrs["placeholder"] = LABELS[field]
+
 
 class SupplierBasicInfoForm(forms.Form):
     first_name = forms.CharField(max_length=100, label="First Name")
@@ -37,6 +60,11 @@ class SupplierBasicInfoForm(forms.Form):
     )
     email = forms.EmailField(label="Email Address")
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
+
+    def __init__(self, *args, **kwargs):
+        super(SupplierBasicInfoForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            add_placeholder(field, self)
 
     def clean_password(self) -> str:
         errors: list[str] = []
@@ -63,10 +91,10 @@ class SupplierBasicInfoForm(forms.Form):
 class SupplierBusinessInfoForm(forms.Form):
     # business info
     name = forms.CharField(max_length=100, label="Registered Business Name")
-    phone_number = PhoneNumberField(
+    business_phone_number = PhoneNumberField(
         label="Business Phone Number",
     )
-    email = forms.EmailField(label="Business Email Address")
+    business_email = forms.EmailField(label="Business Email Address")
     business_address = forms.CharField(max_length=100, label="Business Address")
 
     # supplier info
@@ -87,6 +115,11 @@ class SupplierBusinessInfoForm(forms.Form):
     premises_license = forms.FileField(
         label="Food business premises license", required=False
     )
+
+    def __init__(self, *args, **kwargs):
+        super(SupplierBusinessInfoForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            add_placeholder(field, self)
 
 
 class CategoryForm(forms.ModelForm):
