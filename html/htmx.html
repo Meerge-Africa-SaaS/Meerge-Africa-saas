@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<script src="https://unpkg.com/htmx.org@1.8.4"></script>
+<script>
+  htmx.config.useTemplateFragments = true;
+</script>
+{% endblock %}
+{% block allcontent %}
+<div id="content" class="container">
+  <h2>Home: <a href="{% url 'index' %}">Project1233</a></h2>
+  <div class="container">
+    <div class="row">
+    
+      <div class="col col-lg-6">
+        <h5>Add A DeliveryAgent</h5>
+        <div hx-get="{% url 'orders_DeliveryAgent_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>DeliveryAgent List</h4>
+        <div hx-get="{% url 'orders_DeliveryAgent_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A User</h5>
+        <div hx-get="{% url 'core_User_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>User List</h4>
+        <div hx-get="{% url 'core_User_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Order</h5>
+        <div hx-get="{% url 'customers_Order_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Order List</h4>
+        <div hx-get="{% url 'customers_Order_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Customer</h5>
+        <div hx-get="{% url 'customers_Customer_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Customer List</h4>
+        <div hx-get="{% url 'customers_Customer_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A City</h5>
+        <div hx-get="{% url 'world_City_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>City List</h4>
+        <div hx-get="{% url 'world_City_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Country</h5>
+        <div hx-get="{% url 'world_Country_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Country List</h4>
+        <div hx-get="{% url 'world_Country_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Province</h5>
+        <div hx-get="{% url 'world_Province_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Province List</h4>
+        <div hx-get="{% url 'world_Province_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Category</h5>
+        <div hx-get="{% url 'inventory_Category_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Category List</h4>
+        <div hx-get="{% url 'inventory_Category_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Item</h5>
+        <div hx-get="{% url 'inventory_Item_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Item List</h4>
+        <div hx-get="{% url 'inventory_Item_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Stock</h5>
+        <div hx-get="{% url 'inventory_Stock_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Stock List</h4>
+        <div hx-get="{% url 'inventory_Stock_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Supplier</h5>
+        <div hx-get="{% url 'inventory_Supplier_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Supplier List</h4>
+        <div hx-get="{% url 'inventory_Supplier_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A SupplyManager</h5>
+        <div hx-get="{% url 'inventory_SupplyManager_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>SupplyManager List</h4>
+        <div hx-get="{% url 'inventory_SupplyManager_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Ingredient</h5>
+        <div hx-get="{% url 'restaurant_Ingredient_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Ingredient List</h4>
+        <div hx-get="{% url 'restaurant_Ingredient_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Menu</h5>
+        <div hx-get="{% url 'restaurant_Menu_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Menu List</h4>
+        <div hx-get="{% url 'restaurant_Menu_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A MenuItem</h5>
+        <div hx-get="{% url 'restaurant_MenuItem_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>MenuItem List</h4>
+        <div hx-get="{% url 'restaurant_MenuItem_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Restaurant</h5>
+        <div hx-get="{% url 'restaurant_Restaurant_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Restaurant List</h4>
+        <div hx-get="{% url 'restaurant_Restaurant_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Chef</h5>
+        <div hx-get="{% url 'restaurant_Chef_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Chef List</h4>
+        <div hx-get="{% url 'restaurant_Chef_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+      <div class="col col-lg-6">
+        <h5>Add A Staff</h5>
+        <div hx-get="{% url 'restaurant_Staff_htmx_create' %}" hx-trigger="load" hx-swap="outerHTML"></div>
+        <h4>Staff List</h4>
+        <div hx-get="{% url 'restaurant_Staff_htmx_list' %}" hx-trigger="load">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

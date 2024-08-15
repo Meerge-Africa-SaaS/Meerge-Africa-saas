@@ -1,0 +1,5 @@
+<label
+    for="{{ field.id_for_label }}"
+    class="text-xs font-medium field-label {{ field.field.required|yesno:'required,' }} {{ field.errors|yesno:'error,' }}">
+    {{ field.label }}
+</label>
