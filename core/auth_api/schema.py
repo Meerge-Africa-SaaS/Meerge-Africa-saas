@@ -1,6 +1,6 @@
 from ninja import Schema
 from typing import Optional
-from pydantic import constr
+from pydantic import constr, Field
 
 ''' class EmailVerificationSchema(Schema):
     email: str
@@ -11,16 +11,17 @@ class UserSchema(Schema):
     first_name: str
     last_name: str
     email: str
-    phone_number: constr(regex=r'^\+?[1-9]\d{1,14}$')
+    phone_number: str = Field(pattern = r'^\+?[1-9]\d{1,14}$')
+    #phone_number: constr(regex=r'^\+?[1-9]\d{1,14}$')
     
 class CustomerSignup(Schema):
     pass
 
 class RequestPhoneNumberVerificationSchema(Schema):
-    phone_number: constr(regex=r'^\+?[1-9]\d{1,14}$')
+    phone_number: str = Field(pattern = r'^\+?[1-9]\d{1,14}$')
 
 class SubmitPhoneNumberVerificationSchema(Schema):
-    phone_number: constr(regex=r'^\+?[1-9]\d{1,14}$')
+    phone_number: str = Field(pattern = r'^\+?[1-9]\d{1,14}$')
     token: str
 
 class EmailVerificationSchema(Schema):
@@ -35,9 +36,11 @@ class SignupRequestSchema(Schema):
     first_name: str
     last_name: str
     email: str
+    phone_number: str = Field(pattern = r'^\+?[1-9]\d{1,14}$')
     password: str
-    phone_number: constr(regex=r'^\+?[1-9]\d{1,14}$')
     username: Optional[str] = None
+    actor_type: str
+    is_mobile: bool
 
 class SocialAccountSignupSchema(Schema):
     email: str

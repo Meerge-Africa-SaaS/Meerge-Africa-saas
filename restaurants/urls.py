@@ -11,7 +11,7 @@ router.register("Ingredient", api.IngredientViewSet)
 router.register("Menu", api.MenuViewSet)
 router.register("MenuItem", api.MenuItemViewSet)
 router.register("Restaurant", api.RestaurantViewSet)
-router.register("Chef", api.ChefViewSet)
+#router.register("Chef", api.ChefViewSet)
 router.register("Staff", api.StaffViewSet)
 
 urlpatterns = (
@@ -36,11 +36,11 @@ urlpatterns = (
     path("restaurants/Restaurant/detail/<int:pk>/", views.RestaurantDetailView.as_view(), name="restaurant_Restaurant_detail"),
     path("restaurants/Restaurant/update/<int:pk>/", views.RestaurantUpdateView.as_view(), name="restaurant_Restaurant_update"),
     path("restaurants/Restaurant/delete/<int:pk>/", views.RestaurantDeleteView.as_view(), name="restaurant_Restaurant_delete"),
-    path("restaurants/Chef/", views.ChefListView.as_view(), name="restaurant_Chef_list"),
-    path("restaurants/Chef/create/", views.ChefCreateView.as_view(), name="restaurant_Chef_create"),
-    path("restaurants/Chef/detail/<int:pk>/", views.ChefDetailView.as_view(), name="restaurant_Chef_detail"),
-    path("restaurants/Chef/update/<int:pk>/", views.ChefUpdateView.as_view(), name="restaurant_Chef_update"),
-    path("restaurants/Chef/delete/<int:pk>/", views.ChefDeleteView.as_view(), name="restaurant_Chef_delete"),
+    #path("restaurants/Chef/", views.ChefListView.as_view(), name="restaurant_Chef_list"),
+    #path("restaurants/Chef/create/", views.ChefCreateView.as_view(), name="restaurant_Chef_create"),
+    #path("restaurants/Chef/detail/<int:pk>/", views.ChefDetailView.as_view(), name="restaurant_Chef_detail"),
+    #path("restaurants/Chef/update/<int:pk>/", views.ChefUpdateView.as_view(), name="restaurant_Chef_update"),
+    #path("restaurants/Chef/delete/<int:pk>/", views.ChefDeleteView.as_view(), name="restaurant_Chef_delete"),
     path("restaurants/Staff/", views.StaffListView.as_view(), name="restaurant_Staff_list"),
     path("restaurants/Staff/create/", views.StaffCreateView.as_view(), name="restaurant_Staff_create"),
     path("restaurants/Staff/detail/<int:pk>/", views.StaffDetailView.as_view(), name="restaurant_Staff_detail"),
@@ -59,9 +59,9 @@ urlpatterns = (
     path("restaurants/htmx/Restaurant/", htmx.HTMXRestaurantListView.as_view(), name="restaurant_Restaurant_htmx_list"),
     path("restaurants/htmx/Restaurant/create/", htmx.HTMXRestaurantCreateView.as_view(), name="restaurant_Restaurant_htmx_create"),
     path("restaurants/htmx/Restaurant/delete/<int:pk>/", htmx.HTMXRestaurantDeleteView.as_view(), name="restaurant_Restaurant_htmx_delete"),
-    path("restaurants/htmx/Chef/", htmx.HTMXChefListView.as_view(), name="restaurant_Chef_htmx_list"),
-    path("restaurants/htmx/Chef/create/", htmx.HTMXChefCreateView.as_view(), name="restaurant_Chef_htmx_create"),
-    path("restaurants/htmx/Chef/delete/<int:pk>/", htmx.HTMXChefDeleteView.as_view(), name="restaurant_Chef_htmx_delete"),
+    #path("restaurants/htmx/Chef/", htmx.HTMXChefListView.as_view(), name="restaurant_Chef_htmx_list"),
+    #path("restaurants/htmx/Chef/create/", htmx.HTMXChefCreateView.as_view(), name="restaurant_Chef_htmx_create"),
+    #path("restaurants/htmx/Chef/delete/<int:pk>/", htmx.HTMXChefDeleteView.as_view(), name="restaurant_Chef_htmx_delete"),
     path("restaurants/htmx/Staff/", htmx.HTMXStaffListView.as_view(), name="restaurant_Staff_htmx_list"),
     path("restaurants/htmx/Staff/create/", htmx.HTMXStaffCreateView.as_view(), name="restaurant_Staff_htmx_create"),
     path("restaurants/htmx/Staff/delete/<int:pk>/", htmx.HTMXStaffDeleteView.as_view(), name="restaurant_Staff_htmx_delete"),

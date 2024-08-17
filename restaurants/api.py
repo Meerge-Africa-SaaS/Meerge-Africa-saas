@@ -35,7 +35,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.RestaurantSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
+''' 
 class ChefViewSet(viewsets.ModelViewSet):
     """ViewSet for the Chef class"""
 
@@ -43,7 +43,7 @@ class ChefViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ChefSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
+ '''
 class StaffViewSet(viewsets.ModelViewSet):
     """ViewSet for the Staff class"""
 
