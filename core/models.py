@@ -128,8 +128,8 @@ class Account(models.Model):
     
     # While the bank owner is the account tied to this model/table
     account_user = models.ForeignKey("core.User", models.CASCADE)
-    account_number = models.IntegerField(max_length=10)
-    bvn = models.IntegerField(max_length=11)
+    account_number = models.IntegerField()
+    bvn = models.IntegerField()
 
     class Meta:
         db_table = "accounts"

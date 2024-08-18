@@ -88,7 +88,7 @@ def socialaccount_user_signup(request, user, **kwargs):
 def staff_signup(request, data:SignupRequestSchema):
     # Model signup
     user_class = Staff
-    staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username)
+    staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
     staff.set_password(data.password)
     staff.is_active = False
     staff.save()
