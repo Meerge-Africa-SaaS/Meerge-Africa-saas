@@ -64,8 +64,8 @@ def password_reset(request, email: str):
     
 @p_router.post("/reset/done")
 def password_reset_done(request, uid: str, token: str, new_password: str):
-    request = HttpRequest()
-    request.POST = {
+    new_request = HttpRequest()
+    new_request.POST = {
         "uidb36": uid,
         "key": token,
         "password1": new_password,
@@ -73,7 +73,7 @@ def password_reset_done(request, uid: str, token: str, new_password: str):
     }
     #view = allauthPasswordResetFromKeyView.as_view()
     view = CustomPasswordResetFromKeyView.as_view()
-    response = view(request)
+    response = view(new_request)
     if response.status_code == 302:
         return JsonResponse({'message': "Password reset successful"})
     else:

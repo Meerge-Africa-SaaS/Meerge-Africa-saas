@@ -21,7 +21,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         if (actor_type == "staff"):
             url = f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}{key}"
         else:
-            url = f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}{key}"
+            pass
         
         return url
 
