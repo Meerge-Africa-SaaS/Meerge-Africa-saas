@@ -33,7 +33,7 @@ from allauth.account.decorators import verified_email_required
 from allauth.account.utils import send_email_confirmation
 from allauth.account.signals import email_confirmed, user_signed_up
 
-from .schema import LoginResponseSchema, SignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
+from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
     NotFoundSchema, EmailLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
                     AddEmployeeSchema, AcceptInvitation
@@ -51,6 +51,12 @@ from django.conf import settings
 
 User = get_user_model()
 router = Router()
+
+
+"""
+    GLOBAL VARIABLES
+"""
+registration_successful = "Registration successful"
 
 
 #############      SIGNALS EMITTED        ############
@@ -84,18 +90,44 @@ def socialaccount_user_signup(request, user, **kwargs):
 
 
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
-@router.post("/staff-signup")
-def staff_signup(request, data:SignupRequestSchema):
+@router.post("/owner-signup", tags = ["Default Signup"])
+def owner_signup(request, data: SignupRequestSchema):
     # Model signup
-    user_class = Staff
-    staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
-    staff.set_password(data.password)
+    if data.actor_type != "owner":
+        return JsonResponse({"message": "Not a restaurant owner."})
+    
+    owner = User.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username)
+    owner.set_password(data.password)
+    owner.is_active = False
+    owner.save()
+    
+    # Get the model instance for allauth implementation.
+    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
+        user=owner,
+        email=data.email,
+        defaults={'verified': False, 'primary': True}
+    )
+
+    # Create EmailConfirmation instance and send verification mail
+    confirmation = allauthEmailConfirmation.create(email_address = allauthemail_address)
+    confirmation.send(request = request, signup=True)
+    confirmation.sent = timezone.now()
+    confirmation.save()
+    
+    # Return info.
+    return {"message": registration_successful}
+
+@router.post("/add-employee")
+def add_employee(request, data: AddEmployeeSchema):
+    if data.actor_type != "owner":
+        return JsonResponse({"message": "Not a restaurant owner, only restaurant owners can add employee."})
+    
+    staff = Staff.objects.create(email = data.email, role = data.role)
     staff.is_active = False
     staff.save()
     
     # Get the model instance for allauth implementation.
-    new_user = User.objects.get(email = data.email, first_name = data.first_name)
-    allauthemail_address, created = allauthEmailAddress.objects.get_or_create(
+    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
         user=staff,
         email=data.email,
         defaults={'verified': False, 'primary': True}
@@ -108,7 +140,31 @@ def staff_signup(request, data:SignupRequestSchema):
     confirmation.save()
     
     # Return info.
-    return {"message": "Registration successful"}
+    return {"message": registration_successful}
+
+@router.post("/staff-signup")
+def staff_signup(request, data:StaffSignupRequestSchema):
+    # Model signup
+    staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
+    staff.set_password(data.password)
+    staff.is_active = False
+    staff.save()
+    
+    # Get the model instance for allauth implementation.
+    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
+        user=staff,
+        email=data.email,
+        defaults={'verified': False, 'primary': True}
+    )
+
+    # Create EmailConfirmation instance and send verification mail
+    confirmation = allauthEmailConfirmation.create(email_address = allauthemail_address)
+    confirmation.send(request = request, signup=True)
+    confirmation.sent = timezone.now()
+    confirmation.save()
+    
+    # Return info.
+    return {"message": registration_successful}
     
 
 @router.get("confirm-email/{key_token}", url_name="verifybytoken")

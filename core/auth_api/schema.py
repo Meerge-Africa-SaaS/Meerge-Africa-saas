@@ -41,6 +41,21 @@ class SignupRequestSchema(Schema):
     username: Optional[str] = None
     actor_type: str
     is_mobile: bool
+    
+class StaffSignupRequestSchema(Schema):
+    first_name: str
+    last_name: str
+    email: str
+    phone_number: str = Field(pattern = r'^\+?[1-9]\d{1,14}$')
+    password: str
+    username: Optional[str] = None
+    actor_type: str
+    is_mobile: bool
+    role: str
+
+class AddEmployeeSchema(Schema):
+    email: str
+    role: str
 
 class SocialAccountSignupSchema(Schema):
     email: str

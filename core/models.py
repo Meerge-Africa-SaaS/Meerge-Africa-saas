@@ -61,7 +61,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         unique=True,
     )
     username = models.CharField(
-        db_index=True, verbose_name=_('username'), max_length=50, unique=True,
+        db_index=True, verbose_name=_('username'), max_length=50, unique=True, blank=True, null=True,
         validators=[RegexValidator(regex=USERNAME_REGEX,
                                    message=_("Username must be Alpha-Numeric and may also contain '.', '@' and '_'."),
                                    code='Invalid Username.')],
