@@ -56,6 +56,8 @@ class StaffSignupRequestSchema(Schema):
 class AddEmployeeSchema(Schema):
     email: str
     role: str
+    restaurant_name: str
+    actor_type: str
 
 class SocialAccountSignupSchema(Schema):
     email: str
@@ -66,10 +68,6 @@ class SocialAccountSignupSchema(Schema):
 class SignupResponseSchema(Schema):
     user_id: int
 
-class AddEmployeeSchema(Schema):
-    email: str
-    role: str
-    restaurant_name: str
     
 class AcceptInvitation(Schema):
     email: str
