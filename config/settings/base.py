@@ -60,7 +60,7 @@ INSTALLED_APPS = [
                      "core.apps.CoreConfig",
                  ] + [
                      # apps
-
+                     
                  ]
 # Customer User Model
 AUTH_USER_MODEL = "core.User"

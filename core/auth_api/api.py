@@ -89,6 +89,7 @@ def socialaccount_user_signup(request, user, **kwargs):
         del request.session['actor_type']
 
 
+
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
 @router.post("/owner-signup", tags = ["Default Signup"])
 def owner_signup(request, data: SignupRequestSchema):
