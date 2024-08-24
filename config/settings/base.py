@@ -71,7 +71,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    #"django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -106,7 +106,7 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "Meerge Africa"
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 #SOCIALACCOUNT_ADAPTER = "core.CustomFiles.CustomSocialAdapter.CustomSocialAccountAdapter"
-ACCOUNT_EMAIL_CONFIRMATION_URL = WEB_APP_SCHEME+'core/authenticate/auth-api/confirm-email/'
+ACCOUNT_EMAIL_CONFIRMATION_URL = WEB_APP_SCHEME+'api/authenticate/auth-api/confirm-email/'
 
 
 ######### ALL-AUTH PROVIDERS   ########

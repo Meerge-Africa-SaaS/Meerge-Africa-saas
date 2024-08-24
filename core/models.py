@@ -34,14 +34,14 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, username, password=None):
+    def create_superuser(self, email, phone_number, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
         user = self.create_user(
             email,
-            username,
+            phone_number,
             password=password,
         )
         user.is_admin = True
@@ -69,7 +69,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
             "unique": _("A user with that username already exists."),
         },)
     phone_number = PhoneNumberField(
-        #blank=False, null=False, unique=True,
+        blank=False, null=False, unique=True,
         verbose_name=_("phone number"),
         error_messages={
             "unique": _("A user with that phone number already exists."),
@@ -83,7 +83,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     EMAIL_FIELD = "email"
-    USERNAME_FIELD = "username"
+    USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = ["email"]
 
     def __str__(self):
@@ -112,35 +112,6 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     def get_htmx_delete_url(self):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
-
-class Bank(models.Model):
-    # Possibly get the api of lists of banks through which we can link the account table/model to
-    pass
-
-class Account(models.Model):
-    
-    # Can be a name that is pre-saved in our database or be a relationship to the bank table. Whichever way, both requires the banks to be populated in the database.
-    #name = models.CharField(max_length=100)
-    #name = models.ForeignKey(Bank, on_delete=models.DO_NOTHING)
-    
-    # The idea behind this is to probably save the name on the account name field from the directly from bank. (May not be needed if bvn field is populated)
-    #account_name = models.CharField(max_length=100)
-    
-    # While the bank owner is the account tied to this model/table
-    account_user = models.ForeignKey("core.User", models.CASCADE)
-    account_number = models.IntegerField()
-    bvn = models.IntegerField()
-
-    class Meta:
-        db_table = "accounts"
-        verbose_name = _("account")
-        verbose_name_plural = _("accounts")
-
-    def __str__(self):
-        return self.account_user
-
-    def get_absolute_url(self):
-        return reverse("account_detail", kwargs={"pk": self.pk})
 
 
 class EmailVerification(models.Model):
