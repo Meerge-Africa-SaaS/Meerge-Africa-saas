@@ -105,7 +105,6 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "Meerge Africa"
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
-#SOCIALACCOUNT_ADAPTER = "core.CustomFiles.CustomSocialAdapter.CustomSocialAccountAdapter"
 ACCOUNT_EMAIL_CONFIRMATION_URL = WEB_APP_SCHEME+'api/authenticate/auth-api/confirm-email/'
 
 
