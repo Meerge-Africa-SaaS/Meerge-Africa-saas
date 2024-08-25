@@ -5,7 +5,6 @@ from . import models
 
 
 class DeliveryAgentAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.DeliveryAgent
         fields = "__all__"

@@ -21,7 +21,6 @@ class IngredientForm(forms.ModelForm):
         self.fields["menu_item"].queryset = MenuItem.objects.all()
 
 
-
 class MenuForm(forms.ModelForm):
     class Meta:
         model = models.Menu
@@ -46,7 +45,6 @@ class MenuItemForm(forms.ModelForm):
         self.fields["menu"].queryset = Menu.objects.all()
 
 
-
 class RestaurantForm(forms.ModelForm):
     class Meta:
         model = models.Restaurant
@@ -64,7 +62,6 @@ class RestaurantForm(forms.ModelForm):
         self.fields["owner"].queryset = User.objects.all()
 
 
-
 class ChefForm(forms.ModelForm):
     class Meta:
         model = models.Chef
@@ -77,7 +74,6 @@ class ChefForm(forms.ModelForm):
         self.fields["restaurants"].queryset = Restaurant.objects.all()
 
 
-
 class StaffForm(forms.ModelForm):
     class Meta:
         model = models.Staff
@@ -88,4 +84,3 @@ class StaffForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(StaffForm, self).__init__(*args, **kwargs)
         self.fields["restaurants"].queryset = Restaurant.objects.all()
-

@@ -1,4 +1,4 @@
-from .base import *
+from .base import INSTALLED_APPS
 
 INSTALLED_APPS += [
     "cities_light",
@@ -6,7 +6,23 @@ INSTALLED_APPS += [
 ]
 
 # CITIES_LIGHT_APP_NAME = "geo"
-CITIES_LIGHT_TRANSLATION_LANGUAGES = ["en", ]
-CITIES_LIGHT_INCLUDE_COUNTRIES = ["NG", ]
+CITIES_LIGHT_TRANSLATION_LANGUAGES = [
+    "en",
+]
+CITIES_LIGHT_INCLUDE_COUNTRIES = [
+    "NG",
+]
 CITIES_LIGHT_INCLUDE_CITY_TYPES = [
-    "PPL", "PPLA", "PLA2", "PPLA3", "PPLA4", "PPLC", "PLF", "PPLG", "PPLL", "PPLR", "PPLS", "STLMT",]
+    "PPL",
+    "PPLA",
+    "PLA2",
+    "PPLA3",
+    "PPLA4",
+    "PPLC",
+    "PLF",
+    "PPLG",
+    "PPLL",
+    "PPLR",
+    "PPLS",
+    "STLMT",
+]

@@ -10,7 +10,6 @@ User = get_user_model()
 
 
 class Order(models.Model):
-
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     delivery_address = models.CharField(max_length=130)
@@ -18,7 +17,7 @@ class Order(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
-        db_table = 'orders'
+        db_table = "orders"
 
     def __str__(self):
         return str(self.pk)
@@ -38,10 +37,11 @@ class Order(models.Model):
 
 
 class Customer(User):
-
     # Relationships
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(
+        Country, on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     # Fields
     # last_name = models.CharField(max_length=30)

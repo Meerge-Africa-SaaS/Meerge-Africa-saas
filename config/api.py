@@ -3,10 +3,21 @@ from rest_framework import routers
 
 from core.api import UserViewSet
 from customers.api import OrderViewSet, CustomerViewSet
-from inventory.api import CategoryViewSet, ItemViewSet, StockViewSet, SupplierViewSet, SupplyManagerViewSet
+from inventory.api import (
+    CategoryViewSet,
+    ItemViewSet,
+    StockViewSet,
+    SupplierViewSet,
+    SupplyManagerViewSet,
+)
 from orders.api import DeliveryAgentViewSet
 from restaurants.api import (
-    IngredientViewSet, MenuViewSet, MenuItemViewSet, RestaurantViewSet, ChefViewSet,     StaffViewSet
+    IngredientViewSet,
+    MenuViewSet,
+    MenuItemViewSet,
+    RestaurantViewSet,
+    ChefViewSet,
+    StaffViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -30,6 +41,4 @@ router.register("Stock", StockViewSet)
 router.register("Supplier", SupplierViewSet)
 router.register("SupplyManager", SupplyManagerViewSet)
 
-urlpatterns = (
-    path("api/v1/", include(router.urls)),
-)
+urlpatterns = (path("api/v1/", include(router.urls)),)

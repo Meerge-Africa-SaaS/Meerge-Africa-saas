@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -22,41 +27,45 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 # Application definition
 
-INSTALLED_APPS = [
-                     "home",
-                     "search",
-                     "wagtail.contrib.forms",
-                     "wagtail.contrib.redirects",
-                     "wagtail.embeds",
-                     "wagtail.sites",
-                     "wagtail.users",
-                     "wagtail.snippets",
-                     "wagtail.documents",
-                     "wagtail.images",
-                     "wagtail.search",
-                     "wagtail.admin",
-                     "wagtail",
-                     "modelcluster",
-                     "taggit",
-                     "django.contrib.admin",
-                     "django.contrib.auth",
-                     "django.contrib.contenttypes",
-                     "django.contrib.sessions",
-                     "django.contrib.messages",
-                     "django.contrib.staticfiles",
-                 ] + [
-                     # packages
-                     'rest_framework',
-                     'django_htmx',
-                 ] + [
-                     # core
-                     "core.apps.CoreConfig",
-                 ] + [
-                     # apps
-
-                 ]
+INSTALLED_APPS = (
+    [
+        "home",
+        "search",
+        "wagtail.contrib.forms",
+        "wagtail.contrib.redirects",
+        "wagtail.embeds",
+        "wagtail.sites",
+        "wagtail.users",
+        "wagtail.snippets",
+        "wagtail.documents",
+        "wagtail.images",
+        "wagtail.search",
+        "wagtail.admin",
+        "wagtail",
+        "modelcluster",
+        "taggit",
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "django.contrib.staticfiles",
+    ]
+    + [
+        # packages
+        "rest_framework",
+        "django_htmx",
+    ]
+    + [
+        # core
+        "core.apps.CoreConfig",
+    ]
+    + [
+        # apps
+    ]
+)
 # Customer User Model
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = "core.User"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -97,11 +106,15 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+db_config = dj_database_url.config(default=os.getenv("DATABASE_URL"))
+db_config["ATOMIC_REQUESTS"] = True
 DATABASES = {
-    "default": {
+    "default": db_config,
+    "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+    },
 }
 
 # Password validation
@@ -186,7 +199,18 @@ WAGTAILADMIN_BASE_URL = "http://MeergeAfrica.com"
 # This can be omitted to allow all files, but note that this may present a security risk
 # if untrusted users are allowed to upload files -
 # see https://docs.wagtail.org/en/stable/advanced_topics/deploying.html#user-uploaded-files
-WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+WAGTAILDOCS_EXTENSIONS = [
+    "csv",
+    "docx",
+    "key",
+    "odt",
+    "pdf",
+    "pptx",
+    "rtf",
+    "txt",
+    "xlsx",
+    "zip",
+]
 
 
 def load_settings(setting):

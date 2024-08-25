@@ -1,4 +1,4 @@
-from .base import *
+from .base import INSTALLED_APPS
 
 # Django Xtensions
 INSTALLED_APPS += [
@@ -6,12 +6,12 @@ INSTALLED_APPS += [
     "django_extensions",
 ]
 GRAPH_MODELS = {
-    'app_labels': [
+    "app_labels": [
         "core",
         "geo",
         "restaurant",
         # "inventory",
         # "orders",
     ],
-    'group_models': True,
+    "group_models": True,
 }

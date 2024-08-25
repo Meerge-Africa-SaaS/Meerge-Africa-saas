@@ -15,14 +15,13 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
-
-    path('', include('home.urls')),
-    path('', include(api)),
-    path('core/', include('core.urls')),
-    path('restaurant/', include('restaurants.urls')),
-    path('customers/', include('customers.urls')),
-    path('inventory/', include('inventory.urls')),
-    path('orders/', include('orders.urls')),
+    path("", include("home.urls")),
+    path("", include(api)),
+    path("core/", include("core.urls")),
+    path("restaurant/", include("restaurants.urls")),
+    path("customers/", include("customers.urls")),
+    path("inventory/", include("inventory.urls")),
+    path("orders/", include("orders.urls")),
 ]
 
 

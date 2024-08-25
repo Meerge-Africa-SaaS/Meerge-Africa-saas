@@ -6,4 +6,3 @@ class DeliveryAgentForm(forms.ModelForm):
     class Meta:
         model = models.DeliveryAgent
         fields = []
-

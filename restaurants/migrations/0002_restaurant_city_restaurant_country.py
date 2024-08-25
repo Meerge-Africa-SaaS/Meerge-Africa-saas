@@ -5,21 +5,30 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('cities_light', '0011_alter_city_country_alter_city_region_and_more'),
-        ('restaurants', '0001_initial'),
+        ("cities_light", "0011_alter_city_country_alter_city_region_and_more"),
+        ("restaurants", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='restaurant',
-            name='city',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='cities_light.city'),
+            model_name="restaurant",
+            name="city",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="cities_light.city",
+            ),
         ),
         migrations.AddField(
-            model_name='restaurant',
-            name='country',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='cities_light.country'),
+            model_name="restaurant",
+            name="country",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="cities_light.country",
+            ),
         ),
     ]
