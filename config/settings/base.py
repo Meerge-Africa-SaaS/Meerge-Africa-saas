@@ -27,6 +27,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 # Application definition
 
+
 INSTALLED_APPS = (
     [
         "home",
@@ -64,6 +65,7 @@ INSTALLED_APPS = (
         # apps
     ]
 )
+
 # Customer User Model
 AUTH_USER_MODEL = "core.User"
 
