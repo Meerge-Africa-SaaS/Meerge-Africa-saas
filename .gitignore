@@ -94,5 +94,3 @@ db.sqlite3
 terraform.tfstate
 terraform.tfstate.backup
 .terraform.lock.hcl
-
-.pre-commit-config.yaml
