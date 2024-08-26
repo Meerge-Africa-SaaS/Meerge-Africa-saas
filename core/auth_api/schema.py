@@ -138,7 +138,7 @@ class PasswordResetRequestDoneSchema(Schema):
     
 ########## SIGNOUT SCHEMA #########
 
-class SignOutSchema(Schema):
+class LogOutSchema(Schema):
     email: str = Field(None, pattern = email_regex)
     phone_number: str = Field(None, pattern = phone_number_regex)
     password: str

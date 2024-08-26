@@ -36,7 +36,7 @@ from allauth.account.signals import email_confirmed, user_signed_up
 from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
     NotFoundSchema, EmailLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
-                    AddEmployeeSchema, AcceptInvitation
+                    AddEmployeeSchema, AcceptInvitation, LogOutSchema
 
 from core.models import EmailVerification, SmsVerification
 
@@ -221,3 +221,25 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
     except allauthEmailAddress.DoesNotExist:
         return JsonResponse({"message": "User does not exist in the database"})
            
+
+@login_required
+@router.post("/logout")
+def logout(request, data: LogOutSchema):
+    if (not data.email) and (not data.phone_number):
+            return JsonResponse({"message": "User unknown"})
+    try:
+        if data.email:
+            user = User.objects.get(email = data.email)
+            
+            logout(request, user)
+            return JsonResponse({"message": "User has been logged out."})
+        elif data.phone_number:
+            user = User.objects.get(phone_number = data.phone_number)
+            logout(request, user)
+            return JsonResponse({"message": "User has been logged out."})
+            
+    except User.DoesNotExist:
+        return JsonResponse({"message": "User does not exist in our database"})
+    
+    except Exception as e:
+        return JsonResponse({"message": f"An error occurred while processing your exist.\n{e}\n"})
