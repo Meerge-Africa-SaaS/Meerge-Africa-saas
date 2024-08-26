@@ -105,6 +105,8 @@ class EmailLoginRequestSchema(Schema):
 class PhoneNumberLoginRequestSchema(Schema):
     phone_number: str
     password: str
+    remember_me: Optional[bool|None]
+    
 
 class PhoneNumberLoginResponseSchema(Schema):
     token: str

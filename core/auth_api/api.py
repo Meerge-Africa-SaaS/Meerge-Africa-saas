@@ -35,7 +35,7 @@ from allauth.account.utils import send_email_confirmation
 from allauth.account.signals import email_confirmed, user_signed_up
 
 from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
-    NotFoundSchema, EmailLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
+    NotFoundSchema, EmailLoginRequestSchema, PhoneNumberLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
                     AddEmployeeSchema, AcceptInvitation, LogOutSchema
 
@@ -226,7 +226,7 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
    
 #### SIGN IN ENDPOINTS ##########
  # Sign in with email
-@router.post("/email-signin")
+@router.post("/email-signin", response=LoginResponseSchema)
 def email_login(request, data:EmailLoginRequestSchema):
     email = data.email
     password = data.password
@@ -240,13 +240,37 @@ def email_login(request, data:EmailLoginRequestSchema):
             token_expiry_period = 14 if remember_me == True else 1
             token = create_token(user_id=user.id, expiry_period=token_expiry_period)
             login(request, user)
-            return JsonResponse({"message": {"userToken": token}})
+            return token
         
     except User.DoesNotExist:
         return JsonResponse({"message": "User does not exist"})
     
     except Exception:
         return JsonResponse({"message": "Error in processing requests."})
+    
+    
+ # Sign in with phone number
+@router.post("/phonenumber-signin", tags=["Manual SignIn"], response={200: LoginResponseSchema, 400: NotFoundSchema})
+def phone_number_login(request, data:PhoneNumberLoginRequestSchema):
+    phone_number = data.phone_number
+    password = data.password
+    remember_me = data.remember_me
+    if not phone_number or not password:
+        return 400, "Incomplete details"
+    
+    try:
+        user = authenticate(request, phone_number = phone_number, password = password)
+        if user is not None:
+            token_expiry_period = 14 if remember_me == True else 1
+            token = create_token(user_id=user.id, expiry_period=token_expiry_period)
+            login(request, user)
+            return 200, token
+        
+    except User.DoesNotExist:
+        return 400, "User does not exist"
+    
+    except Exception:
+        return 404, "Error in processing requests."
     
 
 @login_required
