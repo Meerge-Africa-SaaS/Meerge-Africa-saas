@@ -226,13 +226,13 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
    
 #### SIGN IN ENDPOINTS ##########
  # Sign in with email
-@router.post("/email-signin")
+@router.post("/email-signin", tags=["Manual SignIn"], response={200: LoginResponseSchema, 400: NotFoundSchema})
 def email_login(request, data:EmailLoginRequestSchema):
     email = data.email
     password = data.password
     remember_me = data.remember_me
     if not email or not password:
-        return JsonResponse({"message": "Incomplete details"})
+        return 400, "Incomplete details"
     
     try:
         user = authenticate(request, email = email, password = password)
@@ -240,13 +240,13 @@ def email_login(request, data:EmailLoginRequestSchema):
             token_expiry_period = 14 if remember_me == True else 1
             token = create_token(user_id=user.id, expiry_period=token_expiry_period)
             login(request, user)
-            return JsonResponse({"message": {"userToken": token}})
+            return 200, token
         
     except User.DoesNotExist:
-        return JsonResponse({"message": "User does not exist"})
+        return 400, "User does not exist"
     
     except Exception:
-        return JsonResponse({"message": "Error in processing requests."})
+        return 404, "Error in processing requests."
     
 
 @login_required
