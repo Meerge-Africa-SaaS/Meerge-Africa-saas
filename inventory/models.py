@@ -9,7 +9,6 @@ User = get_user_model()
 
 
 class Category(models.Model):
-
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     name = models.CharField(max_length=30)
@@ -36,9 +35,10 @@ class Category(models.Model):
 
 
 class Item(models.Model):
-
     # Relationships
-    category = models.ForeignKey("inventory.Category", on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(
+        "inventory.Category", on_delete=models.DO_NOTHING
+    )
     supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
 
     # Fields
@@ -71,7 +71,6 @@ class Item(models.Model):
 
 
 class Stock(models.Model):
-
     # Relationships
     item = models.ForeignKey("inventory.Item", on_delete=models.DO_NOTHING)
 
@@ -102,10 +101,11 @@ class Stock(models.Model):
 
 
 class Supplier(models.Model):
-
     # Relationships
     # city = models.ManyToManyField("world.City")
-    city = models.ManyToManyField(City)  # , on_delete=models.SET_NULL, null=True, blank=True
+    city = models.ManyToManyField(
+        City
+    )  # , on_delete=models.SET_NULL, null=True, blank=True
 
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -133,8 +133,7 @@ class Supplier(models.Model):
         return reverse("inventory_Supplier_htmx_delete", args=(self.pk,))
 
 
-class SupplyManager(User):
-
+class SupplyManager(User):  # type: ignore
     # Relationships
     supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
 

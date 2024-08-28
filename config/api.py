@@ -4,7 +4,12 @@ from rest_framework import routers
 
 from customers.api import OrderViewSet, CustomerViewSet
 from restaurants.api import (
-    IngredientViewSet, MenuViewSet, MenuItemViewSet, RestaurantViewSet, ChefViewSet,     StaffViewSet
+    IngredientViewSet,
+    MenuViewSet,
+    MenuItemViewSet,
+    RestaurantViewSet,
+    ChefViewSet,
+    StaffViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -19,6 +24,4 @@ router.register("Staff", StaffViewSet)
 router.register("Order", OrderViewSet)
 router.register("Customer", CustomerViewSet)
 
-urlpatterns = (
-    path("api/v1/", include(router.urls)),
-)
+urlpatterns = (path("api/v1/", include(router.urls)),)

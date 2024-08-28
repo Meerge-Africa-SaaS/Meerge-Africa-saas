@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 
-USERNAME_REGEX = '^[a-zA-Z0-9.@_]*$'
+USERNAME_REGEX = "^[a-zA-Z0-9.@_]*$"
 
 
 class UserManager(BaseUserManager):
@@ -25,7 +25,9 @@ class UserManager(BaseUserManager):
         )
         user.set_password(password)
         user.save(using=self._db)
-        user.is_active = user.is_admin = user.is_staff = user.is_superuser = True
+        user.is_active = user.is_admin = user.is_staff = user.is_superuser = (
+            True
+        )
         user.save(using=self._db)
 
         return user
@@ -46,7 +48,6 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
-
     # Fields
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -57,16 +58,26 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         unique=True,
     )
     username = models.CharField(
-        db_index=True, verbose_name=_('username'), max_length=50, unique=True,
-        validators=[RegexValidator(regex=USERNAME_REGEX,
-                                   message=_("Username must be Alpha-Numeric and may also contain '.', '@' and '_'."),
-                                   code='Invalid Username.')],
+        db_index=True,
+        verbose_name=_("username"),
+        max_length=50,
+        unique=True,
+        validators=[
+            RegexValidator(
+                regex=USERNAME_REGEX,
+                message=_(
+                    "Username must be Alpha-Numeric and may also contain '.', '@' and '_'."
+                ),
+                code="Invalid Username.",
+            )
+        ],
         error_messages={
             "unique": _("A user with that username already exists."),
-        },)
+        },
+    )
 
     class Meta:
-        db_table = 'users'
+        db_table = "users"
 
     objects = UserManager()
 

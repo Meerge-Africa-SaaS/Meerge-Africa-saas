@@ -5,7 +5,6 @@ from . import models
 
 
 class OrderAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Order
         fields = "__all__"
@@ -28,7 +27,6 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class CustomerAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Customer
         fields = "__all__"

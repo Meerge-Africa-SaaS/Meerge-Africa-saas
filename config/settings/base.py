@@ -22,39 +22,43 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 # Application definition
 
-INSTALLED_APPS = [
-                     "home",
-                     "search",
-                     "wagtail.contrib.forms",
-                     "wagtail.contrib.redirects",
-                     "wagtail.embeds",
-                     "wagtail.sites",
-                     "wagtail.users",
-                     "wagtail.snippets",
-                     "wagtail.documents",
-                     "wagtail.images",
-                     "wagtail.search",
-                     "wagtail.admin",
-                     "wagtail",
-                     "modelcluster",
-                     "taggit",
-                     "django.contrib.admin",
-                     "django.contrib.auth",
-                     "django.contrib.contenttypes",
-                     "django.contrib.sessions",
-                     "django.contrib.messages",
-                     "django.contrib.staticfiles",
-                 ]  + [
-                     # packages
-                     'rest_framework',
-                     'django_htmx',
-                 ] + [
-                     # core
-                     "core.apps.CoreConfig",
-                 ] + [
-                     # apps
-
-                 ]
+INSTALLED_APPS = (
+    [
+        "home",
+        "search",
+        "wagtail.contrib.forms",
+        "wagtail.contrib.redirects",
+        "wagtail.embeds",
+        "wagtail.sites",
+        "wagtail.users",
+        "wagtail.snippets",
+        "wagtail.documents",
+        "wagtail.images",
+        "wagtail.search",
+        "wagtail.admin",
+        "wagtail",
+        "modelcluster",
+        "taggit",
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "django.contrib.staticfiles",
+    ]
+    + [
+        # packages
+        "rest_framework",
+        "django_htmx",
+    ]
+    + [
+        # core
+        "core.apps.CoreConfig",
+    ]
+    + [
+        # apps
+    ]
+)
 # Customer User Model
 AUTH_USER_MODEL = "core.User"
 
@@ -186,7 +190,18 @@ WAGTAILADMIN_BASE_URL = "http://MeergeAfrica.com"
 # This can be omitted to allow all files, but note that this may present a security risk
 # if untrusted users are allowed to upload files -
 # see https://docs.wagtail.org/en/stable/advanced_topics/deploying.html#user-uploaded-files
-WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+WAGTAILDOCS_EXTENSIONS = [
+    "csv",
+    "docx",
+    "key",
+    "odt",
+    "pdf",
+    "pptx",
+    "rtf",
+    "txt",
+    "xlsx",
+    "zip",
+]
 
 
 def load_settings(setting):

@@ -7,7 +7,6 @@ User = get_user_model()
 
 
 class Ingredient(models.Model):
-
     # Relationships
     menu_item = models.ManyToManyField("restaurants.MenuItem")
 
@@ -37,7 +36,6 @@ class Ingredient(models.Model):
 
 
 class Menu(models.Model):
-
     # Fields
     date_from = models.DateField()
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -66,7 +64,6 @@ class Menu(models.Model):
 
 
 class MenuItem(models.Model):
-
     # Relationships
     menu = models.ForeignKey("restaurants.Menu", on_delete=models.CASCADE)
 
@@ -97,10 +94,13 @@ class MenuItem(models.Model):
 
 
 class Restaurant(models.Model):
-
     # Relationships
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey(
+        City, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    country = models.ForeignKey(
+        Country, on_delete=models.SET_NULL, null=True, blank=True
+    )
     owner = models.ManyToManyField("core.User")
 
     # Fields
@@ -129,10 +129,11 @@ class Restaurant(models.Model):
         return reverse("restaurant_Restaurant_htmx_delete", args=(self.pk,))
 
 
-class Chef(User):
-
+class Chef(User):  # type: ignore
     # Relationships
-    restaurants = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE)
+    restaurants = models.ForeignKey(
+        "restaurants.Restaurant", on_delete=models.CASCADE
+    )
 
     # Fields
     # created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -158,10 +159,11 @@ class Chef(User):
         return reverse("restaurant_Chef_htmx_delete", args=(self.pk,))
 
 
-class Staff(User):
-
+class Staff(User):  # type: ignore
     # Relationships
-    restaurants = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE)
+    restaurants = models.ForeignKey(
+        "restaurants.Restaurant", on_delete=models.CASCADE
+    )
 
     # Fields
     # created = models.DateTimeField(auto_now_add=True, editable=False)

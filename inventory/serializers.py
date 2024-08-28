@@ -4,7 +4,6 @@ from . import models
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Category
         fields = [
@@ -13,8 +12,8 @@ class CategorySerializer(serializers.ModelSerializer):
             "last_updated",
         ]
 
-class ItemSerializer(serializers.ModelSerializer):
 
+class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Item
         fields = [
@@ -29,8 +28,8 @@ class ItemSerializer(serializers.ModelSerializer):
             "supplier",
         ]
 
-class StockSerializer(serializers.ModelSerializer):
 
+class StockSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Stock
         fields = [
@@ -41,8 +40,8 @@ class StockSerializer(serializers.ModelSerializer):
             "item",
         ]
 
-class SupplierSerializer(serializers.ModelSerializer):
 
+class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Supplier
         fields = [
@@ -53,8 +52,8 @@ class SupplierSerializer(serializers.ModelSerializer):
             "city",
         ]
 
-class SupplyManagerSerializer(serializers.ModelSerializer):
 
+class SupplyManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SupplyManager
         fields = [
