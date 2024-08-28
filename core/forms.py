@@ -2,7 +2,12 @@ from typing import Any
 
 from django import forms
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+)
+from django.contrib.auth.forms import (
+    PasswordResetForm as _PasswordResetForm,
+)
 
 from . import models
 
@@ -40,3 +45,15 @@ class UserForm(forms.ModelForm):
             "email",
             "username",
         ]
+
+
+class PasswordResetForm(_PasswordResetForm):
+    """Forgot Password Form."""
+
+    email = forms.EmailField(
+        label="Email",
+        max_length=254,
+        widget=forms.EmailInput(
+            attrs={"autofocus": True, "placeholder": "Enter your email address"}
+        ),
+    )
