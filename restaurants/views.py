@@ -1,7 +1,63 @@
-from django.views import generic
+import os
+
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
 from django.urls import reverse_lazy
-from . import models
-from . import forms
+from django.views import generic
+from formtools.wizard.views import SessionWizardView
+
+from . import forms, models
+
+
+class SignupView(generic.CreateView):
+    form_class = forms.SignupForm
+    success_url = reverse_lazy("login")
+    template_name = "registration/restaurant/signup.html"
+
+
+class EmailVerificationView(generic.TemplateView):
+    template_name = "registration/restaurant/email_verification.html"
+
+
+def show_cac_field_condition(wizard: SessionWizardView):
+    """Condition to show the CAC field"""
+    cleaned_data = wizard.get_cleaned_data_for_step("step1") or {}
+    return cleaned_data.get("business_registration_status") == "registered"
+
+
+class OnboardingWizardView(SessionWizardView):
+    form_list = [
+        ("step1", forms.OnboardingForm1),
+        ("step2A", forms.OnboardingForm2A),
+        ("step2B", forms.OnboardingForm2B),
+    ]
+    templates = {
+        "step1": "registration/restaurant/onboarding_step1.html",
+        "step2A": "registration/restaurant/onboarding_step2A.html",
+        "step2B": "registration/restaurant/onboarding_step2B.html",
+    }
+    file_storage = FileSystemStorage(
+        location=os.path.join(settings.MEDIA_ROOT, "temp")
+    )
+    condition_dict = {
+        "step2A": show_cac_field_condition,
+        "step2B": lambda wizard: not show_cac_field_condition(wizard),
+    }
+
+    def get_template_names(self) -> list[str]:
+        return [self.templates[self.steps.current]]
+
+    def get(self, request, *args, **kwargs):
+        return self.render(self.get_form())
+
+    def done(self, form_list, **kwargs):
+        # Save the form data to the database
+        return HttpResponse("Onboarding completed successfully")
+
+
+class OnboardingView(generic.TemplateView):
+    template_name = "registration/restaurant/onboarding.html"
 
 
 class IngredientListView(generic.ListView):

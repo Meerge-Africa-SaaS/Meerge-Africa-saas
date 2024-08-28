@@ -14,6 +14,26 @@ router.register("Staff", api.StaffViewSet)
 urlpatterns = (
     path("api/v1/", include(router.urls)),
     path(
+        "signup/",
+        views.SignupView.as_view(),
+        name="restaurant_signup",
+    ),
+    path(
+        "email_verification/",
+        views.EmailVerificationView.as_view(),
+        name="restaurant_email_verification",
+    ),
+    path(
+        "onboarding/",
+        views.OnboardingView.as_view(),
+        name="restaurant_onboarding",
+    ),
+    path(
+        "onboarding/wizard",
+        views.OnboardingWizardView.as_view(),
+        name="restaurant_onboarding_wizard",
+    ),
+    path(
         "Ingredient/",
         views.IngredientListView.as_view(),
         name="restaurant_Ingredient_list",
