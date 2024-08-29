@@ -58,7 +58,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         verbose_name=_("email address"),
         max_length=256,
-        unique=True,
+        blank=True, null=True, unique=True,
     )
     username = models.CharField(
         db_index=True, verbose_name=_('username'), max_length=50, unique=True, blank=True, null=True,
@@ -112,17 +112,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     def get_htmx_delete_url(self):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
-''' 
 
-class EmailVerification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "email_verification_codes")
-    email_code = models.CharField(max_length=6, default=secrets.token_hex(3))
-    created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(blank=True, null=True)
-    
-    def __str__(self):
-        return self.user.email
-    
 class SmsVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
     phone_number = PhoneNumberField()
@@ -134,4 +124,17 @@ class SmsVerification(models.Model):
         if user:
             return self.user.email or self.user.phone_number or None
         else:
-            return phone_number or None '''
+            return phone_number or None
+
+''' 
+
+class EmailVerification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "email_verification_codes")
+    email_code = models.CharField(max_length=6, default=secrets.token_hex(3))
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.user.email
+    
+ '''
