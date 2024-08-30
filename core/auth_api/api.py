@@ -40,6 +40,7 @@ from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema,
                     AddEmployeeSchema, AcceptInvitation, LogOutSchema
 
 from core.models import EmailVerification, SmsVerification
+from core.CustomFiles.CustomBackend import EmailAuthBackend
 from token_management import *
 
 ''' 
@@ -238,8 +239,8 @@ def email_login(request, data:EmailLoginRequestSchema):
         user = authenticate(request, email = email, password = password)
         if user is not None:
             token_expiry_period = 14 if remember_me == True else 1
+            login(request, user, backend=EmailAuthBackend)
             token = create_token(user_id=user.id, expiry_period=token_expiry_period)
-            login(request, user)
             return 200, token
         
     except User.DoesNotExist:
