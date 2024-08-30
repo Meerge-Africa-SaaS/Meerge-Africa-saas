@@ -83,8 +83,8 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     EMAIL_FIELD = "email"
-    USERNAME_FIELD = "phone_number"
-    REQUIRED_FIELDS = ["email"]
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["phone_number"]
 
     def __str__(self):
         return str(self.pk)
@@ -112,7 +112,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     def get_htmx_delete_url(self):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
-
+''' 
 
 class EmailVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "email_verification_codes")
@@ -122,7 +122,7 @@ class EmailVerification(models.Model):
     
     def __str__(self):
         return self.user.email
-    
+     '''
 class SmsVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
     phone_number = PhoneNumberField()

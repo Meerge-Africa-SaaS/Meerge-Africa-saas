@@ -38,7 +38,7 @@ from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema,
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
                     AddEmployeeSchema, AcceptInvitation
 
-from core.models import EmailVerification, SmsVerification
+from core.models import SmsVerification
 
 ''' 
 from customers.models import Customer
