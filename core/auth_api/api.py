@@ -1,8 +1,8 @@
 from random import randint
 import secrets
+
 from django.utils import timezone
 from django.utils.http import urlsafe_base64_decode
-
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 from django.core.mail import send_mail
@@ -17,7 +17,7 @@ from django.urls import reverse
 from django.forms.models import model_to_dict
 
 from ninja import Router
-#from ninja.security import HttpBearer
+from ninja.security import HttpBearer
 
 from allauth.account.adapter import get_adapter
 from allauth.socialaccount.models import SocialAccount
@@ -38,7 +38,8 @@ from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema,
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
                     AddEmployeeSchema, AcceptInvitation
 
-from core.models import SmsVerification
+#from core.models import SmsVerification
+from core.CustomFiles.CustomBackend import PhoneAuthBackend
 
 from customers.models import Customer
 
@@ -175,10 +176,11 @@ def customer_signup(request, data:CustomerSignupRequestSchema):
     if data.actor_type != "customer":
         return JsonResponse({"message": "Not a customer."})
     
-    customer = Customer.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
+    customer = Customer.objects.create(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, email = data.email)
     customer.set_password(data.password)
-    customer.is_active = False
+    #customer.is_active = False
     customer.save()
+    login(request, customer, backend=PhoneAuthBackend)
     return JsonResponse({"message": "Saved"})
     
 

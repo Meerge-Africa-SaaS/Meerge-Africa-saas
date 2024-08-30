@@ -84,7 +84,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email"]
+    REQUIRED_FIELDS = ["phone_number"]
 
     def __str__(self):
         return str(self.pk)
@@ -122,7 +122,7 @@ class SmsVerification(models.Model):
     
     def __str__(self):
         if user:
-            return self.user.email or self.user.phone_number or None
+            return self.user.email or None
         else:
             return phone_number or None
 

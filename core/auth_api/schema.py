@@ -53,6 +53,7 @@ class StaffSignupRequestSchema(Schema):
 class CustomerSignupRequestSchema(Schema):
     first_name: str
     last_name: str
+    email: str
     phone_number: str = Field(pattern = phone_number_regex)
     password: str
     actor_type: str
