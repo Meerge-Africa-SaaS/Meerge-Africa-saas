@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from django.conf import settings
+from ninja.security import HttpBearer
 import jwt
 
 def create_token(user_id, expiry_period):

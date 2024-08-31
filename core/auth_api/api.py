@@ -39,9 +39,9 @@ from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema,
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
                     AddEmployeeSchema, AcceptInvitation, LogOutSchema
 
-from core.models import EmailVerification, SmsVerification
+#from core.models import EmailVerification, SmsVerification
 from core.CustomFiles.CustomBackend import EmailAuthBackend
-from token_management import *
+from .token_management import *
 
 ''' 
 from customers.models import Customer
@@ -227,13 +227,15 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
    
 #### SIGN IN ENDPOINTS ##########
  # Sign in with email
-@router.post("/email-signin", tags=["Manual SignIn"], response={200: LoginResponseSchema, 400: NotFoundSchema})
+@router.post("/email-signin", tags=["Manual SignIn"], response={200: LoginResponseSchema, 404: NotFoundSchema})
 def email_login(request, data:EmailLoginRequestSchema):
     email = data.email
     password = data.password
     remember_me = data.remember_me
+    print(email,password,remember_me)
+    
     if not email or not password:
-        return 400, "Incomplete details"
+        return 404, "Incomplete details"
     
     try:
         user = authenticate(request, email = email, password = password)
@@ -244,7 +246,7 @@ def email_login(request, data:EmailLoginRequestSchema):
             return 200, token
         
     except User.DoesNotExist:
-        return 400, "User does not exist"
+        return 404, "User does not exist"
     
     except Exception:
         return 404, "Error in processing requests."

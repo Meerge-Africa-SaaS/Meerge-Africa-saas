@@ -99,7 +99,7 @@ class LoginResponseSchema(Schema):
 class EmailLoginRequestSchema(Schema):
     email: str
     password: str
-    remember_me: Optional[bool|None]
+    remember_me: bool
 
  
 class PhoneNumberLoginRequestSchema(Schema):
