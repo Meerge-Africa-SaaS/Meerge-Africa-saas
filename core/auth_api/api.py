@@ -33,15 +33,17 @@ from allauth.account.decorators import verified_email_required
 from allauth.account.utils import send_email_confirmation
 from allauth.account.signals import email_confirmed, user_signed_up
 
-from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, CustomerSignupRequestSchema, CustomerSignupResponseSchema,\
+from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
     NotFoundSchema, EmailLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
-                    AddEmployeeSchema, AcceptInvitation
+                    AddEmployeeSchema, AcceptInvitation, DeliveryAgentSignupRequestSchema
 
 #from core.models import SmsVerification
 from core.CustomFiles.CustomBackend import PhoneAuthBackend
 
 from customers.models import Customer
+from orders.models import DeliveryAgent
+from cities_light.models import Country
 
 ''' 
 from customers.models import Customer
@@ -171,17 +173,20 @@ def staff_signup(request, data:StaffSignupRequestSchema):
     return {"message": registration_successful}
     
 
-@router.post("/customer-signup", tags=["Default Signup"])
-def customer_signup(request, data:CustomerSignupRequestSchema):
-    if data.actor_type != "customer":
-        return JsonResponse({"message": "Not a customer."})
+@router.post("/deliveryagent-signup", tags=["Default Signup"])
+def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
+    if data.actor_type != "deliveryagent":
+        return JsonResponse({"message": "Not a deliveryagent."})
+    try:
+        country = Country.objects.get(name = data.address)
+    except Country.DoesNotExist:
+        return JsonResponse({"message": "Country does not exist"})
     
-    customer = Customer.objects.create(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, email = data.email)
-    customer.set_password(data.password)
-    customer.is_active = False
-    customer.save()
+    deliveryagent = DeliveryAgent.objects.create(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, email = data.email, address = country)
+    deliveryagent.set_password(data.password)
+    deliveryagent.is_active = False
+    deliveryagent.save()
     return JsonResponse({"message": "Saved"})
-    
 
 @router.get("confirm-email/{key_token}", url_name="verifybytoken")
 def verify_key(request, key_token: str):

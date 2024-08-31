@@ -17,8 +17,8 @@ urlpatterns = [
     path("search/", search_views.search, name="search"),
 
     path('', include('home.urls')),
+    path('api/', include('core.urls')),
     path('', include(api)),
-    path('core/', include('core.urls')),
     path('restaurant/', include('restaurants.urls')),
     path('customers/', include('customers.urls')),
     path('inventory/', include('inventory.urls')),

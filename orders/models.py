@@ -3,9 +3,9 @@ from django.db import models
 from django.urls import reverse
 User = get_user_model()
 
-
 class DeliveryAgent(User):
-
+    
+    address = models.ForeignKey("cities_light.Country", on_delete=models.SET_NULL, null=True, blank=True)
     # Fields
     # created = models.DateTimeField(auto_now_add=True, editable=False)
     # last_updated = models.DateTimeField(auto_now=True, editable=False)
