@@ -180,7 +180,7 @@ def customer_signup(request, data:CustomerSignupRequestSchema):
     customer.set_password(data.password)
     #customer.is_active = False
     customer.save()
-    login(request, customer, backend=PhoneAuthBackend)
+    login(request, customer, backend='PhoneAuthBackend')
     return JsonResponse({"message": "Saved"})
     
 

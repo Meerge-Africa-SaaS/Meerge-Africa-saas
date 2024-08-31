@@ -15,7 +15,7 @@ USERNAME_REGEX = '^[a-zA-Z0-9.@_]*$'
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, username, phone_number, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -26,6 +26,7 @@ class UserManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             username=username,
+            phone_number=phone_number,
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -34,14 +35,15 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, phone_number, password=None):
+    def create_superuser(self, email, username, phone_number, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
         user = self.create_user(
             email,
-            phone_number,
+            username=username,
+            phone_number=phone_number,
             password=password,
         )
         user.is_admin = True
@@ -58,7 +60,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         verbose_name=_("email address"),
         max_length=256,
-        blank=True, null=True, unique=True,
+        unique=True,
     )
     username = models.CharField(
         db_index=True, verbose_name=_('username'), max_length=50, unique=True, blank=True, null=True,
@@ -84,7 +86,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["phone_number"]
+    REQUIRED_FIELDS = ["email"]
 
     def __str__(self):
         return str(self.pk)
@@ -112,20 +114,6 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     def get_htmx_delete_url(self):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
-
-class SmsVerification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
-    phone_number = PhoneNumberField()
-    sms_code = models.CharField(max_length=6, default=secrets.token_hex(3))
-    created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(blank=True, null=True)
-    
-    def __str__(self):
-        if user:
-            return self.user.email or None
-        else:
-            return phone_number or None
-
 ''' 
 
 class EmailVerification(models.Model):
@@ -136,5 +124,16 @@ class EmailVerification(models.Model):
     
     def __str__(self):
         return self.user.email
+     '''
+class SmsVerification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
+    phone_number = PhoneNumberField()
+    sms_code = models.CharField(max_length=6, default=secrets.token_hex(3))
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
     
- '''
+    def __str__(self):
+        if user:
+            return self.user.email or self.user.phone_number or None
+        else:
+            return phone_number or None
