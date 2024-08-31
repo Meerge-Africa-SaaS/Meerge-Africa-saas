@@ -51,6 +51,7 @@ class StaffSignupRequestSchema(Schema):
     actor_type: str
     is_mobile: bool
     role: str
+    works_at: str
 
 class AddEmployeeSchema(Schema):
     email: str
@@ -78,12 +79,6 @@ class AcceptInvitation(Schema):
     password: str
     address: str
 
-class StaffSignupRequestSchema(Schema):
-    email: str
-    username: str
-    phone_number: str
-    password: str
-    works_at: str
     
 class StaffSignupResponseSchema(Schema):
     user_id: int  

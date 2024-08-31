@@ -46,7 +46,7 @@ from orders.models import DeliveryAgent
 
 from inventory.models import SupplyManager
  '''
-from restaurants.models import Staff
+from restaurants.models import Staff, Restaurant
 from django.conf import settings
 
 User = get_user_model()
@@ -123,7 +123,14 @@ def add_employee(request, data: AddEmployeeSchema):
     if data.actor_type != "owner":
         return JsonResponse({"message": "Not a restaurant owner, only restaurant owners can add employee."})
     
-    staff = Staff.objects.create(email = data.email, role = data.role)
+    # Get restaurant availability
+    try:
+        restaurant = Restaurant.objects.get(owner=request.user)
+        
+    except Restaurant.DoesNotExist:
+        return JsonResponse({"message": "Restaurant does not exist"})
+    
+    staff = Staff.objects.create(email = data.email, role = data.role, restaurants = restaurant)
     staff.is_active = False
     staff.save()
     
@@ -145,6 +152,14 @@ def add_employee(request, data: AddEmployeeSchema):
 
 @router.post("/staff-signup")
 def staff_signup(request, data:StaffSignupRequestSchema):
+    
+    # Get restaurant availability
+    try:
+        restaurant = Restaurant.objects.get(name=data.works_at)
+        
+    except Restaurant.DoesNotExist:
+        return JsonResponse({"message": "Restaurant does not exist"})
+    
     # Model signup
     staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
     staff.set_password(data.password)
@@ -198,6 +213,7 @@ def verify_key(request, key_token: str):
         return {"message": "Email verified successfully"}
     except Exception as e:
         return {"message": "Error during email verification"}
+
 
 
 #### VERIFICATION BASICALLY FOR PEOPLE THAT DID NOT SIGN IN WITH GOOGLE ACCOUNT PROVIDER ####
