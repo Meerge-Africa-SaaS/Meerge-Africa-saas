@@ -178,9 +178,8 @@ def customer_signup(request, data:CustomerSignupRequestSchema):
     
     customer = Customer.objects.create(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, email = data.email)
     customer.set_password(data.password)
-    #customer.is_active = False
+    customer.is_active = False
     customer.save()
-    login(request, customer, backend='PhoneAuthBackend')
     return JsonResponse({"message": "Saved"})
     
 
