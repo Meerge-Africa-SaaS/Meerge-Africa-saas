@@ -277,3 +277,27 @@ def logout(request, data: LogOutSchema):
     
     except Exception as e:
         return JsonResponse({"message": f"An error occurred while processing your exist.\n{e}\n"})
+    
+    
+    
+@router.post("/resetpassword", auth=None,)
+def reset_pasword(request, data: PasswordResetRequestSchema):
+    if not data.email:
+            return JsonResponse({"message": "Incomplete details"})
+    
+    try:
+        if data.email:
+            user = User.objects.get(email = data.email)
+            
+            logout(request, user)
+            return JsonResponse({"message": "User has been logged out."})
+        elif data.phone_number:
+            user = User.objects.get(phone_number = data.phone_number)
+            logout(request, user)
+            return JsonResponse({"message": "User has been logged out."})
+            
+    except User.DoesNotExist:
+        return JsonResponse({"message": "User does not exist in our database"})
+    
+    except Exception as e:
+        return JsonResponse({"message": f"An error occurred while processing your exist.\n{e}\n"})
