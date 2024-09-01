@@ -222,20 +222,17 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
         return JsonResponse({"message": "User does not exist in the database"})
            
 
+
 @login_required
 @router.post("/logout")
-def logout(request, data: LogOutSchema):
-    if (not data.email) and (not data.phone_number):
-            return JsonResponse({"message": "User unknown"})
+def logout(request):
+    print(request.auth)
     try:
-        if data.email:
-            user = User.objects.get(email = data.email)
-            
+        if request.auth is not None:
+            user = User.objects.get(id=str(request.auth))
             logout(request, user)
             return JsonResponse({"message": "User has been logged out."})
-        elif data.phone_number:
-            user = User.objects.get(phone_number = data.phone_number)
-            logout(request, user)
+        else:
             return JsonResponse({"message": "User has been logged out."})
             
     except User.DoesNotExist:
