@@ -39,8 +39,9 @@ from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema,
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
                     AddEmployeeSchema, AcceptInvitation, LogOutSchema
 
-from core.models import EmailVerification, SmsVerification
-from token_management import *
+#from core.models import EmailVerification, SmsVerification
+from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
+from .token_management import *
 
 ''' 
 from customers.models import Customer
@@ -93,7 +94,7 @@ def socialaccount_user_signup(request, user, **kwargs):
 
 
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
-@router.post("/owner-signup", tags = ["Default Signup"])
+@router.post("/owner-signup", tags = ["Default Signup"], auth=None)
 def owner_signup(request, data: SignupRequestSchema):
     # Model signup
     if data.actor_type != "owner":
@@ -120,7 +121,7 @@ def owner_signup(request, data: SignupRequestSchema):
     # Return info.
     return {"message": registration_successful}
 
-@router.post("/add-employee")
+@router.post("/add-employee", auth=None)
 def add_employee(request, data: AddEmployeeSchema):
     if data.actor_type != "owner":
         return JsonResponse({"message": "Not a restaurant owner, only restaurant owners can add employee."})
@@ -145,7 +146,7 @@ def add_employee(request, data: AddEmployeeSchema):
     # Return info.
     return {"message": registration_successful}
 
-@router.post("/staff-signup")
+@router.post("/staff-signup", auth=None)
 def staff_signup(request, data:StaffSignupRequestSchema):
     # Model signup
     staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
@@ -170,7 +171,7 @@ def staff_signup(request, data:StaffSignupRequestSchema):
     return {"message": registration_successful}
     
 
-@router.get("confirm-email/{key_token}", url_name="verifybytoken")
+@router.get("confirm-email/{key_token}", url_name="verifybytoken", auth=None)
 def verify_key(request, key_token: str):
     
     try:
@@ -182,7 +183,6 @@ def verify_key(request, key_token: str):
             decoded_key = urlsafe_base64_decode(key_token).decode()
             email_confirmation = allauthEmailConfirmation.objects.get(key=decoded_key)
         except (TypeError, ValueError, OverflowError, allauthEmailConfirmation.DoesNotExist):
-            print("Failed to find EmailConfirmation with provided key")
             return {"message": "Invalid or expired token"}
     
     try:
@@ -209,7 +209,7 @@ def verify_phonenumber(request):
     pass
 
 #### RESEND-EMAIL VERIFICATION CODE ####
-@router.post("/resend-emailcode")
+@router.post("/resend-emailcode", auth=None)
 def resend_emailcode(request, data: ResendEmailCodeSchema):
     try:
         allauthemail_address = allauthEmailAddress.objects.get(email=data.email)
@@ -226,71 +226,59 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
    
 #### SIGN IN ENDPOINTS ##########
  # Sign in with email
-@router.post("/email-signin", response=LoginResponseSchema)
+@router.post("/email-signin", auth=None, tags=["Manual SignIn"], response={200: LoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def email_login(request, data:EmailLoginRequestSchema):
     email = data.email
     password = data.password
     remember_me = data.remember_me
+    
     if not email or not password:
-        return JsonResponse({"message": "Incomplete details"})
+        return 404, "Incomplete details"
     
     try:
         user = authenticate(request, email = email, password = password)
         if user is not None:
             token_expiry_period = 14 if remember_me == True else 1
-            token = create_token(user_id=user.id, expiry_period=token_expiry_period)
-            login(request, user)
-            return token
+            login(request, user, backend='EmailAuthBackend')
+            token = create_token(user_id=str(user.id), expiry_period=token_expiry_period)
+            
+            return 200, {"token": token}
+        else:
+            return 404, {"message": "Not saved, User is not none"}
         
     except User.DoesNotExist:
-        return JsonResponse({"message": "User does not exist"})
+        return 404, {"message": "User does not exist"}
+    
     
     except Exception:
-        return JsonResponse({"message": "Error in processing requests."})
+        return 404, {"message": "Error in processing requests."}
     
     
- # Sign in with phone number
-@router.post("/phonenumber-signin", tags=["Manual SignIn"], response={200: LoginResponseSchema, 400: NotFoundSchema})
-def phone_number_login(request, data:PhoneNumberLoginRequestSchema):
+ # Sign in with phone_number
+@router.post("/phonenumber-signin", auth=None, tags=["Manual SignIn"], response={200: LoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def phonenumber_login(request, data:PhoneNumberLoginRequestSchema):
     phone_number = data.phone_number
     password = data.password
     remember_me = data.remember_me
+    
     if not phone_number or not password:
-        return 400, "Incomplete details"
+        return 404, "Incomplete details"
     
     try:
         user = authenticate(request, phone_number = phone_number, password = password)
         if user is not None:
             token_expiry_period = 14 if remember_me == True else 1
-            token = create_token(user_id=user.id, expiry_period=token_expiry_period)
-            login(request, user)
-            return 200, token
+            login(request, user, backend='PhoneAuthBackend')
+            token = create_token(user_id=str(user.id), expiry_period=token_expiry_period)
+            
+            return 200, {"token": token}
+        else:
+            return 404, {"message": "Not saved, User is not none"}
         
     except User.DoesNotExist:
-        return 400, "User does not exist"
+        return 404, {"message": "User does not exist"}
+    
     
     except Exception:
-        return 404, "Error in processing requests."
+        return 404, {"message": "Error in processing requests."}
     
-
-@login_required
-@router.post("/logout")
-def logout(request, data: LogOutSchema):
-    if (not data.email) and (not data.phone_number):
-            return JsonResponse({"message": "User unknown"})
-    try:
-        if data.email:
-            user = User.objects.get(email = data.email)
-            
-            logout(request, user)
-            return JsonResponse({"message": "User has been logged out."})
-        elif data.phone_number:
-            user = User.objects.get(phone_number = data.phone_number)
-            logout(request, user)
-            return JsonResponse({"message": "User has been logged out."})
-            
-    except User.DoesNotExist:
-        return JsonResponse({"message": "User does not exist in our database"})
-    
-    except Exception as e:
-        return JsonResponse({"message": f"An error occurred while processing your exist.\n{e}\n"})
