@@ -250,27 +250,21 @@ def email_login(request, data:EmailLoginRequestSchema):
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
     
-    
-    
-     
 
-@login_required
-@router.post("/logout", auth=AuthBearer(),)
-def logout(request, data: LogOutSchema):
-    if (not data.email) and (not data.phone_number):
-            return JsonResponse({"message": "User unknown"})
     
-    print("Here", "\n"*5,request.auth, "\n"*5)
+    
+@login_required
+@router.post("/reset_password", auth=AuthBearer(),)
+def logout(request, data: PasswordResetRequestSchema):
+    if (not data.email):
+        return JsonResponse({"message": "User unknown"})
+    
     try:
-        if data.email:
-            user = User.objects.get(email = data.email)
-            
-            logout(request, user)
-            return JsonResponse({"message": "User has been logged out."})
-        elif data.phone_number:
-            user = User.objects.get(phone_number = data.phone_number)
-            logout(request, user)
-            return JsonResponse({"message": "User has been logged out."})
+        user = User.objects.get(email = data.email)
+        
+        logout(request, user)
+        return JsonResponse({"message": "User has been logged out."})
+        
             
     except User.DoesNotExist:
         return JsonResponse({"message": "User does not exist in our database"})
