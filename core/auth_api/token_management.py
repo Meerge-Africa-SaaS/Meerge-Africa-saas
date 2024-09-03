@@ -21,9 +21,10 @@ def create_token(user_id, expiry_period):
 def get_user_from_token(token):
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        
         return User.objects.get(id=str(payload['user_id']))
-    except (jwt.DecodeError, User.DoesNotExist):
+    except (User.DoesNotExist, jwt.DecodeError):
+        return None
+    except Exception:
         return None
     
 
