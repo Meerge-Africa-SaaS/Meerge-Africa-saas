@@ -161,7 +161,7 @@ def staff_signup(request, data:StaffSignupRequestSchema):
         return JsonResponse({"message": "Restaurant does not exist"})
     
     # Model signup
-    staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
+    staff = Staff.objects.update(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
     staff.set_password(data.password)
     staff.is_active = False
     staff.save()
