@@ -35,9 +35,12 @@ from allauth.account.utils import send_email_confirmation
 from allauth.account.signals import email_confirmed, user_signed_up
 
 from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
-    NotFoundSchema, EmailLoginRequestSchema, PhoneNumberLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
+NotFoundSchema, EmailLoginRequestSchema, PhoneNumberLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
-                    AddEmployeeSchema, AcceptInvitation, LogOutSchema, DeliveryAgentSignupRequestSchema
+                    AddEmployeeSchema, AcceptInvitation, DeliveryAgentSignupRequestSchema
+
+
+from core.models import EmailVerification, SmsVerification
 
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
 from .token_management import *
@@ -93,6 +96,7 @@ def socialaccount_user_signup(request, user, **kwargs):
 
 
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
+
 @router.post("/owner-signup", tags = ["Default Signup"], auth=None)
 def owner_signup(request, data: SignupRequestSchema):
     # Model signup
@@ -171,7 +175,6 @@ def staff_signup(request, data:StaffSignupRequestSchema):
     # Return info.
     return {"message": registration_successful}
 
-
 @router.post("/customer-signup", tags=["Default Signup"])
 def customer_signup(request, data:CustomerSignupRequestSchema):
     if data.actor_type != "customer":
@@ -236,6 +239,7 @@ def verify_phonenumber(request):
     pass
 
 #### RESEND-EMAIL VERIFICATION CODE ####
+
 @router.post("/resend-emailcode", auth=None)
 def resend_emailcode(request, data: ResendEmailCodeSchema):
     try:
@@ -249,6 +253,24 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
         
     except allauthEmailAddress.DoesNotExist:
         return JsonResponse({"message": "User does not exist in the database"})
+
+@login_required
+@router.post("/logout")
+def logout(request):
+    print(request.auth)
+    try:
+        if request.auth is not None:
+            user = User.objects.get(id=str(request.auth))
+            logout(request, user)
+            return JsonResponse({"message": "User has been logged out."})
+        else:
+            return JsonResponse({"message": "User has been logged out."})
+            
+    except User.DoesNotExist:
+        return JsonResponse({"message": "User does not exist in our database"})
+    
+    except Exception as e:
+        return JsonResponse({"message": f"An error occurred while processing your exist.\n{e}\n"})
    
 #### SIGN IN ENDPOINTS ##########
  # Sign in with email

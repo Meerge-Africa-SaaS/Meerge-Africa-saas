@@ -48,7 +48,7 @@ class StaffSignupRequestSchema(Schema):
     actor_type: str
     is_mobile: bool
     role: str
-    
+
 class CustomerSignupRequestSchema(Schema):
     first_name: str
     last_name: str
@@ -95,6 +95,7 @@ class StaffSignupRequestSchema(Schema):
 class StaffSignupResponseSchema(Schema):
     user_id: int  
     
+
 class DeliveryAgentSignupRequestSchema(Schema):
     first_name: str
     last_name: str
@@ -147,12 +148,5 @@ class PasswordResetRequestSchema(Schema):
     
 class PasswordResetRequestDoneSchema(Schema):
     email: str
-    token: str
-    
-   
-########## SIGNOUT SCHEMA #########
-class LogOutSchema(Schema):
-    email: str = Field(None, pattern = email_regex)
-    phone_number: str = Field(None, pattern = phone_number_regex)
-    password: str
-
+    token: str 
+  
