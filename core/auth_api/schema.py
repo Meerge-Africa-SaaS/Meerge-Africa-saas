@@ -61,7 +61,6 @@ class CustomerSignupRequestSchema(Schema):
 class CustomerSignupResponseSchema(Schema):
     user_id: int
 
-
 class AddEmployeeSchema(Schema):
     email: str
     role: str
@@ -94,11 +93,20 @@ class StaffSignupRequestSchema(Schema):
     phone_number: str
     password: str
     works_at: str
+
     
 class StaffSignupResponseSchema(Schema):
     user_id: int  
     
 
+class DeliveryAgentSignupRequestSchema(Schema):
+    first_name: str
+    last_name: str
+    phone_number: str
+    email: str
+    address: str
+    password: str
+    actor_type: str
 
 ###########    LOGIN SCHEMA  #############
     

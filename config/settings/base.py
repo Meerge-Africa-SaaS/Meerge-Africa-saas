@@ -80,6 +80,7 @@ MIDDLEWARE = [
     
     "allauth.account.middleware.AccountMiddleware",
     #"allauth.usersessions.middleware.UserSessionsMiddleware", May need installation before we use.
+
 ]
 
 ROOT_URLCONF = "config.urls"

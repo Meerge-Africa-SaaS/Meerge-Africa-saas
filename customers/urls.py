@@ -11,7 +11,7 @@ router.register("Order", api.OrderViewSet)
 router.register("Customer", api.CustomerViewSet)
 
 urlpatterns = (
-    path("api/v1/", include(router.urls)),
+    #path("api/v1/", include(router.urls)),
     path("customers/Order/", views.OrderListView.as_view(), name="customers_Order_list"),
     path("customers/Order/create/", views.OrderCreateView.as_view(), name="customers_Order_create"),
     path("customers/Order/detail/<int:pk>/", views.OrderDetailView.as_view(), name="customers_Order_detail"),

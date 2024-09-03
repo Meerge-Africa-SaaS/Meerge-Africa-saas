@@ -20,6 +20,7 @@ urlpatterns = (
     path("authenticate/", api.urls, name="n-api"),
     
     path("api/v1/", include(router.urls)),
+
     path("core/User/", views.UserListView.as_view(), name="core_User_list"),
     path("core/User/create/", views.UserCreateView.as_view(), name="core_User_create"),
     path("core/User/detail/<int:pk>/", views.UserDetailView.as_view(), name="core_User_detail"),
