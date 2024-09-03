@@ -56,4 +56,5 @@ urlpatterns = (
     path("inventory/htmx/SupplyManager/", htmx.HTMXSupplyManagerListView.as_view(), name="inventory_SupplyManager_htmx_list"),
     path("inventory/htmx/SupplyManager/create/", htmx.HTMXSupplyManagerCreateView.as_view(), name="inventory_SupplyManager_htmx_create"),
     path("inventory/htmx/SupplyManager/delete/<int:pk>/", htmx.HTMXSupplyManagerDeleteView.as_view(), name="inventory_SupplyManager_htmx_delete"),
+
 )

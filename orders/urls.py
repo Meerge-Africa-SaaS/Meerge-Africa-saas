@@ -20,4 +20,5 @@ urlpatterns = (
     path("orders/htmx/DeliveryAgent/", htmx.HTMXDeliveryAgentListView.as_view(), name="orders_DeliveryAgent_htmx_list"),
     path("orders/htmx/DeliveryAgent/create/", htmx.HTMXDeliveryAgentCreateView.as_view(), name="orders_DeliveryAgent_htmx_create"),
     path("orders/htmx/DeliveryAgent/delete/<int:pk>/", htmx.HTMXDeliveryAgentDeleteView.as_view(), name="orders_DeliveryAgent_htmx_delete"),
+
 )

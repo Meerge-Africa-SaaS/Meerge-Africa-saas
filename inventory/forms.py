@@ -4,9 +4,7 @@ from inventory.models import Category
 from inventory.models import Supplier
 from inventory.models import Item
 
-from inventory.models import Supplier
 from . import models
-
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -34,7 +32,6 @@ class ItemForm(forms.ModelForm):
         self.fields["supplier"].queryset = Supplier.objects.all()
 
 
-
 class StockForm(forms.ModelForm):
     class Meta:
         model = models.Stock
@@ -46,7 +43,6 @@ class StockForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(StockForm, self).__init__(*args, **kwargs)
         self.fields["item"].queryset = Item.objects.all()
-
 
 
 class SupplierForm(forms.ModelForm):
@@ -62,7 +58,6 @@ class SupplierForm(forms.ModelForm):
         self.fields["city"].queryset = City.objects.all()
 
 
-
 class SupplyManagerForm(forms.ModelForm):
     class Meta:
         model = models.SupplyManager
@@ -73,4 +68,3 @@ class SupplyManagerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SupplyManagerForm, self).__init__(*args, **kwargs)
         self.fields["supplier"].queryset = Supplier.objects.all()
-

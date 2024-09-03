@@ -105,7 +105,9 @@ class Supplier(models.Model):
 
     # Relationships
     # city = models.ManyToManyField("world.City")
-    city = models.ManyToManyField(City)  # , on_delete=models.SET_NULL, null=True, blank=True
+    city = models.ManyToManyField(
+        City
+    )  # , on_delete=models.SET_NULL, null=True, blank=True
 
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

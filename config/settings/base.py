@@ -44,7 +44,7 @@ INSTALLED_APPS = [
                      "django.contrib.sessions",
                      "django.contrib.messages",
                      "django.contrib.staticfiles",
-                 ] + [
+                 ]  + [
                      # packages
                      'rest_framework',
                      'django_htmx',
@@ -63,7 +63,7 @@ INSTALLED_APPS = [
 
                  ]
 # Customer User Model
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = "core.User"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
