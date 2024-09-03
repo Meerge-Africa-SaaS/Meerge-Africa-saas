@@ -27,3 +27,6 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             pass
         
         return url
+    
+    def get_reset_password_from_key_url(self, key):
+        print("\n"*5, key, "\n"*5)
