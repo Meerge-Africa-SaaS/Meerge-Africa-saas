@@ -13,8 +13,6 @@ class UserSchema(Schema):
     email: str
     phone_number: str = Field(pattern = phone_number_regex)
     
-class CustomerSignup(Schema):
-    pass
 
 class RequestPhoneNumberVerificationSchema(Schema):
     phone_number: str = Field(pattern = phone_number_regex)
@@ -51,7 +49,17 @@ class StaffSignupRequestSchema(Schema):
     actor_type: str
     is_mobile: bool
     role: str
-    works_at: str
+    
+class CustomerSignupRequestSchema(Schema):
+    first_name: str
+    last_name: str
+    email: str
+    phone_number: str = Field(pattern = phone_number_regex)
+    password: str
+    actor_type: str
+    
+class CustomerSignupResponseSchema(Schema):
+    user_id: int
 
 class AddEmployeeSchema(Schema):
     email: str
@@ -79,6 +87,13 @@ class AcceptInvitation(Schema):
     password: str
     address: str
 
+class StaffSignupRequestSchema(Schema):
+    email: str
+    username: str
+    phone_number: str
+    password: str
+    works_at: str
+
     
 class StaffSignupResponseSchema(Schema):
     user_id: int  
@@ -92,7 +107,6 @@ class DeliveryAgentSignupRequestSchema(Schema):
     address: str
     password: str
     actor_type: str
-
 
 ###########    LOGIN SCHEMA  #############
     

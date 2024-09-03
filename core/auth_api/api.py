@@ -33,24 +33,19 @@ from allauth.account.decorators import verified_email_required
 from allauth.account.utils import send_email_confirmation
 from allauth.account.signals import email_confirmed, user_signed_up
 
+
 from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
     NotFoundSchema, EmailLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
                     AddEmployeeSchema, AcceptInvitation, DeliveryAgentSignupRequestSchema
 
-#from core.models import SmsVerification
+from core.models import SmsVerification
 from core.CustomFiles.CustomBackend import PhoneAuthBackend
-
 from customers.models import Customer
 from orders.models import DeliveryAgent
 from cities_light.models import Country
 
-''' 
-from customers.models import Customer
-from orders.models import DeliveryAgent
-
 from inventory.models import SupplyManager
- '''
 from restaurants.models import Staff
 from django.conf import settings
 
@@ -173,6 +168,17 @@ def staff_signup(request, data:StaffSignupRequestSchema):
     return {"message": registration_successful}
     
 
+@router.post("/customer-signup", tags=["Default Signup"])
+def customer_signup(request, data:CustomerSignupRequestSchema):
+    if data.actor_type != "customer":
+        return JsonResponse({"message": "Not a customer."})
+    
+    customer = Customer.objects.create(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, email = data.email)
+    customer.set_password(data.password)
+    customer.is_active = False
+    customer.save()
+    return JsonResponse({"message": "Saved"})
+    
 @router.post("/deliveryagent-signup", tags=["Default Signup"])
 def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     if data.actor_type != "deliveryagent":
