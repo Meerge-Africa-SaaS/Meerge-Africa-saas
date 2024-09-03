@@ -13,7 +13,6 @@ class UserSchema(Schema):
     email: str
     phone_number: str = Field(pattern = phone_number_regex)
     
-
 class RequestPhoneNumberVerificationSchema(Schema):
     phone_number: str = Field(pattern = phone_number_regex)
 
@@ -76,7 +75,6 @@ class SocialAccountSignupSchema(Schema):
 class SignupResponseSchema(Schema):
     user_id: int
 
-    
 class AcceptInvitation(Schema):
     email: str
     works_at: str
@@ -93,12 +91,10 @@ class StaffSignupRequestSchema(Schema):
     phone_number: str
     password: str
     works_at: str
-
     
 class StaffSignupResponseSchema(Schema):
     user_id: int  
     
-
 class DeliveryAgentSignupRequestSchema(Schema):
     first_name: str
     last_name: str
@@ -118,7 +114,6 @@ class EmailLoginRequestSchema(Schema):
     email: str
     password: str
     remember_me: Optional[bool|None]
-
  
 class PhoneNumberLoginRequestSchema(Schema):
     phone_number: str
@@ -152,3 +147,10 @@ class PasswordResetRequestDoneSchema(Schema):
     email: str
     token: str
     
+   
+########## SIGNOUT SCHEMA #########
+class LogOutSchema(Schema):
+    email: str = Field(None, pattern = email_regex)
+    phone_number: str = Field(None, pattern = phone_number_regex)
+    password: str
+

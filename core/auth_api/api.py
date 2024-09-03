@@ -1,5 +1,6 @@
 from random import randint
 import secrets
+import jwt
 
 from django.utils import timezone
 from django.utils.http import urlsafe_base64_decode
@@ -33,12 +34,15 @@ from allauth.account.decorators import verified_email_required
 from allauth.account.utils import send_email_confirmation
 from allauth.account.signals import email_confirmed, user_signed_up
 
-
 from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
     NotFoundSchema, EmailLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
-                    AddEmployeeSchema, AcceptInvitation, DeliveryAgentSignupRequestSchema
+                    AddEmployeeSchema, AcceptInvitation, LogOutSchema, DeliveryAgentSignupRequestSchema
 
+#from core.models import EmailVerification, SmsVerification
+from core.CustomFiles.CustomBackend import EmailAuthBackend
+
+from .token_management import *
 from core.models import SmsVerification
 from core.CustomFiles.CustomBackend import PhoneAuthBackend
 from customers.models import Customer
@@ -91,7 +95,7 @@ def socialaccount_user_signup(request, user, **kwargs):
 
 
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
-@router.post("/owner-signup", tags = ["Default Signup"])
+@router.post("/owner-signup", tags = ["Default Signup"], auth=None)
 def owner_signup(request, data: SignupRequestSchema):
     # Model signup
     if data.actor_type != "owner":
@@ -118,6 +122,7 @@ def owner_signup(request, data: SignupRequestSchema):
     # Return info.
     return {"message": registration_successful}
 
+
 @router.post("/add-employee", tags = ["Accept and Invite"])
 def add_employee(request, data: AddEmployeeSchema):
     if data.actor_type != "owner":
@@ -143,7 +148,8 @@ def add_employee(request, data: AddEmployeeSchema):
     # Return info.
     return {"message": registration_successful}
 
-@router.post("/staff-signup", tags=["Accept and Invite"])
+
+@router.post("/staff-signup", auth=None, tags=["Accept and Invite"])
 def staff_signup(request, data:StaffSignupRequestSchema):
     # Model signup
     staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
@@ -166,7 +172,7 @@ def staff_signup(request, data:StaffSignupRequestSchema):
     
     # Return info.
     return {"message": registration_successful}
-    
+
 
 @router.post("/customer-signup", tags=["Default Signup"])
 def customer_signup(request, data:CustomerSignupRequestSchema):
@@ -194,7 +200,7 @@ def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     deliveryagent.save()
     return JsonResponse({"message": "Saved"})
 
-@router.get("confirm-email/{key_token}", url_name="verifybytoken")
+@router.get("confirm-email/{key_token}", url_name="verifybytoken", auth=None)
 def verify_key(request, key_token: str):
     
     try:
@@ -246,4 +252,54 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
         
     except allauthEmailAddress.DoesNotExist:
         return JsonResponse({"message": "User does not exist in the database"})
-           
+   
+#### SIGN IN ENDPOINTS ##########
+ # Sign in with email
+@router.post("/email-signin", tags=["Manual SignIn"], response={200: LoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def email_login(request, data:EmailLoginRequestSchema):
+    email = data.email
+    password = data.password
+    remember_me = data.remember_me
+    
+    if not email or not password:
+        return 404, "Incomplete details"
+    
+    try:
+        user = authenticate(request, email = email, password = password)
+        if user is not None:
+            token_expiry_period = 14 if remember_me == True else 1
+            login(request, user, backend='EmailAuthBackend')
+            token = create_token(user_id=str(user.id), expiry_period=token_expiry_period)
+            
+            return 200, {"token": token}
+        else:
+            return 404, {"message": "Not saved, User is not none"}
+        
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+     
+
+@login_required
+@router.post("/logout", auth=AuthBearer(),)
+def logout(request, data: LogOutSchema):
+    if (not data.email) and (not data.phone_number):
+            return JsonResponse({"message": "User unknown"})
+    
+    print("Here", "\n"*5,request.auth, "\n"*5)
+    try:
+        if data.email:
+            user = User.objects.get(email = data.email)
+            
+            logout(request, user)
+            return JsonResponse({"message": "User has been logged out."})
+        elif data.phone_number:
+            user = User.objects.get(phone_number = data.phone_number)
+            logout(request, user)
+            return JsonResponse({"message": "User has been logged out."})
+            
+    except User.DoesNotExist:
+        return JsonResponse({"message": "User does not exist in our database"})
+    
+    except Exception as e:
+        return JsonResponse({"message": f"An error occurred while processing your exist.\n{e}\n"})
+      

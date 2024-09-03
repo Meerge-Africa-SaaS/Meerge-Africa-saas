@@ -68,6 +68,12 @@ AUTH_USER_MODEL = "core.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'core.CustomFiles.CustomBackend.PhoneAuthBackend',
+    'core.CustomFiles.CustomBackend.EmailAuthBackend',
+]
+
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

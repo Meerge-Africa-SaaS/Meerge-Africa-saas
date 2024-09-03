@@ -5,6 +5,7 @@ from . import api
 from . import views
 from . import htmx
 
+from core.auth_api.token_management import AuthBearer
 
 router = routers.DefaultRouter()
 router.register("User", api.UserViewSet)
@@ -13,12 +14,11 @@ router.register("User", api.UserViewSet)
 from ninja import NinjaAPI
 from core.auth_api.api import router as auth_router
 
-api = NinjaAPI()
+api = NinjaAPI(auth=AuthBearer())
 api.add_router("auth-api", auth_router)
 
 urlpatterns = (
     path("authenticate/", api.urls, name="n-api"),
-    
     path("api/v1/", include(router.urls)),
 
     path("core/User/", views.UserListView.as_view(), name="core_User_list"),
