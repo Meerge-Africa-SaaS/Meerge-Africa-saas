@@ -1,9 +1,9 @@
 from random import randint
 import secrets
-from django.utils import timezone
-from django.utils.http import urlsafe_base64_decode
 import jwt
 
+from django.utils import timezone
+from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 from django.core.mail import send_mail
@@ -37,18 +37,17 @@ from allauth.account.signals import email_confirmed, user_signed_up
 from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
     NotFoundSchema, EmailLoginRequestSchema, PhoneNumberLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
-                    AddEmployeeSchema, AcceptInvitation, LogOutSchema
+                    AddEmployeeSchema, AcceptInvitation, LogOutSchema, DeliveryAgentSignupRequestSchema
 
-#from core.models import EmailVerification, SmsVerification
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
 from .token_management import *
 
-''' 
+from core.models import SmsVerification
 from customers.models import Customer
 from orders.models import DeliveryAgent
+from cities_light.models import Country
 
 from inventory.models import SupplyManager
- '''
 from restaurants.models import Staff
 from django.conf import settings
 
@@ -121,7 +120,8 @@ def owner_signup(request, data: SignupRequestSchema):
     # Return info.
     return {"message": registration_successful}
 
-@router.post("/add-employee", auth=None)
+
+@router.post("/add-employee", tags = ["Accept and Invite"])
 def add_employee(request, data: AddEmployeeSchema):
     if data.actor_type != "owner":
         return JsonResponse({"message": "Not a restaurant owner, only restaurant owners can add employee."})
@@ -146,7 +146,8 @@ def add_employee(request, data: AddEmployeeSchema):
     # Return info.
     return {"message": registration_successful}
 
-@router.post("/staff-signup", auth=None)
+
+@router.post("/staff-signup", auth=None, tags=["Accept and Invite"])
 def staff_signup(request, data:StaffSignupRequestSchema):
     # Model signup
     staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
@@ -169,7 +170,33 @@ def staff_signup(request, data:StaffSignupRequestSchema):
     
     # Return info.
     return {"message": registration_successful}
+
+
+@router.post("/customer-signup", tags=["Default Signup"])
+def customer_signup(request, data:CustomerSignupRequestSchema):
+    if data.actor_type != "customer":
+        return JsonResponse({"message": "Not a customer."})
     
+    customer = Customer.objects.create(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, email = data.email)
+    customer.set_password(data.password)
+    customer.is_active = False
+    customer.save()
+    return JsonResponse({"message": "Saved"})
+    
+@router.post("/deliveryagent-signup", tags=["Default Signup"])
+def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
+    if data.actor_type != "deliveryagent":
+        return JsonResponse({"message": "Not a deliveryagent."})
+    try:
+        country = Country.objects.get(name = data.address)
+    except Country.DoesNotExist:
+        return JsonResponse({"message": "Country does not exist"})
+    
+    deliveryagent = DeliveryAgent.objects.create(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, email = data.email, address = country)
+    deliveryagent.set_password(data.password)
+    deliveryagent.is_active = False
+    deliveryagent.save()
+    return JsonResponse({"message": "Saved"})
 
 @router.get("confirm-email/{key_token}", url_name="verifybytoken", auth=None)
 def verify_key(request, key_token: str):
@@ -223,7 +250,6 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
     except allauthEmailAddress.DoesNotExist:
         return JsonResponse({"message": "User does not exist in the database"})
    
-   
 #### SIGN IN ENDPOINTS ##########
  # Sign in with email
 @router.post("/email-signin", auth=None, tags=["Manual SignIn"], response={200: LoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
@@ -248,11 +274,10 @@ def email_login(request, data:EmailLoginRequestSchema):
         
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
-    
-    
+
     except Exception:
         return 404, {"message": "Error in processing requests."}
-    
+
     
  # Sign in with phone_number
 @router.post("/phonenumber-signin", auth=None, tags=["Manual SignIn"], response={200: LoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
