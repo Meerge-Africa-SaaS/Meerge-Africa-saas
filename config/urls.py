@@ -18,6 +18,7 @@ urlpatterns = [
     path('', include('home.urls')),
     path('core/', include('core.urls')),
     path('restaurant/', include('restaurants.urls')),
+    path('customers/', include('customers.urls')),
 ]
 
 
