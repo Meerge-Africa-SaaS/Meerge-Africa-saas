@@ -6,7 +6,6 @@ from inventory.models import Item
 
 from . import models
 
-
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = models.Category

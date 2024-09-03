@@ -48,6 +48,13 @@ INSTALLED_APPS = [
                      # packages
                      'rest_framework',
                      'django_htmx',
+                     'allauth',
+                     'allauth.account',
+                     'allauth.socialaccount',
+                     'allauth.socialaccount.providers.google',
+                     'allauth.socialaccount.providers.facebook',
+                     'ninja',
+                     'phonenumber_field',
                  ] + [
                      # core
                      "core.apps.CoreConfig",
@@ -70,6 +77,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"

@@ -5,6 +5,7 @@ from . import models
 
 
 class CategoryAdminForm(forms.ModelForm):
+
     class Meta:
         model = models.Category
         fields = "__all__"
@@ -25,6 +26,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ItemAdminForm(forms.ModelForm):
+
     class Meta:
         model = models.Item
         fields = "__all__"
@@ -53,6 +55,7 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 class StockAdminForm(forms.ModelForm):
+
     class Meta:
         model = models.Stock
         fields = "__all__"
@@ -75,6 +78,7 @@ class StockAdmin(admin.ModelAdmin):
 
 
 class SupplierAdminForm(forms.ModelForm):
+
     class Meta:
         model = models.Supplier
         fields = "__all__"
@@ -97,6 +101,7 @@ class SupplierAdmin(admin.ModelAdmin):
 
 
 class SupplyManagerAdminForm(forms.ModelForm):
+
     class Meta:
         model = models.SupplyManager
         fields = "__all__"

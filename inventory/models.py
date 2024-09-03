@@ -9,6 +9,7 @@ User = get_user_model()
 
 
 class Category(models.Model):
+
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     name = models.CharField(max_length=30)
@@ -35,6 +36,7 @@ class Category(models.Model):
 
 
 class Item(models.Model):
+
     # Relationships
     category = models.ForeignKey("inventory.Category", on_delete=models.DO_NOTHING)
     supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
@@ -69,6 +71,7 @@ class Item(models.Model):
 
 
 class Stock(models.Model):
+
     # Relationships
     item = models.ForeignKey("inventory.Item", on_delete=models.DO_NOTHING)
 
@@ -99,6 +102,7 @@ class Stock(models.Model):
 
 
 class Supplier(models.Model):
+
     # Relationships
     # city = models.ManyToManyField("world.City")
     city = models.ManyToManyField(
@@ -132,6 +136,7 @@ class Supplier(models.Model):
 
 
 class SupplyManager(User):
+
     # Relationships
     supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
 

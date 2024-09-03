@@ -29,6 +29,9 @@ router.register("Restaurant", RestaurantViewSet)
 router.register("Chef", ChefViewSet)
 router.register("Staff", StaffViewSet)
 
+router.register("Order", OrderViewSet)
+router.register("Customer", CustomerViewSet)
+
 router.register("User", UserViewSet)
 router.register("Order", OrderViewSet)
 router.register("Customer", CustomerViewSet)
