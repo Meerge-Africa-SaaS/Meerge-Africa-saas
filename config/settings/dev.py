@@ -13,5 +13,10 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 load_settings("geo")
+load_settings("auth")
+load_settings("api")
 load_settings("restaurants")
+load_settings("customers")
+load_settings("inventory")
+load_settings("orders")
 load_settings("djext")
