@@ -71,7 +71,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
             "unique": _("A user with that username already exists."),
         },)
     phone_number = PhoneNumberField(
-        blank=True, null=True, unique=True,
+        blank=False, null=False, unique=True,
         verbose_name=_("phone number"),
         error_messages={
             "unique": _("A user with that phone number already exists."),
@@ -86,7 +86,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email"]
+    REQUIRED_FIELDS = ["email", "phone_number"]
 
     def __str__(self):
         return str(self.pk)
