@@ -1,0 +1,79 @@
+{% load wagtailadmin_tags %}
+<div class="flex-col w-full justify-start items-center" id="body">
+  <div class="text-center">
+    <p class="text-2xl font-bold">Almost There!</p>
+    <p class="text-lg text-gray-700">Complete your business details to get started right away.</p>
+  </div>
+  <form class="" hx-post="{% url 'inventory_Supplier_htmx_create' %}" hx-target="#body" hx-swap="outerHTML" novalidate>
+    <div class="hidden">
+      {{ form.errors }}
+    </div>
+    {% csrf_token %}
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% endif %}
+
+    {% comment %} business name field {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.name %}
+    </div>
+    {% comment %}phone number input{% endcomment %}
+    <div class="form-group min-w-full">
+      {% include 'components/phone-field.html' with field=form.business_phone_number %}
+    </div>
+    {% comment %} business email {% endcomment %}
+    <div class="form-group min-w-full">
+      {% formattedfield field=form.business_email %}
+    </div>
+    {% comment %} business address {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.business_address %}
+    </div>
+
+    {% comment %} supplier category {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.supplier_category %}
+    </div>
+
+    {% comment %} bank name {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.bank_name %}
+    </div>
+
+    {% comment %} account number {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.account_number %}
+    </div>
+
+    {% comment %} account name {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.account_name %}
+    </div>
+  
+    {% comment %} business registration number {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.business_registration_number %}
+    </div>
+  
+    {% comment %} business document {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.business_document %}
+    </div>
+
+    {% comment %} premises license {% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.premises_license %}
+    </div>
+  
+    <button type="submit" class="primary w-full mt-4 mx-0 flex items-center justify-center gap-2">
+      <svg class="animate-spin htmx-indicator" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+      </svg>
+      Create Account
+    </button>
+    <div class="pl-2 mb-4 mt-2">
+      <p class="text-gray-700 text-xs">Already have an account? <a href="#" class="text-secondary">Login</a></p>
+    </div>
+  </form>
+</div>

@@ -35,21 +35,17 @@ from allauth.account.utils import send_email_confirmation
 from allauth.account.signals import email_confirmed, user_signed_up
 
 from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
-          NotFoundSchema, EmailLoginRequestSchema, PhoneNumberLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
+    NotFoundSchema, EmailLoginRequestSchema, PhoneNumberLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
                     AddEmployeeSchema, AcceptInvitation, DeliveryAgentSignupRequestSchema
 
-
 from core.models import EmailVerification, SmsVerification
-
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
 from .token_management import *
 
-from core.models import SmsVerification
 from customers.models import Customer
 from orders.models import DeliveryAgent
 from cities_light.models import Country
-
 from inventory.models import SupplyManager
 from restaurants.models import Staff
 from django.conf import settings
@@ -130,9 +126,8 @@ def owner_signup(request, data: SignupRequestSchema):
 def add_employee(request, data: AddEmployeeSchema):
     if data.actor_type != "owner":
         return JsonResponse({"message": "Not a restaurant owner, only restaurant owners can add employee."})
-    
+
     # Get restaurant availability
-    
     try:
         restaurant = Restaurant.objects.get(owner=request.user)
         
@@ -160,29 +155,40 @@ def add_employee(request, data: AddEmployeeSchema):
     return {"message": registration_successful}
 
 
-@router.post("/staff-signup", auth=None, tags=["Accept and Invite"])
+
+@router.post("/accept-invite")
 def staff_signup(request, data:StaffSignupRequestSchema):
+    
+    # Get restaurant availability
+    ''' 
+    try:
+        restaurant = Restaurant.objects.get(name=data.works_at)
+        
+    except Restaurant.DoesNotExist:
+        return JsonResponse({"message": "Restaurant does not exist"})
+     '''
+    
     # Model signup
-    staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
-    staff.set_password(data.password)
-    staff.is_active = False
-    staff.save()
+    try:
+        staff = Staff.objects.get(email = data.email)
+    except Staff.DoesNotExist:
+        return JsonResponse({"message": "Staff doesn't exist!"})
+    
+    staff_update = staff.objects.update(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, username = data.username, role = data.role)
+    staff_update.set_password(data.password)
+    staff_update.is_active = False
+    staff_update.save()
     
     # Get the model instance for allauth implementation.
     allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
-        user=staff,
+        user=staff_update,
         email=data.email,
-        defaults={'verified': False, 'primary': True}
+        defaults={'verified': True, 'primary': True}
     )
-
-    # Create EmailConfirmation instance and send verification mail
-    confirmation = allauthEmailConfirmation.create(email_address = allauthemail_address)
-    confirmation.send(request = request, signup=True)
-    confirmation.sent = timezone.now()
-    confirmation.save()
     
     # Return info.
     return {"message": registration_successful}
+    
 
 @router.post("/customer-signup", tags=["Default Signup"])
 def customer_signup(request, data:CustomerSignupRequestSchema):
