@@ -24,6 +24,8 @@ def get_user_from_token(token):
         return User.objects.get(id=str(payload['user_id']))
     except (jwt.DecodeError, User.DoesNotExist):
         return None
+    except Exception:
+        return None
     
 
 class AuthBearer(HttpBearer):
