@@ -3,6 +3,8 @@ import os
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import HttpResponse
+
+from django.template import Template, RequestContext
 from django.template.response import TemplateResponse
 from django.urls import reverse_lazy
 from django.views import generic
