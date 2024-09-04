@@ -107,7 +107,7 @@ class RestaurantDeleteView(generic.DeleteView):
     model = models.Restaurant
     success_url = reverse_lazy("restaurant_Restaurant_list")
 
-
+''' 
 class ChefListView(generic.ListView):
     model = models.Chef
     form_class = forms.ChefForm
@@ -132,7 +132,7 @@ class ChefUpdateView(generic.UpdateView):
 class ChefDeleteView(generic.DeleteView):
     model = models.Chef
     success_url = reverse_lazy("restaurant_Chef_list")
-
+ '''
 
 class StaffListView(generic.ListView):
     model = models.Staff

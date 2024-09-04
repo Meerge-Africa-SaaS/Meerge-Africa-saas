@@ -268,7 +268,7 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
         
     except allauthEmailAddress.DoesNotExist:
         return JsonResponse({"message": "User does not exist in the database"})
-
+      
 @login_required
 @router.post("/logout")
 def logout(request):

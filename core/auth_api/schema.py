@@ -13,6 +13,7 @@ class UserSchema(Schema):
     email: str
     phone_number: str = Field(pattern = phone_number_regex)
     
+
 class RequestPhoneNumberVerificationSchema(Schema):
     phone_number: str = Field(pattern = phone_number_regex)
 
@@ -48,6 +49,7 @@ class StaffSignupRequestSchema(Schema):
     actor_type: str
     is_mobile: bool
     role: str
+
 
 class CustomerSignupRequestSchema(Schema):
     first_name: str

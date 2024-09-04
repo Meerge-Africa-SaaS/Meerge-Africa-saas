@@ -11,6 +11,7 @@ router.register("User", api.UserViewSet)
 from ninja import NinjaAPI
 from core.auth_api.api import router as auth_router
 
+
 api = NinjaAPI(auth=AuthBearer())
 api.add_router("auth-api", auth_router)
 

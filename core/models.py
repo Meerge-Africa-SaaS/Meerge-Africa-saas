@@ -35,6 +35,7 @@ class UserManager(BaseUserManager):
 
         return user
 
+
     def create_superuser(self, email, username, phone_number, password=None):
         """
         Creates and saves a superuser with the given email, date of
@@ -71,7 +72,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
             "unique": _("A user with that username already exists."),
         },)
     phone_number = PhoneNumberField(
-        blank=False, null=False, unique=True,
+        blank=True, null=True, unique=True,
         verbose_name=_("phone number"),
         error_messages={
             "unique": _("A user with that phone number already exists."),
@@ -86,7 +87,7 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email", "phone_number"]
+    REQUIRED_FIELDS = ["email"]
 
     def __str__(self):
         return str(self.pk)
@@ -114,8 +115,8 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     def get_htmx_delete_url(self):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
-''' 
 
+''' 
 class EmailVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "email_verification_codes")
     email_code = models.CharField(max_length=6, default=secrets.token_hex(3))
@@ -124,6 +125,7 @@ class EmailVerification(models.Model):
     
     def __str__(self):
         return self.user.email
+
      '''
 class SmsVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
