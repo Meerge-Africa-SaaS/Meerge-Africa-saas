@@ -47,7 +47,8 @@ from customers.models import Customer
 from orders.models import DeliveryAgent
 from cities_light.models import Country
 from inventory.models import SupplyManager
-from restaurants.models import Staff
+ 
+from restaurants.models import Staff, Restaurant
 from django.conf import settings
 
 User = get_user_model()
@@ -119,7 +120,6 @@ def owner_signup(request, data: SignupRequestSchema):
     
     # Return info.
     return {"message": registration_successful}
-
 
 
 @router.post("/add-employee", tags = ["Accept and Invite"])
@@ -245,6 +245,7 @@ def verify_key(request, key_token: str):
         return {"message": "Email verified successfully"}
     except Exception as e:
         return {"message": "Error during email verification"}
+
 
 
 #### VERIFICATION BASICALLY FOR PEOPLE THAT DID NOT SIGN IN WITH GOOGLE ACCOUNT PROVIDER ####

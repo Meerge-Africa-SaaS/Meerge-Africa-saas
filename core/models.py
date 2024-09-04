@@ -116,7 +116,6 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
 
-''' 
 class EmailVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "email_verification_codes")
     email_code = models.CharField(max_length=6, default=secrets.token_hex(3))
