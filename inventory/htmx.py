@@ -1,12 +1,43 @@
-from django.views import generic
-from django.urls import reverse_lazy
+import os
+
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.shortcuts import HttpResponse
 
 from django.template import Template, RequestContext
 from django.template.response import TemplateResponse
+from django.urls import reverse_lazy
+from django.views import generic
+from formtools.wizard.views import SessionWizardView
 
-from . import models
-from . import forms
+from . import forms, models
+
+
+class HtmxSupplierRegistrationWizardView(SessionWizardView):
+    form_list = [
+        ("basic_info", forms.SupplierBasicInfoForm),
+        ("business_info", forms.SupplierBusinessInfoForm),
+    ]
+    templates = {
+        "basic_info": "inventory/supplier_registration/basic_info.html",
+        "business_info": "inventory/supplier_registration/business_info.html",
+    }
+    file_storage = FileSystemStorage(
+        location=os.path.join(settings.MEDIA_ROOT, "temp")
+    )
+
+    def get_template_names(self):
+        return [self.templates[self.steps.current]]
+
+    def get(self, request, *args, **kwargs):
+        return self.render(self.get_form())
+
+    def done(self, form_list, form_dict, **kwargs):
+        form_data = {}
+        for form in form_list:
+            form_data.update(form.cleaned_data)
+        full_name = f"{form_data['first_name']} {form_data['last_name']}"
+        return HttpResponse(f"Supplier {full_name} created successfully")
 
 
 class HTMXCategoryListView(generic.ListView):

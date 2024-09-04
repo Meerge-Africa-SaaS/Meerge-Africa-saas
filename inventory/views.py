@@ -4,6 +4,11 @@ from . import models
 from . import forms
 
 
+
+class SupplierCreateView(generic.TemplateView):
+    template_name = "inventory/supplier_registration/base.html"
+
+
 class CategoryListView(generic.ListView):
     model = models.Category
     form_class = forms.CategoryForm
@@ -83,11 +88,6 @@ class StockDeleteView(generic.DeleteView):
 
 
 class SupplierListView(generic.ListView):
-    model = models.Supplier
-    form_class = forms.SupplierForm
-
-
-class SupplierCreateView(generic.CreateView):
     model = models.Supplier
     form_class = forms.SupplierForm
 
