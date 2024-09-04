@@ -1,8 +1,9 @@
 from random import randint
 import secrets
+import jwt
+
 from django.utils import timezone
 from django.utils.http import urlsafe_base64_decode
-
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 from django.core.mail import send_mail
@@ -17,7 +18,7 @@ from django.urls import reverse
 from django.forms.models import model_to_dict
 
 from ninja import Router
-#from ninja.security import HttpBearer
+from ninja.security import HttpBearer
 
 from allauth.account.adapter import get_adapter
 from allauth.socialaccount.models import SocialAccount
@@ -34,18 +35,22 @@ from allauth.account.utils import send_email_confirmation
 from allauth.account.signals import email_confirmed, user_signed_up
 
 from .schema import LoginResponseSchema, SignupRequestSchema, AddEmployeeSchema, StaffSignupRequestSchema, SignupResponseSchema, SocialLoginRequestSchema, \
-    NotFoundSchema, EmailLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
+          NotFoundSchema, EmailLoginRequestSchema, PhoneNumberLoginRequestSchema, EmailVerificationSchema, SuccessMessageSchema, PasswordChangeRequestSchema, PasswordChangeRequestDoneSchema, \
                 PasswordResetRequestSchema, PasswordResetRequestDoneSchema, SocialAccountSignupSchema, ResendEmailCodeSchema, StaffSignupRequestSchema, StaffSignupResponseSchema, \
-                    AddEmployeeSchema, AcceptInvitation
+                    AddEmployeeSchema, AcceptInvitation, DeliveryAgentSignupRequestSchema
+
 
 from core.models import EmailVerification, SmsVerification
 
-''' 
+from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
+from .token_management import *
+
+from core.models import SmsVerification
 from customers.models import Customer
 from orders.models import DeliveryAgent
+from cities_light.models import Country
 
 from inventory.models import SupplyManager
- '''
 from restaurants.models import Staff
 from django.conf import settings
 
@@ -91,7 +96,8 @@ def socialaccount_user_signup(request, user, **kwargs):
 
 
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
-@router.post("/owner-signup", tags = ["Default Signup"])
+
+@router.post("/owner-signup", tags = ["Default Signup"], auth=None)
 def owner_signup(request, data: SignupRequestSchema):
     # Model signup
     if data.actor_type != "owner":
@@ -119,7 +125,8 @@ def owner_signup(request, data: SignupRequestSchema):
     return {"message": registration_successful}
 
 
-@router.post("/add-employee")
+
+@router.post("/add-employee", tags = ["Accept and Invite"])
 def add_employee(request, data: AddEmployeeSchema):
     if data.actor_type != "owner":
         return JsonResponse({"message": "Not a restaurant owner, only restaurant owners can add employee."})
@@ -153,7 +160,57 @@ def add_employee(request, data: AddEmployeeSchema):
     return {"message": registration_successful}
 
 
-@router.get("confirm-email/{key_token}", url_name="verifybytoken")
+@router.post("/staff-signup", auth=None, tags=["Accept and Invite"])
+def staff_signup(request, data:StaffSignupRequestSchema):
+    # Model signup
+    staff = Staff.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username, role = data.role)
+    staff.set_password(data.password)
+    staff.is_active = False
+    staff.save()
+    
+    # Get the model instance for allauth implementation.
+    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
+        user=staff,
+        email=data.email,
+        defaults={'verified': False, 'primary': True}
+    )
+
+    # Create EmailConfirmation instance and send verification mail
+    confirmation = allauthEmailConfirmation.create(email_address = allauthemail_address)
+    confirmation.send(request = request, signup=True)
+    confirmation.sent = timezone.now()
+    confirmation.save()
+    
+    # Return info.
+    return {"message": registration_successful}
+
+@router.post("/customer-signup", tags=["Default Signup"])
+def customer_signup(request, data:CustomerSignupRequestSchema):
+    if data.actor_type != "customer":
+        return JsonResponse({"message": "Not a customer."})
+    
+    customer = Customer.objects.create(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, email = data.email)
+    customer.set_password(data.password)
+    customer.is_active = False
+    customer.save()
+    return JsonResponse({"message": "Saved"})
+    
+@router.post("/deliveryagent-signup", tags=["Default Signup"])
+def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
+    if data.actor_type != "deliveryagent":
+        return JsonResponse({"message": "Not a deliveryagent."})
+    try:
+        country = Country.objects.get(name = data.address)
+    except Country.DoesNotExist:
+        return JsonResponse({"message": "Country does not exist"})
+    
+    deliveryagent = DeliveryAgent.objects.create(first_name = data.first_name, last_name = data.last_name, phone_number = data.phone_number, email = data.email, address = country)
+    deliveryagent.set_password(data.password)
+    deliveryagent.is_active = False
+    deliveryagent.save()
+    return JsonResponse({"message": "Saved"})
+
+@router.get("confirm-email/{key_token}", url_name="verifybytoken", auth=None)
 def verify_key(request, key_token: str):
     
     try:
@@ -165,7 +222,6 @@ def verify_key(request, key_token: str):
             decoded_key = urlsafe_base64_decode(key_token).decode()
             email_confirmation = allauthEmailConfirmation.objects.get(key=decoded_key)
         except (TypeError, ValueError, OverflowError, allauthEmailConfirmation.DoesNotExist):
-            print("Failed to find EmailConfirmation with provided key")
             return {"message": "Invalid or expired token"}
     
     try:
@@ -192,7 +248,8 @@ def verify_phonenumber(request):
     pass
 
 #### RESEND-EMAIL VERIFICATION CODE ####
-@router.post("/resend-emailcode")
+
+@router.post("/resend-emailcode", auth=None)
 def resend_emailcode(request, data: ResendEmailCodeSchema):
     try:
         allauthemail_address = allauthEmailAddress.objects.get(email=data.email)
@@ -205,4 +262,79 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
         
     except allauthEmailAddress.DoesNotExist:
         return JsonResponse({"message": "User does not exist in the database"})
-           
+      
+@login_required
+@router.post("/logout")
+def logout(request):
+    print(request.auth)
+    try:
+        if request.auth is not None:
+            user = User.objects.get(id=str(request.auth))
+            logout(request, user)
+            return JsonResponse({"message": "User has been logged out."})
+        else:
+            return JsonResponse({"message": "User has been logged out."})
+            
+    except User.DoesNotExist:
+        return JsonResponse({"message": "User does not exist in our database"})
+    
+    except Exception as e:
+        return JsonResponse({"message": f"An error occurred while processing your exist.\n{e}\n"})
+   
+#### SIGN IN ENDPOINTS ##########
+ # Sign in with email
+@router.post("/email-signin", auth=None, tags=["Manual SignIn"], response={200: LoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def email_login(request, data:EmailLoginRequestSchema):
+    email = data.email
+    password = data.password
+    remember_me = data.remember_me
+    
+    if not email or not password:
+        return 404, "Incomplete details"
+    
+    try:
+        user = authenticate(request, email = email, password = password)
+        if user is not None:
+            token_expiry_period = 14 if remember_me == True else 1
+            login(request, user, backend='EmailAuthBackend')
+            token = create_token(user_id=str(user.id), expiry_period=token_expiry_period)
+            
+            return 200, {"token": token}
+        else:
+            return 404, {"message": "Not saved, User is not none"}
+        
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+
+    except Exception:
+        return 404, {"message": "Error in processing requests."}
+
+    
+ # Sign in with phone_number
+@router.post("/phonenumber-signin", auth=None, tags=["Manual SignIn"], response={200: LoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def phonenumber_login(request, data:PhoneNumberLoginRequestSchema):
+    phone_number = data.phone_number
+    password = data.password
+    remember_me = data.remember_me
+    
+    if not phone_number or not password:
+        return 404, "Incomplete details"
+    
+    try:
+        user = authenticate(request, phone_number = phone_number, password = password)
+        if user is not None:
+            token_expiry_period = 14 if remember_me == True else 1
+            login(request, user, backend='PhoneAuthBackend')
+            token = create_token(user_id=str(user.id), expiry_period=token_expiry_period)
+            
+            return 200, {"token": token}
+        else:
+            return 404, {"message": "Not saved, User is not none"}
+        
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+    
+    
+    except Exception:
+        return 404, {"message": "Error in processing requests."}
+    
