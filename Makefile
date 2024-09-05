@@ -30,4 +30,4 @@ run:		## Run the development server.
 
 .PHONY: tailwind
 tailwind:	## Compile the Tailwind CSS.
-	npx tailwindcss -i config/static/vendor/tailwind.in.css -o config/static/vendor/tailwind.out.css --watch
+	npx tailwindcss -i config/styles/main.css -o config/static/vendor/tailwind.out.css --watch
