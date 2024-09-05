@@ -1,0 +1,51 @@
+section#top-menu {
+    @apply max-w-full w-full overflow-x-auto
+    gap-4 p-4 lg:p-6
+    bg-white rounded-lg shadow-sm;
+}
+
+#top-menu > #top-menu__list {
+    @apply flex items-start justify-start gap-4;
+}
+
+#top-menu > .section-title {
+    @apply text-xl font-bold text-gray-800 my-4;
+}
+
+.top-menu__item {
+    @apply relative w-[19%] min-w-56
+}
+
+.top-menu__item > .item-image > img {
+    @apply w-full min-w-full h-auto rounded-lg;
+}
+
+.top-menu__item > .item-count {
+    @apply absolute -top-2 -right-2 bg-secondary
+    flex items-center justify-center
+    rounded-full w-7 h-7;
+}
+
+.top-menu__item > .item-count > span {
+    @apply text-xs font-medium text-white;
+}
+
+.top-menu__item:not(.placeholder) > .item-count > span::before {
+    @apply content-["+"] text-xs font-medium text-white;
+}
+
+.top-menu__item > .item-details {
+    @apply space-y-2 mt-2;
+}
+
+.top-menu__item .item-name {
+    @apply font-medium text-gray-800;
+}
+
+.top-menu__item.placeholder .item-name {
+    @apply font-normal;
+}
+
+.top-menu__item .item-price {
+    @apply text-sm font-normal text-green-500;
+}

@@ -1,7 +1,7 @@
-from django.views import generic
 from django.urls import reverse_lazy
-from . import models
-from . import forms
+from django.views import generic
+
+from . import forms, models
 
 
 class IngredientListView(generic.ListView):
