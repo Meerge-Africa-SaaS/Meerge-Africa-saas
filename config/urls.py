@@ -12,13 +12,17 @@ urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
-    path("search/", search_views.search, name="search"),
-    path("", include("home.urls")),
-    path("", include(api)),
-    path("core/", include("core.urls")),
-    path("restaurant/", include("restaurants.urls")),
-    path("customers/", include("customers.urls")),
-    path("inventory/", include("inventory.urls")),
+    path("search/", search_views.search, name="search"),\
+  
+    #path('', include('home.urls')),
+    path('api/', include('core.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('', include(api)),
+    path('accounts/', include('allauth.urls')),
+    path('restaurant/', include('restaurants.urls')),
+    path('customers/', include('customers.urls')),
+    path('inventory/', include('inventory.urls')),
+    path('orders/', include('orders.urls')),
 ]
 
 

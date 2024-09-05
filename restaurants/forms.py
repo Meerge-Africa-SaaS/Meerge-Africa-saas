@@ -63,7 +63,7 @@ class RestaurantForm(forms.ModelForm):
         # self.fields["city"].queryset = City.objects.all()
         self.fields["owner"].queryset = User.objects.all()
 
-
+''' 
 
 class ChefForm(forms.ModelForm):
     class Meta:
@@ -76,7 +76,7 @@ class ChefForm(forms.ModelForm):
         super(ChefForm, self).__init__(*args, **kwargs)
         self.fields["restaurants"].queryset = Restaurant.objects.all()
 
-
+ '''
 
 class StaffForm(forms.ModelForm):
     class Meta:
