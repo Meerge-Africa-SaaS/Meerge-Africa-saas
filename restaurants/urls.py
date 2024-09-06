@@ -134,31 +134,32 @@ urlpatterns = (
         views.RestaurantDeleteView.as_view(),
         name="restaurant_Restaurant_delete",
     ),
-    path(
-        "Chef/",
-        views.ChefListView.as_view(),
-        name="restaurant_Chef_list",
-    ),
-    path(
-        "Chef/create/",
-        views.ChefCreateView.as_view(),
-        name="restaurant_Chef_create",
-    ),
-    path(
-        "Chef/detail/<int:pk>/",
-        views.ChefDetailView.as_view(),
-        name="restaurant_Chef_detail",
-    ),
-    path(
-        "Chef/update/<int:pk>/",
-        views.ChefUpdateView.as_view(),
-        name="restaurant_Chef_update",
-    ),
-    path(
-        "Chef/delete/<int:pk>/",
-        views.ChefDeleteView.as_view(),
-        name="restaurant_Chef_delete",
-    ),
+    # TODO: Add Chef views
+    # path(
+    #     "Chef/",
+    #     views.ChefListView.as_view(),
+    #     name="restaurant_Chef_list",
+    # ),
+    # path(
+    #     "Chef/create/",
+    #     views.ChefCreateView.as_view(),
+    #     name="restaurant_Chef_create",
+    # ),
+    # path(
+    #     "Chef/detail/<int:pk>/",
+    #     views.ChefDetailView.as_view(),
+    #     name="restaurant_Chef_detail",
+    # ),
+    # path(
+    #     "Chef/update/<int:pk>/",
+    #     views.ChefUpdateView.as_view(),
+    #     name="restaurant_Chef_update",
+    # ),
+    # path(
+    #     "Chef/delete/<int:pk>/",
+    #     views.ChefDeleteView.as_view(),
+    #     name="restaurant_Chef_delete",
+    # ),
     path(
         "Staff/",
         views.StaffListView.as_view(),
@@ -244,34 +245,35 @@ urlpatterns = (
         htmx.HTMXRestaurantDeleteView.as_view(),
         name="restaurant_Restaurant_htmx_delete",
     ),
-    path(
-        "htmx/Chef/",
-        htmx.HTMXChefListView.as_view(),
-        name="restaurant_Chef_htmx_list",
-    ),
-    path(
-        "htmx/Chef/create/",
-        htmx.HTMXChefCreateView.as_view(),
-        name="restaurant_Chef_htmx_create",
-    ),
-    path(
-        "htmx/Chef/delete/<int:pk>/",
-        htmx.HTMXChefDeleteView.as_view(),
-        name="restaurant_Chef_htmx_delete",
-    ),
-    path(
-        "htmx/Staff/",
-        htmx.HTMXStaffListView.as_view(),
-        name="restaurant_Staff_htmx_list",
-    ),
-    path(
-        "htmx/Staff/create/",
-        htmx.HTMXStaffCreateView.as_view(),
-        name="restaurant_Staff_htmx_create",
-    ),
-    path(
-        "htmx/Staff/delete/<int:pk>/",
-        htmx.HTMXStaffDeleteView.as_view(),
-        name="restaurant_Staff_htmx_delete",
-    ),
+    # TODO: Add Chef views
+    # path(
+    #     "htmx/Chef/",
+    #     htmx.HTMXChefListView.as_view(),
+    #     name="restaurant_Chef_htmx_list",
+    # ),
+    # path(
+    #     "htmx/Chef/create/",
+    #     htmx.HTMXChefCreateView.as_view(),
+    #     name="restaurant_Chef_htmx_create",
+    # ),
+    # path(
+    #     "htmx/Chef/delete/<int:pk>/",
+    #     htmx.HTMXChefDeleteView.as_view(),
+    #     name="restaurant_Chef_htmx_delete",
+    # ),
+    # path(
+    #     "htmx/Staff/",
+    #     htmx.HTMXStaffListView.as_view(),
+    #     name="restaurant_Staff_htmx_list",
+    # ),
+    # path(
+    #     "htmx/Staff/create/",
+    #     htmx.HTMXStaffCreateView.as_view(),
+    #     name="restaurant_Staff_htmx_create",
+    # ),
+    # path(
+    #     "htmx/Staff/delete/<int:pk>/",
+    #     htmx.HTMXStaffDeleteView.as_view(),
+    #     name="restaurant_Staff_htmx_delete",
+    # ),
 )

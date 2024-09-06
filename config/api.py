@@ -12,7 +12,7 @@ from inventory.api import (
 )
 from orders.api import DeliveryAgentViewSet
 from restaurants.api import (
-    ChefViewSet,
+    # ChefViewSet,
     IngredientViewSet,
     MenuItemViewSet,
     MenuViewSet,
@@ -26,7 +26,7 @@ router.register("Ingredient", IngredientViewSet)
 router.register("Menu", MenuViewSet)
 router.register("MenuItem", MenuItemViewSet)
 router.register("Restaurant", RestaurantViewSet)
-router.register("Chef", ChefViewSet)
+# router.register("Chef", ChefViewSet)
 router.register("Staff", StaffViewSet)
 
 router.register("Order", OrderViewSet)

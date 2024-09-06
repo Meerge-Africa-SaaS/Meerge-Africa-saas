@@ -11,11 +11,11 @@ router = routers.DefaultRouter()
 router.register("User", api.UserViewSet)
 
 ### NINJA API ROUTES
-api = NinjaAPI(auth=AuthBearer())
-api.add_router("auth-api", auth_router)
+ninjaapi = NinjaAPI(auth=AuthBearer())
+ninjaapi.add_router("auth-api", auth_router)
 
 urlpatterns = (
-    path("authenticate/", api.urls, name="n-api"),
+    path("authenticate/", ninjaapi.urls, name="n-api"),
     path("api/v1/", include(router.urls)),
     path("User/", views.UserListView.as_view(), name="core_User_list"),
     path("User/create/", views.UserCreateView.as_view(), name="core_User_create"),
