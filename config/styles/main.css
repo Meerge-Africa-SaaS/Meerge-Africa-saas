@@ -73,8 +73,8 @@ select {
     focus-visible:ring-blue-500;
 }
 
-button {
-    @apply px-5 py-2.5 my-0 rounded-lg font-medium
+button, .btn {
+    @apply px-5 py-2.5 mx-2.5 my-0 rounded-lg font-medium
     text-sm focus:ring-4 focus:outline-none text-center
 }
 
@@ -83,22 +83,22 @@ button[type="submit"] {
     focus:ring-blue-500
 }
 
-button.btn-primary {
+button.btn-primary, .btn.btn-primary {
     @apply bg-primary text-white border
     border-primary focus:ring-primary hover:bg-primary/80
 }
 
-button.btn-primary.btn-outline {
+button.btn-primary.btn-outline, .btn.btn-primary.btn-outline {
     @apply bg-white text-primary border
     border-primary focus:ring-primary hover:bg-primary/10
 }
 
-button.btn-secondary {
+button.btn-secondary, .btn.btn-secondary {
     @apply bg-secondary text-white border
     border-secondary focus:ring-secondary hover:bg-secondary/80
 }
 
-button.btn-secondary.btn-outline {
+button.btn-secondary.btn-outline, .btn.btn-secondary.btn-outline {
     @apply bg-white text-secondary border
     border-secondary focus:ring-secondary hover:bg-secondary/10
 }

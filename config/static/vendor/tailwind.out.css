@@ -1194,6 +1194,14 @@ input:checked + .toggle-bg {
   margin-left: 1.25rem;
 }
 
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
 .mr-3 {
   margin-right: 0.75rem;
 }
@@ -1208,6 +1216,10 @@ input:checked + .toggle-bg {
 
 .mt-4 {
   margin-top: 1rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .block {
@@ -1248,6 +1260,10 @@ input:checked + .toggle-bg {
 
 .h-4 {
   height: 1rem;
+}
+
+.h-5 {
+  height: 1.25rem;
 }
 
 .h-6 {
@@ -1482,6 +1498,10 @@ input:checked + .toggle-bg {
   gap: 1.25rem;
 }
 
+.gap-8 {
+  gap: 2rem;
+}
+
 .gap-6 {
   gap: 1.5rem;
 }
@@ -1490,6 +1510,18 @@ input:checked + .toggle-bg {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-y-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
+
+.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
 .overflow-hidden {
@@ -1632,6 +1664,10 @@ input:checked + .toggle-bg {
 
 .bg-white\/50 {
   background-color: rgb(255 255 255 / 0.5);
+}
+
+.fill-gray-700 {
+  fill: #374151;
 }
 
 .bg-gray-50 {
@@ -2794,7 +2830,9 @@ select:focus-visible {
   --tw-ring-color: rgb(63 131 248 / var(--tw-ring-opacity));
 }
 
-button {
+button, .btn {
+  margin-left: 0.625rem;
+  margin-right: 0.625rem;
   margin-top: 0px;
   margin-bottom: 0px;
   border-radius: 0.5rem;
@@ -2808,7 +2846,7 @@ button {
   font-weight: 500;
 }
 
-button:focus {
+button:focus, .btn:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
@@ -2832,7 +2870,7 @@ button[type="submit"]:focus {
   --tw-ring-color: rgb(63 131 248 / var(--tw-ring-opacity));
 }
 
-button.btn-primary {
+button.btn-primary, .btn.btn-primary {
   border-width: 1px;
   border-color: rgba(14, 34, 84, 1);
   background-color: rgba(14, 34, 84, 1);
@@ -2840,15 +2878,15 @@ button.btn-primary {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-button.btn-primary:hover {
+button.btn-primary:hover, .btn.btn-primary:hover {
   background-color: rgba(14, 34, 84, 0.8);
 }
 
-button.btn-primary:focus {
+button.btn-primary:focus, .btn.btn-primary:focus {
   --tw-ring-color: rgba(14, 34, 84, 1);
 }
 
-button.btn-primary.btn-outline {
+button.btn-primary.btn-outline, .btn.btn-primary.btn-outline {
   border-width: 1px;
   border-color: rgba(14, 34, 84, 1);
   --tw-bg-opacity: 1;
@@ -2856,15 +2894,15 @@ button.btn-primary.btn-outline {
   color: rgba(14, 34, 84, 1);
 }
 
-button.btn-primary.btn-outline:hover {
+button.btn-primary.btn-outline:hover, .btn.btn-primary.btn-outline:hover {
   background-color: rgba(14, 34, 84, 0.1);
 }
 
-button.btn-primary.btn-outline:focus {
+button.btn-primary.btn-outline:focus, .btn.btn-primary.btn-outline:focus {
   --tw-ring-color: rgba(14, 34, 84, 1);
 }
 
-button.btn-secondary {
+button.btn-secondary, .btn.btn-secondary {
   border-width: 1px;
   border-color: rgba(225, 93, 37, 1);
   background-color: rgba(225, 93, 37, 1);
@@ -2872,15 +2910,15 @@ button.btn-secondary {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-button.btn-secondary:hover {
+button.btn-secondary:hover, .btn.btn-secondary:hover {
   background-color: rgba(225, 93, 37, 0.8);
 }
 
-button.btn-secondary:focus {
+button.btn-secondary:focus, .btn.btn-secondary:focus {
   --tw-ring-color: rgba(225, 93, 37, 1);
 }
 
-button.btn-secondary.btn-outline {
+button.btn-secondary.btn-outline, .btn.btn-secondary.btn-outline {
   border-width: 1px;
   border-color: rgba(225, 93, 37, 1);
   --tw-bg-opacity: 1;
@@ -2888,11 +2926,11 @@ button.btn-secondary.btn-outline {
   color: rgba(225, 93, 37, 1);
 }
 
-button.btn-secondary.btn-outline:hover {
+button.btn-secondary.btn-outline:hover, .btn.btn-secondary.btn-outline:hover {
   background-color: rgba(225, 93, 37, 0.1);
 }
 
-button.btn-secondary.btn-outline:focus {
+button.btn-secondary.btn-outline:focus, .btn.btn-secondary.btn-outline:focus {
   --tw-ring-color: rgba(225, 93, 37, 1);
 }
 
