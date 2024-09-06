@@ -28,8 +28,10 @@ passwordInputField.addEventListener(
             if (passwordInputField.value === 'password') {
                 passwordInputField.setCustomValidity('')
                 loader.classList.add('hidden')
+                deactivateBtn.attributes.removeNamedItem('disabled')
             } else {
                 passwordInputField.setCustomValidity('Password is incorrect')
+                deactivateBtn.setAttribute('disabled', true)
             }
             loader.classList.add('hidden')
         }, 2000)
