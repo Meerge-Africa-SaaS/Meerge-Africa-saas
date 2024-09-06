@@ -1,6 +1,6 @@
-from .base import *
-from django.urls import path, include
+# ruff: noqa: F403,F405
+from django.urls import include, path
 
-INSTALLED_APPS += [
-    #
-]
+from .base import *
+
+INSTALLED_APPS += []

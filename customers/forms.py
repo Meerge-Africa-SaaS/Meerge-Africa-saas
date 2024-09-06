@@ -24,4 +24,3 @@ class CustomerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CustomerForm, self).__init__(*args, **kwargs)
         self.fields["city"].queryset = City.objects.all()
-

@@ -1,5 +1,4 @@
 from cities_light.models import City, Country
-
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
@@ -9,7 +8,6 @@ User = get_user_model()
 
 
 class Ingredient(models.Model):
-
     # Relationships
     menu_item = models.ManyToManyField("restaurants.MenuItem")
 
@@ -39,7 +37,6 @@ class Ingredient(models.Model):
 
 
 class Menu(models.Model):
-
     # Fields
     date_from = models.DateField()
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -68,7 +65,6 @@ class Menu(models.Model):
 
 
 class MenuItem(models.Model):
-
     # Relationships
     menu = models.ForeignKey("restaurants.Menu", on_delete=models.CASCADE)
 
@@ -99,10 +95,11 @@ class MenuItem(models.Model):
 
 
 class Restaurant(models.Model):
-
     # Relationships
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(
+        Country, on_delete=models.SET_NULL, null=True, blank=True
+    )
     owner = models.ManyToManyField("core.User")
 
     # Fields
@@ -130,7 +127,8 @@ class Restaurant(models.Model):
     def get_htmx_delete_url(self):
         return reverse("restaurant_Restaurant_htmx_delete", args=(self.pk,))
 
-''' 
+
+""" 
 class Chef(User):
 
     # Relationships
@@ -159,27 +157,29 @@ class Chef(User):
     def get_htmx_delete_url(self):
         return reverse("restaurant_Chef_htmx_delete", args=(self.pk,))
 
- '''
- 
+ """
+
+
 class Staff(User):
-    
     role_choices = (
-        ('chef', _('Chef')),
-        ('sous_chef', _('Sous Chef')),
-        ('line_cook', _('Line Cook')),
-        ('restaurant_manager', _('Restaurant Manager')),
-        ('cashier', _('Cashier')),
-        ('assistant_restaurant_manager', _('Assistant Restaurant Manager')),
-        ('host', _('Host')),
-        ('kitchen_porter', _('Kitchen Porter')),
-        ('server', _('Server')),
-        ('dish_washer', _('Dish Washer'))
+        ("chef", _("Chef")),
+        ("sous_chef", _("Sous Chef")),
+        ("line_cook", _("Line Cook")),
+        ("restaurant_manager", _("Restaurant Manager")),
+        ("cashier", _("Cashier")),
+        ("assistant_restaurant_manager", _("Assistant Restaurant Manager")),
+        ("host", _("Host")),
+        ("kitchen_porter", _("Kitchen Porter")),
+        ("server", _("Server")),
+        ("dish_washer", _("Dish Washer")),
     )
-    
+
     # Fields
     role = models.CharField(max_length=28, choices=role_choices, blank=True, null=True)
     # Relationships
-    restaurants = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE, blank=True, null=True)
+    restaurants = models.ForeignKey(
+        "restaurants.Restaurant", on_delete=models.CASCADE, blank=True, null=True
+    )
 
     # Fields
     # created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -205,129 +205,127 @@ class Staff(User):
         return reverse("restaurant_Staff_htmx_delete", args=(self.pk,))
 
 
-
-'''
+"""
     The models below are the proxy models that are linked to the staff models.
     No need to create a separate model for every staff-type.
-'''
+"""
+
+
 class RestaurantManager(Staff):
-    objects = Staff.objects.filter(role = "restaurant_manager")
-    
+    objects = Staff.objects.filter(role="restaurant_manager")
+
     class Meta:
         proxy = True
         verbose_name = "Restaurant Manager"
         verbose_name_plural = "Restaurant Managers"
-        
+
     def works_at(self):
         return f"{self.email} manages {self.restaurants}"
 
 
 class AssistantRestaurantManager(Staff):
-    objects = Staff.objects.filter(role = "assistant_restaurant_manager")
-    
+    objects = Staff.objects.filter(role="assistant_restaurant_manager")
+
     class Meta:
         proxy = True
         verbose_name = "Assistant Restaurant Manager"
         verbose_name_plural = "Assistant Restaurant Managers"
-        
+
     def works_at(self):
         return f"{self.email} assists restaurant manager at {self.restaurants}"
-    
-    
+
+
 class Chef(Staff):
-    objects = Staff.objects.filter(role = "chef")
-    
+    objects = Staff.objects.filter(role="chef")
+
     class Meta:
         proxy = True
         verbose_name = "Chef"
         verbose_name_plural = "Chefs"
-        
+
     def works_at(self):
         return f"{self.email} works at {self.restaurants}"
-    
+
 
 class SousChef(Staff):
-    objects = Staff.objects.filter(role = "sous_chef")
-    
+    objects = Staff.objects.filter(role="sous_chef")
+
     class Meta:
         proxy = True
         verbose_name = "Sous Chef"
         verbose_name_plural = "Sous Chefs"
-        
+
     def works_at(self):
         return f"{self.email} works at {self.restaurants}"
 
 
 class LineCook(Staff):
-    objects = Staff.objects.filter(role = "line_cook")
-    
+    objects = Staff.objects.filter(role="line_cook")
+
     class Meta:
         proxy = True
         verbose_name = "Line Cook"
         verbose_name_plural = "Line Cooks"
-        
+
     def works_at(self):
         return f"{self.email} works at {self.restaurants}"
 
 
 class Host(Staff):
-    objects = Staff.objects.filter(role = "host")
-    
+    objects = Staff.objects.filter(role="host")
+
     class Meta:
         proxy = True
         verbose_name = "Host"
         verbose_name_plural = "Hosts"
-        
+
     def works_at(self):
         return f"{self.email} works at {self.restaurants}"
 
 
 class Cashier(Staff):
-    objects = Staff.objects.filter(role = "cashier")
-    
+    objects = Staff.objects.filter(role="cashier")
+
     class Meta:
         proxy = True
         verbose_name = "Cashier"
         verbose_name_plural = "Cashiers"
-        
+
     def works_at(self):
         return f"{self.email} works at {self.restaurants}"
-    
-    
+
+
 class KitchenPorter(Staff):
-    objects = Staff.objects.filter(role = "kitchen_porter")
-    
+    objects = Staff.objects.filter(role="kitchen_porter")
+
     class Meta:
         proxy = True
         verbose_name = "Kitchen Porter"
         verbose_name_plural = "Kitchen Porters"
-        
+
     def works_at(self):
         return f"{self.email} works at {self.restaurants}"
-    
+
 
 class Server(Staff):
-    objects = Staff.objects.filter(role = "server")
-    
+    objects = Staff.objects.filter(role="server")
+
     class Meta:
         proxy = True
         verbose_name = "Server"
         verbose_name_plural = "Servers"
-        
+
     def works_at(self):
         return f"{self.email} works at {self.restaurants}"
-    
-    
+
+
 class DishWasher(Staff):
-    objects = Staff.objects.filter(role = "dish_washer")
-    
+    objects = Staff.objects.filter(role="dish_washer")
+
     class Meta:
         proxy = True
         verbose_name = "Dish Washer"
         verbose_name_plural = "Dish Washers"
-        
+
     def works_at(self):
         return f"{self.email} works at {self.restaurants}"
-    
-     
- 

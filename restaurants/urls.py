@@ -15,6 +15,26 @@ urlpatterns = (
     path("", include("restaurants.pages", namespace="pages")),
     path("api/v1/", include(router.urls)),
     path(
+        "signup/",
+        views.SignupView.as_view(),
+        name="restaurant_signup",
+    ),
+    path(
+        "email_verification/",
+        views.EmailVerificationView.as_view(),
+        name="restaurant_email_verification",
+    ),
+    path(
+        "onboarding/",
+        views.OnboardingView.as_view(),
+        name="restaurant_onboarding",
+    ),
+    path(
+        "onboarding/wizard",
+        views.OnboardingWizardView.as_view(),
+        name="restaurant_onboarding_wizard",
+    ),
+    path(
         "Ingredient/",
         views.IngredientListView.as_view(),
         name="restaurant_Ingredient_list",
@@ -39,7 +59,11 @@ urlpatterns = (
         views.IngredientDeleteView.as_view(),
         name="restaurant_Ingredient_delete",
     ),
-    path("Menu/", views.MenuListView.as_view(), name="restaurant_Menu_list"),
+    path(
+        "Menu/",
+        views.MenuListView.as_view(),
+        name="restaurant_Menu_list",
+    ),
     path(
         "Menu/create/",
         views.MenuCreateView.as_view(),
@@ -110,7 +134,11 @@ urlpatterns = (
         views.RestaurantDeleteView.as_view(),
         name="restaurant_Restaurant_delete",
     ),
-    path("Chef/", views.ChefListView.as_view(), name="restaurant_Chef_list"),
+    path(
+        "Chef/",
+        views.ChefListView.as_view(),
+        name="restaurant_Chef_list",
+    ),
     path(
         "Chef/create/",
         views.ChefCreateView.as_view(),
@@ -131,7 +159,11 @@ urlpatterns = (
         views.ChefDeleteView.as_view(),
         name="restaurant_Chef_delete",
     ),
-    path("Staff/", views.StaffListView.as_view(), name="restaurant_Staff_list"),
+    path(
+        "Staff/",
+        views.StaffListView.as_view(),
+        name="restaurant_Staff_list",
+    ),
     path(
         "Staff/create/",
         views.StaffCreateView.as_view(),

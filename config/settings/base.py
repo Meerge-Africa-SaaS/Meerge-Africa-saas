@@ -23,46 +23,50 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 
-INSTALLED_APPS = [
-                     "home",
-                     "search",
-                     "wagtail.contrib.forms",
-                     "wagtail.contrib.redirects",
-                     "wagtail.embeds",
-                     "wagtail.sites",
-                     "wagtail.users",
-                     "wagtail.snippets",
-                     "wagtail.documents",
-                     "wagtail.images",
-                     "wagtail.search",
-                     "wagtail.admin",
-                     "wagtail",
-                     "modelcluster",
-                     "taggit",
-                     "django.contrib.admin",
-                     "django.contrib.auth",
-                     "django.contrib.contenttypes",
-                     "django.contrib.sessions",
-                     "django.contrib.messages",
-                     "django.contrib.staticfiles",
-                 ]  + [
-                     # packages
-                     'rest_framework',
-                     'django_htmx',
-                     'allauth',
-                     'allauth.account',
-                     'allauth.socialaccount',
-                     'allauth.socialaccount.providers.google',
-                     'allauth.socialaccount.providers.facebook',
-                     'ninja',
-                     'phonenumber_field',
-                 ] + [
-                     # core
-                     "core.apps.CoreConfig",
-                 ] + [
-                     # apps
-                     
-                 ]
+INSTALLED_APPS = (
+    [
+        "home",
+        "search",
+        "wagtail.contrib.forms",
+        "wagtail.contrib.redirects",
+        "wagtail.embeds",
+        "wagtail.sites",
+        "wagtail.users",
+        "wagtail.snippets",
+        "wagtail.documents",
+        "wagtail.images",
+        "wagtail.search",
+        "wagtail.admin",
+        "wagtail",
+        "modelcluster",
+        "taggit",
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "django.contrib.staticfiles",
+    ]
+    + [
+        # packages
+        "rest_framework",
+        "django_htmx",
+        "allauth",
+        "allauth.account",
+        "allauth.socialaccount",
+        "allauth.socialaccount.providers.google",
+        "allauth.socialaccount.providers.facebook",
+        "ninja",
+        "phonenumber_field",
+    ]
+    + [
+        # core
+        "core.apps.CoreConfig",
+    ]
+    + [
+        # apps
+    ]
+)
 # Customer User Model
 AUTH_USER_MODEL = "core.User"
 
@@ -70,23 +74,22 @@ AUTH_USER_MODEL = "core.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'core.CustomFiles.CustomBackend.PhoneAuthBackend',
-    'core.CustomFiles.CustomBackend.EmailAuthBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "core.CustomFiles.CustomBackend.PhoneAuthBackend",
+    "core.CustomFiles.CustomBackend.EmailAuthBackend",
 ]
 
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    #"django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
-    
     "allauth.account.middleware.AccountMiddleware",
-    #"allauth.usersessions.middleware.UserSessionsMiddleware", May need installation before we use.
+    # "allauth.usersessions.middleware.UserSessionsMiddleware", May need installation before we use.
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -101,18 +104,20 @@ MOBILE_APP_SCHEME = "app://localhost:5000/"
 WEB_APP_SCHEME = "http://localhost:8000/"
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'core.CustomFiles.CustomBackend.PhoneAuthBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+    "core.CustomFiles.CustomBackend.PhoneAuthBackend",
 ]
 
-ACCOUNT_ADAPTER = 'core.CustomFiles.CustomAdapterFile.CustomAccountAdapter'
+ACCOUNT_ADAPTER = "core.CustomFiles.CustomAdapterFile.CustomAccountAdapter"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "Meerge Africa"
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
-ACCOUNT_EMAIL_CONFIRMATION_URL = WEB_APP_SCHEME+'api/authenticate/auth-api/confirm-email/'
+ACCOUNT_EMAIL_CONFIRMATION_URL = (
+    WEB_APP_SCHEME + "api/authenticate/auth-api/confirm-email/"
+)
 
 
 ######### ALL-AUTH PROVIDERS   ########
@@ -121,57 +126,48 @@ client_id = ""
 client_secret = ""
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile'
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/userinfo.profile",
 ]
 # Facebook provider details
 
 # Provider settings
 SOCIALACCOUNT_PROVIDERS = {
-  'google': {
-        'SCOPE': [
-            'profile',
-            'email',
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
+        "AUTH_PARAMS": {
+            "access_type": "online",
         },
-        'OAUTH_PKCE_ENABLED': True,
-        'EMAIL_AUTHENTICATION': True,
-        'FETCH_USERINFO' : True,
-        
-        'REDIRECT_URI': 'http://localhost:8000/accounts/google/login/callback/'
+        "OAUTH_PKCE_ENABLED": True,
+        "EMAIL_AUTHENTICATION": True,
+        "FETCH_USERINFO": True,
+        "REDIRECT_URI": "http://localhost:8000/accounts/google/login/callback/",
     },
-  
-  'facebook': {
-        'METHOD': 'oauth2',  # Set to 'js_sdk' to use the Facebook connect SDK
-        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
-        'SCOPE': [
-            'email', 
-            'public_profile'
+    "facebook": {
+        "METHOD": "oauth2",  # Set to 'js_sdk' to use the Facebook connect SDK
+        "SDK_URL": "//connect.facebook.net/{locale}/sdk.js",
+        "SCOPE": ["email", "public_profile"],
+        "AUTH_PARAMS": {"auth_type": "reauthenticate"},
+        "INIT_PARAMS": {"cookie": True},
+        "FIELDS": [
+            "id",
+            "first_name",
+            "last_name",
+            "middle_name",
+            "name",
+            "name_format",
+            "picture",
+            "short_name",
         ],
-        'AUTH_PARAMS': {
-            'auth_type': 'reauthenticate'
-            },
-        'INIT_PARAMS': {
-            'cookie': True
-            },
-        'FIELDS': [
-            'id',
-            'first_name',
-            'last_name',
-            'middle_name',
-            'name',
-            'name_format',
-            'picture',
-            'short_name'
-        ],
-        'EXCHANGE_TOKEN': True,
+        "EXCHANGE_TOKEN": True,
         #'LOCALE_FUNC': 'path.to.callable',
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v20.0',
-        'GRAPH_API_URL': 'https://graph.facebook.com/v20.0',
-    }
+        "VERIFIED_EMAIL": False,
+        "VERSION": "v20.0",
+        "GRAPH_API_URL": "https://graph.facebook.com/v20.0",
+    },
 }
 
 
