@@ -13,14 +13,18 @@ function collapseSidebar() {
 window.addEventListener('resize', () => {
     if (window.innerWidth < 1024) {
         collapseSidebar();
+    } else if (window.innerWidth >= 1024) {
+        sidebar.classList.add('active');
     }
 });
 
 window.addEventListener("load", () => {
     if (window.innerWidth < 1024) {
         collapseSidebar()
+    } else if (window.innerWidth >= 1024) {
+        sidebar.classList.add('active')
     }
-    collapseSidebar()
+    // collapseSidebar()
 })
 
 sidebarOverlay?.addEventListener('click', () => {
