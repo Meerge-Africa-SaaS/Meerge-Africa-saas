@@ -11,7 +11,6 @@ router = routers.DefaultRouter()
 router.register("User", api.UserViewSet)
 
 ### NINJA API ROUTES
-
 api = NinjaAPI(auth=AuthBearer())
 api.add_router("auth-api", auth_router)
 

@@ -4,7 +4,6 @@ from . import models
 from . import forms
 
 
-
 class SupplierCreateView(generic.TemplateView):
     template_name = "inventory/supplier_registration/base.html"
 

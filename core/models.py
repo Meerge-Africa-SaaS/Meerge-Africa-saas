@@ -7,9 +7,9 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 # External
-from phonenumber_field.modelfields import PhoneNumberField
 
 USERNAME_REGEX = "^[a-zA-Z0-9.@_]*$"
 
@@ -60,6 +60,12 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         verbose_name=_("email address"),
         max_length=256,
         unique=True,
+    )
+    phone_number = PhoneNumberField(
+        verbose_name=_("phone number"),
+        region="NG",
+        unique=True,
+        blank=True,
     )
     username = models.CharField(
         db_index=True,
