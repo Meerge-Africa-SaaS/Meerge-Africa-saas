@@ -1,14 +1,11 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework import routers
 
-from . import api
-from . import views
-from . import htmx
-
+from . import api, htmx, views
 
 router = routers.DefaultRouter()
-router.register("Order", api.OrderViewSet)
-router.register("Customer", api.CustomerViewSet)
+# router.register("Order", api.OrderViewSet)
+# router.register("Customer", api.CustomerViewSet)
 
 urlpatterns = (
     path("api/v1/", include(router.urls)),
