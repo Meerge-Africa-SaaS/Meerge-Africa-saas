@@ -15,4 +15,11 @@ class DashboardView(generic.TemplateView):
         return context
 
 
-urlpatterns = (path("", DashboardView.as_view()),)
+class SettingsView(generic.TemplateView):
+    template_name = "restaurants/pages/settings.html"
+
+
+urlpatterns = (
+    path("", DashboardView.as_view(), name="dashboard"),
+    path("settings/", SettingsView.as_view(), name="settings"),
+)

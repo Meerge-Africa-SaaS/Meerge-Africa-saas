@@ -9,7 +9,7 @@
         <span>Africa</span>
       </h1>
     </div>
-    <ul id="sidebar-list" class="group" role="navigation" data-active-tab="{{ active_tab }}">
+    <ul id="sidebar-list" class="group" hx-boost="true" role="navigation" data-active-tab="{{ active_tab }}">
       <li class="sidebar__item">
         <a class="group-data-[active-tab='dashboard']:tab-active" href="{% url 'restaurants:dashboard' %}">
           {% include 'svg/dashboard.html' %}
@@ -59,7 +59,7 @@
         </a>
       </li>
       <li class="sidebar__item">
-        <a class="group-data-[active-tab='settings']:tab-active" href="">
+        <a class="group-data-[active-tab='settings']:tab-active" href="{% url 'restaurants:settings' %}">
           {% include 'svg/settings.html' %}
           <span>Settings</span>
         </a>
