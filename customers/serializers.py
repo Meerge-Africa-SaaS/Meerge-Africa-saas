@@ -4,7 +4,6 @@ from . import models
 
 
 class OrderSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Order
         fields = [
@@ -14,8 +13,8 @@ class OrderSerializer(serializers.ModelSerializer):
             "last_updated",
         ]
 
-class CustomerSerializer(serializers.ModelSerializer):
 
+class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Customer
         fields = [

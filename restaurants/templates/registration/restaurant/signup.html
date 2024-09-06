@@ -1,0 +1,42 @@
+{% extends 'registration/restaurant/base.html' %}
+{% load wagtailadmin_tags %}
+
+{% block title %}
+  Restaurant Signup
+{% endblock %}
+
+{% block form_title %}
+  <h1 class="text-2xl font-bold">Let's Get You Started.</h1>
+{% endblock %}
+{% block form_subtitle %}
+  <p class="text-lg font-light">Enter your credentials to get started.</p>
+{% endblock %}
+
+{% block form_fields %}
+  <div class="flex flex-col sm:flex-row sm:gap-2 sm:justify-between sm:items-center w-full mt-4">
+    <div class="form-group min-w-full sm:min-w-40">
+      {% formattedfield field=form.first_name %}
+    </div>
+    <div class="form-group min-w-full sm:min-w-40">
+      {% formattedfield field=form.last_name %}
+    </div>
+  </div>
+  <div class="form-group min-w-full">
+    {% include 'components/phone-field.html' with field=form.phone_number %}
+  </div>
+  <div class="form-group min-w-full">
+    {% formattedfield field=form.email %}
+  </div>
+  <div class="form-group min-w-full">
+    {% include 'components/password-field.html' with field=form.password %}
+  </div>
+{% endblock %}
+
+{% block form_btns %}
+  <button type="submit" class="btn btn-primary">Create Account</button>
+  <div class="text-left">
+    <p class="text-sm text-gray-700 font-medium">
+      Already have an account? <a href="#" class="text-secondary">Login</a>
+    </p>
+  </div>
+{% endblock %}

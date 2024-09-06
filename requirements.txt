@@ -6,3 +6,10 @@ django-htmx
 PyJWT
 cryptography
 django-cities-light
+django-ninja
+django-phonenumber-field
+secrets
+django-browser-reload
+django-compressor
+django-formtools
+django-phonenumber-field[phonenumbers]

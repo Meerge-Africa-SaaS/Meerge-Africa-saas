@@ -5,7 +5,6 @@ from . import models
 
 
 class IngredientAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Ingredient
         fields = "__all__"
@@ -26,7 +25,6 @@ class IngredientAdmin(admin.ModelAdmin):
 
 
 class MenuAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Menu
         fields = "__all__"
@@ -51,7 +49,6 @@ class MenuAdmin(admin.ModelAdmin):
 
 
 class MenuItemAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.MenuItem
         fields = "__all__"
@@ -74,7 +71,6 @@ class MenuItemAdmin(admin.ModelAdmin):
 
 
 class RestaurantAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Restaurant
         fields = "__all__"
@@ -94,10 +90,9 @@ class RestaurantAdmin(admin.ModelAdmin):
         "name",
         "last_updated",
     ]
-
+''' 
 
 class ChefAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Chef
         fields = "__all__"
@@ -114,9 +109,8 @@ class ChefAdmin(admin.ModelAdmin):
         "last_updated",
     ]
 
-
+ '''
 class StaffAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Staff
         fields = "__all__"
@@ -138,5 +132,5 @@ admin.site.register(models.Ingredient, IngredientAdmin)
 admin.site.register(models.Menu, MenuAdmin)
 admin.site.register(models.MenuItem, MenuItemAdmin)
 admin.site.register(models.Restaurant, RestaurantAdmin)
-admin.site.register(models.Chef, ChefAdmin)
+#admin.site.register(models.Chef, ChefAdmin)
 admin.site.register(models.Staff, StaffAdmin)
