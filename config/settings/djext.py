@@ -11,9 +11,8 @@ INSTALLED_APPS.extend(
 GRAPH_MODELS = {
     "app_labels": [
         "core",
-        # "restaurant",
-        # "world",
-        # "customers",
+        "geo",
+        "restaurant",
         # "inventory",
         # "orders",
     ],

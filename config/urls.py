@@ -5,16 +5,24 @@ from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
+from config import api
 from search import views as search_views
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
-    path("search/", search_views.search, name="search"),
-    path("", include("home.urls")),
-    path("core/", include("core.urls")),
-    path("restaurant/", include("restaurants.urls")),
+    path("search/", search_views.search, name="search"),\
+  
+    #path('', include('home.urls')),
+    path('api/', include('core.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('', include(api)),
+    path('accounts/', include('allauth.urls')),
+    path('restaurant/', include('restaurants.urls')),
+    path('customers/', include('customers.urls')),
+    path('inventory/', include('inventory.urls')),
+    path('orders/', include('orders.urls')),
 ]
 
 
