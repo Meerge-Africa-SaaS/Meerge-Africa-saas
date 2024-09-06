@@ -37,9 +37,7 @@ class OnboardingWizardView(SessionWizardView):
         "step2A": "registration/restaurant/onboarding_step2A.html",
         "step2B": "registration/restaurant/onboarding_step2B.html",
     }
-    file_storage = FileSystemStorage(
-        location=os.path.join(settings.MEDIA_ROOT, "temp")
-    )
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "temp"))
     condition_dict = {
         "step2A": show_cac_field_condition,
         "step2B": lambda wizard: not show_cac_field_condition(wizard),
@@ -164,6 +162,7 @@ class RestaurantDeleteView(generic.DeleteView):
     success_url = reverse_lazy("restaurant_Restaurant_list")
 
 
+""" 
 class ChefListView(generic.ListView):
     model = models.Chef
     form_class = forms.ChefForm
@@ -188,6 +187,7 @@ class ChefUpdateView(generic.UpdateView):
 class ChefDeleteView(generic.DeleteView):
     model = models.Chef
     success_url = reverse_lazy("restaurant_Chef_list")
+ """
 
 
 class StaffListView(generic.ListView):

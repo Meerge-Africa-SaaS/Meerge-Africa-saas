@@ -3,6 +3,7 @@ module.exports = {
         './config/templates/**/*.html',
         './inventory/templates/**/*.html',
         './restaurants/templates/**/*.html',
+        './core/templates/**/*.html',
         './node_modules/flowbite/**/*.js'
     ],
     plugins: [

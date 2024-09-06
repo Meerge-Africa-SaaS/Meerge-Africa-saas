@@ -1,3 +1,4 @@
+import secrets
 import uuid
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
@@ -8,11 +9,13 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
+# External
+
 USERNAME_REGEX = "^[a-zA-Z0-9.@_]*$"
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, username, phone_number, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -23,24 +26,24 @@ class UserManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             username=username,
+            phone_number=phone_number,
         )
         user.set_password(password)
         user.save(using=self._db)
-        user.is_active = user.is_admin = user.is_staff = user.is_superuser = (
-            True
-        )
+        user.is_active = user.is_admin = user.is_staff = user.is_superuser = True
         user.save(using=self._db)
 
         return user
 
-    def create_superuser(self, email, username, password=None):
+    def create_superuser(self, email, username, phone_number, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
         user = self.create_user(
             email,
-            username,
+            username=username,
+            phone_number=phone_number,
             password=password,
         )
         user.is_admin = True
@@ -69,6 +72,8 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         verbose_name=_("username"),
         max_length=50,
         unique=True,
+        blank=True,
+        null=True,
         validators=[
             RegexValidator(
                 regex=USERNAME_REGEX,
@@ -80,6 +85,15 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         ],
         error_messages={
             "unique": _("A user with that username already exists."),
+        },
+    )
+    phone_number = PhoneNumberField(
+        blank=True,
+        null=True,
+        unique=True,
+        verbose_name=_("phone number"),
+        error_messages={
+            "unique": _("A user with that phone number already exists."),
         },
     )
 
@@ -117,3 +131,31 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
 
     def get_htmx_delete_url(self):
         return reverse("core_User_htmx_delete", args=(self.pk,))
+
+
+class EmailVerification(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="email_verification_codes"
+    )
+    email_code = models.CharField(max_length=6, default=secrets.token_hex(3))
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return self.user.email
+
+
+"""
+class SmsVerification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
+    phone_number = PhoneNumberField()
+    sms_code = models.CharField(max_length=6, default=secrets.token_hex(3))
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+    
+    def __str__(self):
+        if user:
+            return self.user.email or self.user.phone_number or None
+        else:
+            return phone_number or None
+"""

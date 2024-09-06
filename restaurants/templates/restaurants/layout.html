@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}
+h-screen w-screen max-w-[100vw] max-h-[100vh] overflow-clip flex justify-start items-start
+{% endblock body_class %}
+
+{% block extra_js %}
+  <script src="{% static 'js/sidebar.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+  {% block sidebar %}
+    {% include 'restaurants/components/sidebar.html' %}
+  {% endblock %}
+  <div class="flex-1 min-w-0 w-full h-full flex flex-col">
+    {% block navbar %}
+      {% include 'restaurants/components/navbar.html' %}
+    {% endblock %}
+    <main class="{% block main_class %}p-4 min-w-0{% endblock %}">
+      {% block main %}
+  
+      {% endblock %}
+    </main>
+  </div>
+{% endblock %}

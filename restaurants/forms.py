@@ -186,6 +186,8 @@ class RestaurantForm(forms.ModelForm):
         self.fields["owner"].queryset = User.objects.all()
 
 
+""" 
+
 class ChefForm(forms.ModelForm):
     class Meta:
         model = models.Chef
@@ -196,6 +198,8 @@ class ChefForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ChefForm, self).__init__(*args, **kwargs)
         self.fields["restaurants"].queryset = Restaurant.objects.all()
+
+ """
 
 
 class StaffForm(forms.ModelForm):

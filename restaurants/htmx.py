@@ -214,7 +214,7 @@ class HTMXRestaurantDeleteView(generic.DeleteView):
         super().form_valid(form)
         return HttpResponse()
 
-
+''' 
 class HTMXChefListView(generic.ListView):
     model = models.Chef
     form_class = forms.ChefForm
@@ -265,7 +265,7 @@ class HTMXChefDeleteView(generic.DeleteView):
     def form_valid(self, form):
         super().form_valid(form)
         return HttpResponse()
-
+ '''
 
 class HTMXStaffListView(generic.ListView):
     model = models.Staff

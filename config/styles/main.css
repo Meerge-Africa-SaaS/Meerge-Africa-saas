@@ -1,6 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "./components/sidebar.css";
+@import "./components/navbar.css";
+@import "./components/stats.css";
+@import "./components/top-menu.css";
+@import "./components/new-orders.css";
+@import "./components/sales-history.css";
 
 .help {
     @apply text-xs text-gray-500

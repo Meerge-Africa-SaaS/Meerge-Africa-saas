@@ -1,10 +1,7 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework import routers
 
-from . import api
-from . import views
-from . import htmx
-
+from . import api, htmx, views
 
 router = routers.DefaultRouter()
 router.register("Category", api.CategoryViewSet)
@@ -63,9 +60,7 @@ urlpatterns = (
     ),
     path("Stock/", views.StockListView.as_view(), name="inventory_Stock_list"),
     path(
-        "Stock/create/",
-        views.StockCreateView.as_view(),
-        name="inventory_Stock_create",
+        "Stock/create/", views.StockCreateView.as_view(), name="inventory_Stock_create"
     ),
     path(
         "Stock/detail/<int:pk>/",
@@ -82,11 +77,7 @@ urlpatterns = (
         views.StockDeleteView.as_view(),
         name="inventory_Stock_delete",
     ),
-    path(
-        "Supplier/",
-        views.SupplierListView.as_view(),
-        name="inventory_Supplier_list",
-    ),
+    path("Supplier/", views.SupplierListView.as_view(), name="inventory_Supplier_list"),
     path(
         "Supplier/create/",
         views.SupplierCreateView.as_view(),
@@ -133,77 +124,77 @@ urlpatterns = (
         name="inventory_SupplyManager_delete",
     ),
     path(
-        "htmx/Category/",
+        "inventory/htmx/Category/",
         htmx.HTMXCategoryListView.as_view(),
         name="inventory_Category_htmx_list",
     ),
     path(
-        "htmx/Category/create/",
+        "inventory/htmx/Category/create/",
         htmx.HTMXCategoryCreateView.as_view(),
         name="inventory_Category_htmx_create",
     ),
     path(
-        "htmx/Category/delete/<int:pk>/",
+        "inventory/htmx/Category/delete/<int:pk>/",
         htmx.HTMXCategoryDeleteView.as_view(),
         name="inventory_Category_htmx_delete",
     ),
     path(
-        "htmx/Item/",
+        "inventory/htmx/Item/",
         htmx.HTMXItemListView.as_view(),
         name="inventory_Item_htmx_list",
     ),
     path(
-        "htmx/Item/create/",
+        "inventory/htmx/Item/create/",
         htmx.HTMXItemCreateView.as_view(),
         name="inventory_Item_htmx_create",
     ),
     path(
-        "htmx/Item/delete/<int:pk>/",
+        "inventory/htmx/Item/delete/<int:pk>/",
         htmx.HTMXItemDeleteView.as_view(),
         name="inventory_Item_htmx_delete",
     ),
     path(
-        "htmx/Stock/",
+        "inventory/htmx/Stock/",
         htmx.HTMXStockListView.as_view(),
         name="inventory_Stock_htmx_list",
     ),
     path(
-        "htmx/Stock/create/",
+        "inventory/htmx/Stock/create/",
         htmx.HTMXStockCreateView.as_view(),
         name="inventory_Stock_htmx_create",
     ),
     path(
-        "htmx/Stock/delete/<int:pk>/",
+        "inventory/htmx/Stock/delete/<int:pk>/",
         htmx.HTMXStockDeleteView.as_view(),
         name="inventory_Stock_htmx_delete",
     ),
     path(
-        "htmx/Supplier/",
+        "inventory/htmx/Supplier/",
         htmx.HTMXSupplierListView.as_view(),
         name="inventory_Supplier_htmx_list",
     ),
     path(
-        "htmx/Supplier/create/",
-        htmx.HtmxSupplierRegistrationWizardView.as_view(),
+        "inventory/htmx/Supplier/create/",
+        htmx.HTMXSupplierCreateView.as_view(),
         name="inventory_Supplier_htmx_create",
     ),
     path(
-        "htmx/Supplier/delete/<int:pk>/",
+        "inventory/htmx/Supplier/delete/<int:pk>/",
         htmx.HTMXSupplierDeleteView.as_view(),
         name="inventory_Supplier_htmx_delete",
     ),
     path(
-        "htmx/SupplyManager/",
+        "inventory/htmx/SupplyManager/",
         htmx.HTMXSupplyManagerListView.as_view(),
         name="inventory_SupplyManager_htmx_list",
     ),
     path(
-        "htmx/SupplyManager/create/",
+        "inventory/htmx/SupplyManager/create/",
         htmx.HTMXSupplyManagerCreateView.as_view(),
         name="inventory_SupplyManager_htmx_create",
     ),
     path(
-        "htmx/SupplyManager/delete/<int:pk>/",
+        "inventory/htmx/SupplyManager/delete/<int:pk>/",
         htmx.HTMXSupplyManagerDeleteView.as_view(),
         name="inventory_SupplyManager_htmx_delete",
     ),
