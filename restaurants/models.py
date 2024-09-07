@@ -160,7 +160,7 @@ class Chef(User):
  """
 
 
-class Staff(User):
+class Staff(User):  # type: ignore
     role_choices = (
         ("chef", _("Chef")),
         ("sous_chef", _("Sous Chef")),

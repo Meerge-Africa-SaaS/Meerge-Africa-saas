@@ -13,7 +13,7 @@ h-screen w-screen max-w-[100vw] max-h-[100vh] overflow-clip flex justify-start i
   {% block sidebar %}
     {% include 'restaurants/components/sidebar.html' %}
   {% endblock %}
-  <div class="flex-1 min-w-0 w-full h-full flex flex-col">
+  <div class="flex-1 min-w-0 w-full h-full flex flex-col relative">
     {% block navbar %}
       {% include 'restaurants/components/navbar.html' %}
     {% endblock %}

@@ -12,17 +12,16 @@ urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
-    path("search/", search_views.search, name="search"),\
-  
-    #path('', include('home.urls')),
-    path('api/', include('core.urls')),
-    path('accounts/', include('allauth.urls')),
-    path('', include(api)),
-    path('accounts/', include('allauth.urls')),
-    path('restaurant/', include('restaurants.urls')),
-    path('customers/', include('customers.urls')),
-    path('inventory/', include('inventory.urls')),
-    path('orders/', include('orders.urls')),
+    path("search/", search_views.search, name="search"),
+    # path('', include('home.urls')),
+    path("api/", include("core.urls")),
+    path("accounts/", include("allauth.urls")),
+    path("", include(api)),
+    path("accounts/", include("allauth.urls")),
+    path("restaurant/", include("restaurants.urls")),
+    path("customers/", include("customers.urls")),
+    path("inventory/", include("inventory.urls")),
+    path("orders/", include("orders.urls")),
 ]
 
 
@@ -33,9 +32,7 @@ if settings.DEBUG:
     # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns.append(
-        path("__reload__/", include("django_browser_reload.urls"))
-    )
+    urlpatterns.append(path("__reload__/", include("django_browser_reload.urls")))
 
 urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to
