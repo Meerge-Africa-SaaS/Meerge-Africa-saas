@@ -1,15 +1,15 @@
-.toast.info {
-  background-color: #3498db;
+.toastify.info {
+  @apply bg-gradient-to-tr from-blue-400 to-blue-600;
 }
 
-.toast.success {
-  background-color: #2ecc71;
+.toastify.success {
+  @apply bg-gradient-to-tr from-green-400 to-green-600;
 }
 
-.toast.warning {
-  background-color: #f1c40f;
+.toastify.warning {
+  @apply bg-gradient-to-tr from-yellow-400 to-yellow-600;
 }
 
-.toast.error {
-  background-color: #e74c3c;
+.toastify.error {
+  @apply bg-gradient-to-tr from-red-400 to-red-600;
 }

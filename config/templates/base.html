@@ -85,9 +85,8 @@
             close: true,
             gravity: "top",
             position: "right",
-            backgroundColor: "var(--color-primary)",
             stopOnFocus: true,
-            className: "toast {{ message.tags }}"
+            className: "{{ message.tags }}"
         }).showToast();
         {% endfor %}
     </script>
