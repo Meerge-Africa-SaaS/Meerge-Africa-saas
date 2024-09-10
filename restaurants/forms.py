@@ -1,7 +1,8 @@
 from typing import Any
 
 from django import forms
-from phonenumber_field.formfields import PhoneNumberField
+
+from config.form_fields import PhoneNumberField
 
 # from world.models import City
 from core.models import User
@@ -42,15 +43,6 @@ def add_placeholder(field: str, form: forms.Form) -> None:
     form.fields[field].widget.attrs["placeholder"] = PLACEHOLDERS[field]
 
 
-class PhoneField(PhoneNumberField):
-    def to_python(self, value):
-        if value.startswith("0"):
-            value = f"+234{value[1:]}"
-        else:
-            value = f"+234{value}"
-        return super().to_python(value)
-
-
 class SignupForm(forms.ModelForm):
     class Meta:
         model = User
@@ -62,7 +54,7 @@ class SignupForm(forms.ModelForm):
             "password",
         ]
         field_classes = {
-            "phone_number": PhoneField,
+            "phone_number": PhoneNumberField,
         }
         widgets = {
             "password": forms.PasswordInput(
