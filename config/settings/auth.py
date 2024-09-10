@@ -1,7 +1,13 @@
 # ruff: noqa: F403,F405
 from .base import *
 
-INSTALLED_APPS += []
+INSTALLED_APPS += [
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.google",
+]
 ###################################################
 ############    ALLAUTH SETTINGS     ##############
 ###################################################
