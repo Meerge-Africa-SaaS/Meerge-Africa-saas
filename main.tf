@@ -36,3 +36,11 @@ module "vpc-infra" {
   public_subnet_cidrs  = local.public_subnet_cidrs
   private_subnet_cidrs = local.private_subnet_cidrs
 }
+
+module "webserver-infra" {
+  source = "./iac/aws/modules/web"
+
+  # Web Server (EC2 Isntances) Input Vars
+  maow_vpc_id         = module.vpc-infra.mao_vpc_id
+  maow_public_subnets = module.vpc-infra.mao_public_subnets
+}
