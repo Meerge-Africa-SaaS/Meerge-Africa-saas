@@ -1,5 +1,8 @@
-from .base import INSTALLED_APPS
+# ruff: noqa: F405
+from .base import *  # noqa: F403
 
-INSTALLED_APPS += [
-    "restaurants.apps.RestaurantsConfig",
-]
+INSTALLED_APPS.extend(
+    [
+        "restaurants.apps.RestaurantsConfig",
+    ]
+)

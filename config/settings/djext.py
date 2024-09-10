@@ -1,10 +1,13 @@
-from .base import INSTALLED_APPS
+# ruff: noqa: F405
+from .base import *  # noqa: F403
 
 # Django Xtensions
-INSTALLED_APPS += [
-    # extensions
-    "django_extensions",
-]
+INSTALLED_APPS.extend(
+    [
+        # extensions
+        "django_extensions",
+    ]
+)
 GRAPH_MODELS = {
     "app_labels": [
         "core",

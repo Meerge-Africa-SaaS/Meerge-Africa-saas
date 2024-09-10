@@ -3,7 +3,9 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    path("index/", TemplateView.as_view(template_name="index.html"), name="index"),
+    path(
+        "index/", TemplateView.as_view(template_name="index.html"), name="index"
+    ),
     # path('orders/', include('orders.urls')),
     # path('core/', include('core.urls')),
     # path('customers/', include('customers.urls')),

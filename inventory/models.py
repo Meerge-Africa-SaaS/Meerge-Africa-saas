@@ -36,7 +36,9 @@ class Category(models.Model):
 
 class Item(models.Model):
     # Relationships
-    category = models.ForeignKey("inventory.Category", on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(
+        "inventory.Category", on_delete=models.DO_NOTHING
+    )
     supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
 
     # Fields
@@ -131,7 +133,7 @@ class Supplier(models.Model):
         return reverse("inventory_Supplier_htmx_delete", args=(self.pk,))
 
 
-class SupplyManager(User):
+class SupplyManager(User):  # type: ignore
     # Relationships
     supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
 

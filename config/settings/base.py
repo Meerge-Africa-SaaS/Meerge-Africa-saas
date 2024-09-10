@@ -70,15 +70,23 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
+    # "allauth.usersessions.middleware.UserSessionsMiddleware", May need installation before we use.
 ]
 
 ROOT_URLCONF = "config.urls"
+
+
+
+
+
+##### Django stuff continues from here.
 
 TEMPLATES = [
     {
@@ -131,6 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

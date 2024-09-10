@@ -1,7 +1,6 @@
 from django.views import generic
 from django.urls import reverse_lazy
 from django.shortcuts import HttpResponse
-from django.template import Template, RequestContext
 from django.template.response import TemplateResponse
 
 from . import models
@@ -215,7 +214,7 @@ class HTMXRestaurantDeleteView(generic.DeleteView):
         super().form_valid(form)
         return HttpResponse()
 
-
+''' 
 class HTMXChefListView(generic.ListView):
     model = models.Chef
     form_class = forms.ChefForm
@@ -266,7 +265,7 @@ class HTMXChefDeleteView(generic.DeleteView):
     def form_valid(self, form):
         super().form_valid(form)
         return HttpResponse()
-
+ '''
 
 class HTMXStaffListView(generic.ListView):
     model = models.Staff

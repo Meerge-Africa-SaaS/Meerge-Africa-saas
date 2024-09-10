@@ -1,11 +1,14 @@
-from .base import INSTALLED_APPS
+# ruff: noqa: F405
+from .base import *  # noqa: F403
 
-INSTALLED_APPS += [
-    "cities_light",
-    "geo",
-]
+INSTALLED_APPS.extend(
+    [
+        "cities_light",
+        "geo",
+    ]
+)
 
-# CITIES_LIGHT_APP_NAME = "geo"
+CITIES_LIGHT_APP_NAME = "geo"
 CITIES_LIGHT_TRANSLATION_LANGUAGES = [
     "en",
 ]

@@ -80,14 +80,15 @@ target/
 
 ### Django ###
 *.log
-*.pyc
-__pycache__
-local_settings.py
-
-.env
-db.sqlite3
-
 .idea
+*.pyc
+db.sqlite3
+__pycache__
+node_modules
+.env
+.env.*
+!.env.example
+local_settings.py
 
 #iac
 .terraform

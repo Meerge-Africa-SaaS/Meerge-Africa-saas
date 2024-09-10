@@ -1,10 +1,7 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework import routers
 
-from . import api
-from . import views
-from . import htmx
-
+from . import api, htmx, views
 
 router = routers.DefaultRouter()
 router.register("Category", api.CategoryViewSet)
@@ -16,121 +13,113 @@ router.register("SupplyManager", api.SupplyManagerViewSet)
 urlpatterns = (
     path("api/v1/", include(router.urls)),
     path(
-        "inventory/Category/",
+        "Category/",
         views.CategoryListView.as_view(),
         name="inventory_Category_list",
     ),
     path(
-        "inventory/Category/create/",
+        "Category/create/",
         views.CategoryCreateView.as_view(),
         name="inventory_Category_create",
     ),
     path(
-        "inventory/Category/detail/<int:pk>/",
+        "Category/detail/<int:pk>/",
         views.CategoryDetailView.as_view(),
         name="inventory_Category_detail",
     ),
     path(
-        "inventory/Category/update/<int:pk>/",
+        "Category/update/<int:pk>/",
         views.CategoryUpdateView.as_view(),
         name="inventory_Category_update",
     ),
     path(
-        "inventory/Category/delete/<int:pk>/",
+        "Category/delete/<int:pk>/",
         views.CategoryDeleteView.as_view(),
         name="inventory_Category_delete",
     ),
-    path("inventory/Item/", views.ItemListView.as_view(), name="inventory_Item_list"),
+    path("Item/", views.ItemListView.as_view(), name="inventory_Item_list"),
     path(
-        "inventory/Item/create/",
+        "Item/create/",
         views.ItemCreateView.as_view(),
         name="inventory_Item_create",
     ),
     path(
-        "inventory/Item/detail/<int:pk>/",
+        "Item/detail/<int:pk>/",
         views.ItemDetailView.as_view(),
         name="inventory_Item_detail",
     ),
     path(
-        "inventory/Item/update/<int:pk>/",
+        "Item/update/<int:pk>/",
         views.ItemUpdateView.as_view(),
         name="inventory_Item_update",
     ),
     path(
-        "inventory/Item/delete/<int:pk>/",
+        "Item/delete/<int:pk>/",
         views.ItemDeleteView.as_view(),
         name="inventory_Item_delete",
     ),
+    path("Stock/", views.StockListView.as_view(), name="inventory_Stock_list"),
     path(
-        "inventory/Stock/", views.StockListView.as_view(), name="inventory_Stock_list"
+        "Stock/create/", views.StockCreateView.as_view(), name="inventory_Stock_create"
     ),
     path(
-        "inventory/Stock/create/",
-        views.StockCreateView.as_view(),
-        name="inventory_Stock_create",
-    ),
-    path(
-        "inventory/Stock/detail/<int:pk>/",
+        "Stock/detail/<int:pk>/",
         views.StockDetailView.as_view(),
         name="inventory_Stock_detail",
     ),
     path(
-        "inventory/Stock/update/<int:pk>/",
+        "Stock/update/<int:pk>/",
         views.StockUpdateView.as_view(),
         name="inventory_Stock_update",
     ),
     path(
-        "inventory/Stock/delete/<int:pk>/",
+        "Stock/delete/<int:pk>/",
         views.StockDeleteView.as_view(),
         name="inventory_Stock_delete",
     ),
+    path("Supplier/", views.SupplierListView.as_view(), name="inventory_Supplier_list"),
     path(
-        "inventory/Supplier/",
-        views.SupplierListView.as_view(),
-        name="inventory_Supplier_list",
-    ),
-    path(
-        "inventory/Supplier/create/",
+        "Supplier/create/",
         views.SupplierCreateView.as_view(),
         name="inventory_Supplier_create",
     ),
     path(
-        "inventory/Supplier/detail/<int:pk>/",
+        "Supplier/detail/<int:pk>/",
         views.SupplierDetailView.as_view(),
         name="inventory_Supplier_detail",
     ),
     path(
-        "inventory/Supplier/update/<int:pk>/",
+        "Supplier/update/<int:pk>/",
         views.SupplierUpdateView.as_view(),
         name="inventory_Supplier_update",
     ),
     path(
-        "inventory/Supplier/delete/<int:pk>/",
+        "Supplier/delete/<int:pk>/",
         views.SupplierDeleteView.as_view(),
         name="inventory_Supplier_delete",
     ),
     path(
-        "inventory/SupplyManager/",
+        "SupplyManager/",
         views.SupplyManagerListView.as_view(),
         name="inventory_SupplyManager_list",
     ),
     path(
-        "inventory/SupplyManager/create/",
+        "SupplyManager/create/",
         views.SupplyManagerCreateView.as_view(),
         name="inventory_SupplyManager_create",
     ),
     path(
-        "inventory/SupplyManager/detail/<int:pk>/",
+        "SupplyManager/detail/<int:pk>/",
         views.SupplyManagerDetailView.as_view(),
         name="inventory_SupplyManager_detail",
     ),
     path(
-        "inventory/SupplyManager/update/<int:pk>/",
+        "SupplyManager/update/<int:pk>/",
         views.SupplyManagerUpdateView.as_view(),
         name="inventory_SupplyManager_update",
     ),
     path(
-        "inventory/SupplyManager/delete/<int:pk>/",
+        "SupplyManager/delete/<int:pk>/",
         views.SupplyManagerDeleteView.as_view(),
         name="inventory_SupplyManager_delete",
     ),

@@ -90,7 +90,7 @@ class RestaurantAdmin(admin.ModelAdmin):
         "name",
         "last_updated",
     ]
-
+''' 
 
 class ChefAdminForm(forms.ModelForm):
     class Meta:
@@ -109,7 +109,7 @@ class ChefAdmin(admin.ModelAdmin):
         "last_updated",
     ]
 
-
+ '''
 class StaffAdminForm(forms.ModelForm):
     class Meta:
         model = models.Staff
@@ -132,5 +132,5 @@ admin.site.register(models.Ingredient, IngredientAdmin)
 admin.site.register(models.Menu, MenuAdmin)
 admin.site.register(models.MenuItem, MenuItemAdmin)
 admin.site.register(models.Restaurant, RestaurantAdmin)
-admin.site.register(models.Chef, ChefAdmin)
+#admin.site.register(models.Chef, ChefAdmin)
 admin.site.register(models.Staff, StaffAdmin)

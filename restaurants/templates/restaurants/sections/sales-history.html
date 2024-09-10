@@ -1,0 +1,61 @@
+<section id="sales-history">
+  <h2 class="section-title">Sales History Today</h2>
+  <table id="sales-history__table">
+    <thead>
+      <tr>
+        <th>Order No.</th>
+        <th>Payment Type</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if empty %}
+        <tr>
+          <td colspan="4" class="!w-full !text-left">No Available Orders Data</td>
+        </tr>
+      {% else %}
+        <tr class="group/sales" data-status="pending">
+          <td>RBP-0939</td>
+          <td>Credit Card</td>
+          <td>Pending</td>
+          <td>
+            {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
+          </td>
+        </tr>
+        <tr class="group/sales" data-status="confirmed">
+          <td>RBP-0938</td>
+          <td>Bank Transfer</td>
+          <td>Confirmed</td>
+          <td>
+            {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
+          </td>
+        </tr>
+        <tr class="group/sales" data-status="completed">
+          <td>RBP-0937</td>
+          <td>Bank Transfer</td>
+          <td>Completed</td>
+          <td>
+            {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
+          </td>
+        </tr>
+        <tr class="group/sales" data-status="cancelled">
+          <td>RBP-0936</td>
+          <td>Cash</td>
+          <td>Cancelled</td>
+          <td>
+            {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
+          </td>
+        </tr>
+        <tr class="group/sales" data-status="failed">
+          <td>RBP-7399</td>
+          <td>Bank Transfer</td>
+          <td>Failed</td>
+          <td>
+            {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</section>

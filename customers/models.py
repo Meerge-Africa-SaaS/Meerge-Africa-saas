@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 
-
 User = get_user_model()
 
 
@@ -36,9 +35,11 @@ class Order(models.Model):
         return reverse("customers_Order_htmx_delete", args=(self.pk,))
 
 
-class Customer(User):
+class Customer(User):  # type: ignore
     # Relationships
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey(
+        City, on_delete=models.SET_NULL, null=True, blank=True
+    )
     country = models.ForeignKey(
         Country, on_delete=models.SET_NULL, null=True, blank=True
     )

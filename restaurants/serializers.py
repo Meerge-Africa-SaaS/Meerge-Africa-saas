@@ -51,6 +51,9 @@ class RestaurantSerializer(serializers.ModelSerializer):
         ]
 
 
+""" 
+class ChefSerializer(serializers.ModelSerializer):
+
 class ChefSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Chef
@@ -59,6 +62,7 @@ class ChefSerializer(serializers.ModelSerializer):
             "last_updated",
             "restaurants",
         ]
+ """
 
 
 class StaffSerializer(serializers.ModelSerializer):

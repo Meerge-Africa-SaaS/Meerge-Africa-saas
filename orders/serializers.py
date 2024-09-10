@@ -4,6 +4,7 @@ from . import models
 
 
 class DeliveryAgentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.DeliveryAgent
         fields = [
