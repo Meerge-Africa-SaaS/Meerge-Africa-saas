@@ -28,6 +28,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
+                     "unfold",
                      "home",
                      "search",
                      "wagtail.contrib.forms",

@@ -4,6 +4,7 @@ python-dotenv
 dj_database_url
 psycopg2-binary
 django-allauth
+django-unfold
 django-extensions
 djangorestframework
 django-htmx
