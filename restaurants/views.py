@@ -1,9 +1,11 @@
 import os
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
+from django.forms import BaseModelForm
 from django.http import HttpResponse
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from formtools.wizard.views import SessionWizardView
 
@@ -12,8 +14,18 @@ from . import forms, models
 
 class SignupView(generic.CreateView):
     form_class = forms.SignupForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("core_User_signin")
     template_name = "registration/restaurant/signup.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        messages.success(
+            self.request,
+            "Your account has been created successfully. Please login to continue",
+        )
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return super().get_success_url() + "?next=" + reverse("restaurant_onboarding")
 
 
 class EmailVerificationView(generic.TemplateView):
