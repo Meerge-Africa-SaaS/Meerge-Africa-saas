@@ -1,5 +1,7 @@
 Django>=4.2,<5.2
 wagtail>=6.2,<6.3
+python-dotenv
+dj_database_url
 psycopg2-binary
 django-allauth
 django-extensions
