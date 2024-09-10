@@ -15,7 +15,7 @@ USERNAME_REGEX = "^[a-zA-Z0-9.@_]*$"
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, phone_number, password=None):
+    def create_user(self, email, username, phone_number=None, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -35,7 +35,7 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, username, phone_number, password=None):
+    def create_superuser(self, email, username, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -43,7 +43,6 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email,
             username=username,
-            phone_number=phone_number,
             password=password,
         )
         user.is_admin = True
