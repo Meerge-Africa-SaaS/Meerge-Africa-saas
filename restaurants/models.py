@@ -162,6 +162,7 @@ class Chef(User):
 
 class Staff(User):  # type: ignore
     role_choices = (
+        ("owner", _("Owner")),
         ("chef", _("Chef")),
         ("sous_chef", _("Sous Chef")),
         ("line_cook", _("Line Cook")),
