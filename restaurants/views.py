@@ -11,6 +11,7 @@ from django.views import generic
 from django_htmx.http import HttpResponseClientRedirect
 from formtools.wizard.views import SessionWizardView
 from more_itertools import first
+from django_htmx.http import HttpResponseClientRedirect
 
 from . import forms, models
 
@@ -94,10 +95,8 @@ class OnboardingWizardView(SessionWizardView):
             self.request,
             "Your restaurant has been created successfully.",
         )
-        return render(
-            self.request,
-            "registration/restaurant/onboarding_done.html",
-            {"restaurant": restaurant},
+        return HttpResponseClientRedirect(
+            reverse("restaurants:dashboard", args=[restaurant.slug])
         )
 
 
