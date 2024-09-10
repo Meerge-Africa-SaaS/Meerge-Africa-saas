@@ -20,6 +20,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args:
+            -Dsonar.projectKey=omniotosho_Meerge-Africa-saas
+            -Dsonar.organization=omniotosho
 
 # # This workflow uses actions that are not certified by GitHub.
 # # They are provided by a third-party and are governed by
