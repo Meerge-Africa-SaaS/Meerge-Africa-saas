@@ -9,8 +9,12 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
-
 USERNAME_REGEX = "^[a-zA-Z0-9.@_]*$"
+
+
+def get_default_email_code():
+    """Generates a 6-character alphanumeric code."""
+    return secrets.token_hex(3)
 
 
 class UserManager(BaseUserManager):
@@ -136,7 +140,7 @@ class EmailVerification(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="email_verification_codes"
     )
-    email_code = models.CharField(max_length=6, default=secrets.token_hex(3))
+    email_code = models.CharField(max_length=6, default=get_default_email_code)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(blank=True, null=True)
 

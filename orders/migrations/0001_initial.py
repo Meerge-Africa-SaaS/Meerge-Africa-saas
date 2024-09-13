@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('cities_light', '0011_alter_city_country_alter_city_region_and_more'),
-        ('core', '0006_alter_emailverification_email_code'),
+        ('core', '0001_initial'),
     ]
 
     operations = [
