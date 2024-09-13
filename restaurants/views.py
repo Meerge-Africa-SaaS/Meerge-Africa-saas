@@ -1,19 +1,35 @@
 import os
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
+from django.forms import BaseModelForm
 from django.http import HttpResponse
-from django.urls import reverse_lazy
+from django.shortcuts import render
+from django.urls import reverse, reverse_lazy
 from django.views import generic
+from django_htmx.http import HttpResponseClientRedirect
 from formtools.wizard.views import SessionWizardView
+from more_itertools import first
+from django_htmx.http import HttpResponseClientRedirect
 
 from . import forms, models
 
 
 class SignupView(generic.CreateView):
     form_class = forms.SignupForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("core_User_signin")
     template_name = "registration/restaurant/signup.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        messages.success(
+            self.request,
+            "Your account has been created successfully. Please login to continue",
+        )
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return super().get_success_url() + "?next=" + reverse("restaurant_onboarding")
 
 
 class EmailVerificationView(generic.TemplateView):
@@ -49,9 +65,39 @@ class OnboardingWizardView(SessionWizardView):
     def get(self, request, *args, **kwargs):
         return self.render(self.get_form())
 
+    def get_form_initial(self, step):
+        initial = super().get_form_initial(step)
+        if step == "step1":
+            initial.update(
+                {
+                    "business_email": self.request.user.email,
+                    "business_phone_number": str(self.request.user.phone_number).lstrip(
+                        "+234"
+                    ),
+                    "account_name": self.request.user.get_full_name(),
+                }
+            )
+        return initial
+
     def done(self, form_list, **kwargs):
-        # Save the form data to the database
-        return HttpResponse("Onboarding completed successfully")
+        user = self.request.user
+        # create a restaurant
+        restaurant = models.Restaurant.objects.create(
+            name=form_list[0].cleaned_data["name"],
+            city=None,
+            country=None,
+            address=form_list[0].cleaned_data["business_address"],
+        )
+        restaurant.owner.add(user)
+        restaurant.save()
+        # create a staff account
+        messages.success(
+            self.request,
+            "Your restaurant has been created successfully.",
+        )
+        return HttpResponseClientRedirect(
+            reverse("restaurants:dashboard", args=[restaurant.slug])
+        )
 
 
 class OnboardingView(generic.TemplateView):

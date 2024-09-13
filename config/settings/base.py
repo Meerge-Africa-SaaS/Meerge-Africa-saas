@@ -219,6 +219,8 @@ WAGTAILDOCS_EXTENSIONS = [
     "zip",
 ]
 
+APPEND_SLASH = False
+
 
 def load_settings(setting):
     try:

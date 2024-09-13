@@ -2,6 +2,7 @@ from cities_light.models import City, Country
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
@@ -96,6 +97,7 @@ class MenuItem(models.Model):
 
 class Restaurant(models.Model):
     # Relationships
+    slug = models.SlugField(_("slug"), unique=True, blank=True, null=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
     country = models.ForeignKey(
         Country, on_delete=models.SET_NULL, null=True, blank=True
@@ -126,6 +128,10 @@ class Restaurant(models.Model):
 
     def get_htmx_delete_url(self):
         return reverse("restaurant_Restaurant_htmx_delete", args=(self.pk,))
+
+    def save(self, *args, **kwargs):
+        self.slug = self.slug or slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 """ 
@@ -162,6 +168,7 @@ class Chef(User):
 
 class Staff(User):  # type: ignore
     role_choices = (
+        ("owner", _("Owner")),
         ("chef", _("Chef")),
         ("sous_chef", _("Sous Chef")),
         ("line_cook", _("Line Cook")),
