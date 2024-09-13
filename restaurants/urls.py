@@ -12,7 +12,7 @@ router.register("Restaurant", api.RestaurantViewSet)
 router.register("Staff", api.StaffViewSet)
 
 urlpatterns = (
-    path("", include("restaurants.pages", namespace="pages")),
+    path("<slug:restaurant>", include("restaurants.pages", namespace="pages")),
     path("api/v1/", include(router.urls)),
     path(
         "signup/",
