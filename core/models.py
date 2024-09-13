@@ -9,7 +9,6 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
-# External
 
 USERNAME_REGEX = "^[a-zA-Z0-9.@_]*$"
 
@@ -43,6 +42,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email,
             username=username,
+            phone_number=phone_number,
             password=password,
         )
         user.is_admin = True
@@ -60,12 +60,12 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         max_length=256,
         unique=True,
     )
-    phone_number = PhoneNumberField(
-        verbose_name=_("phone number"),
-        region="NG",
-        unique=True,
-        blank=True,
-    )
+    # phone_number = PhoneNumberField(
+    #     verbose_name=_("phone number"),
+    #     region="NG",
+    #     unique=True,
+    #     blank=True,
+    # )
     username = models.CharField(
         db_index=True,
         verbose_name=_("username"),

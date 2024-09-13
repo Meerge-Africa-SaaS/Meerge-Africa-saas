@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='emailverification',
-            name='email_code',
-            field=models.CharField(default='e0d8ab', max_length=6),
+            model_name="emailverification",
+            name="email_code",
+            field=models.CharField(default="e0d8ab", max_length=6),
         ),
     ]
