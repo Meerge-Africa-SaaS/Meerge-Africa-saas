@@ -13,18 +13,15 @@ from . import models
 class UserAdmin(ModelAdmin):
     # form = UserAdminForm
     list_display = [
+        "username",
+        "email",
         "last_updated",
         "created",
-        "email",
-        "id",
-        "username",
     ]
     readonly_fields = [
         "last_updated",
         "created",
-        "email",
         "id",
-        "username",
     ]
 
 
