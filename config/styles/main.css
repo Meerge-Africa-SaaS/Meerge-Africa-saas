@@ -1,7 +1,6 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-@import "./components/toast.css";
 @import "./components/sidebar.css";
 @import "./components/navbar.css";
 @import "./components/stats.css";
@@ -75,7 +74,7 @@ select {
 }
 
 button, .btn {
-    @apply px-5 py-2.5 my-0 rounded-lg font-medium
+    @apply px-5 py-2.5 mx-2.5 my-0 rounded-lg font-medium
     text-sm focus:ring-4 focus:outline-none text-center
 }
 
