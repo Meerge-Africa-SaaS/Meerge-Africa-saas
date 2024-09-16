@@ -9,6 +9,10 @@
 @import "./components/new-orders.css";
 @import "./components/sales-history.css";
 
+body {
+    @apply font-poppins;
+}
+
 .help {
     @apply text-xs text-gray-500
 }
