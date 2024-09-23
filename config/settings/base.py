@@ -85,8 +85,6 @@ ROOT_URLCONF = "config.urls"
 
 
 
-
-
 ##### Django stuff continues from here.
 
 TEMPLATES = [

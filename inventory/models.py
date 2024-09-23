@@ -4,6 +4,8 @@ from cities_light.models import City
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
+from phonenumber_field.modelfields import PhoneNumberField
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -101,6 +103,21 @@ class Stock(models.Model):
 
 
 class Supplier(models.Model):
+    # Choices
+    SUPPLIER_CATEGORY = [
+        ("sea_food", "Sea Food"),
+        ("vegetables", "Vegetables"),
+        ("meat_and_poultry", "Meat and Poultry"),
+        ("grains", "Grain Products"),
+        ("soup_and_condiments", "Soups and Condiments"),
+        ("spices_and_seasoning", "Spices and Seasoning"),
+        ("oil_and_fat", "Oil and Fat"),
+        ("baking_products", "Baking Products"),
+        ("fruits_and_nuts", "Fruits and Nuts"),
+        ("diary_products", "Diary Products"),
+        ("spread_and_sweeteners", "Spread and Sweeteners"),
+        ("drinks_and_beverages", "Drinks and Beverages")
+    ]
     # Relationships
     # city = models.ManyToManyField("world.City")
     city = models.ManyToManyField(
@@ -111,6 +128,31 @@ class Supplier(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     name = models.CharField(max_length=30)
+    email = models.EmailField(
+        verbose_name=_("email address"),
+        max_length=256,
+        unique=True
+    )
+    phone_number = PhoneNumberField(
+        blank=True,
+        null=True,
+        unique=True,
+        verbose_name=_("phone number"),
+        error_messages={
+            "unique": _("A restaurant with that phone number already exists."),
+        },
+    )
+    #business_category = model
+    cac_reg_number = models.CharField(max_length = 20, null=True, blank=True)
+    cac_certificate = models.FileField(upload_to="images/supplier/cac_certificates")
+    business_license = models.FileField(upload_to="images/supplier/business_license", null=True, blank=True)
+    category = models.CharField(choices=SUPPLIER_CATEGORY, max_length = 21)
+    
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
+    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
+
+    address = models.CharField(max_length=130)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
