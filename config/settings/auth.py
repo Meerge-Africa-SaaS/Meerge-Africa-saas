@@ -24,6 +24,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 ACCOUNT_ADAPTER = "core.CustomFiles.CustomAdapterFile.CustomAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "core.CustomFiles.CustomSocialAdapter.MyCustomSocialAccountAdapter"
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
