@@ -8,6 +8,8 @@
 @import "./components/top-menu.css";
 @import "./components/new-orders.css";
 @import "./components/sales-history.css";
+@import "./components/modal.css";
+
 
 body {
     @apply font-poppins;

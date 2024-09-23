@@ -1,0 +1,14 @@
+.modal {
+    @apply
+    absolute top-0 left-0 bg-black bg-opacity-50 z-20
+    flex items-center justify-center
+    w-full h-full !mt-0
+    transition-transform ease-in-out
+    /* slide right */
+    translate-x-full
+}
+
+.modal.active {
+    @apply
+    translate-x-0
+}
