@@ -17,6 +17,7 @@
   {{ block.super }}
   <script src="{% static 'js/dashboard.js' %}" defer></script>
   <script src="{% static 'js/deactivate-account-modal.js' %}" defer></script>
+  <script src="{% static 'js/change-password-modal.js' %}" defer></script>
 {% endblock %}
 
 {% block main_class %}
@@ -25,6 +26,7 @@
 
 {% block main %}
   {% include 'restaurants/components/deactivate-account-modal.html' %}
+  {% include 'restaurants/components/change-password-modal.html' %}
   <div class="flex items-start p-8 gap-8 h-full w-full">
     <div class="bg-white flex-[0.2] h-full pl-10 py-6">
       <ul class="space-y-2 text-secondary text-xl">
@@ -41,7 +43,7 @@
           <h2 class="text-xl font-semibold">Password</h2>
           <p class="text-gray-400">Set a unique password to protect your account</p>
         </div>
-        <a class="text-secondary">Change Password</a>
+        <a class="text-secondary cursor-pointer change-password-trigger">Change Password</a>
       </div>
       <div class="flex items-center justify-between">
         <div class="flex-[0.6]">

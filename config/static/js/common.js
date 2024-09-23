@@ -14,3 +14,20 @@ function togglePasswordVisibility(element) {
     // set data-visible attribute to the opposite of its current value
     element.setAttribute("data-visible", element.getAttribute("data-visible") === "false");
 }
+
+/**
+ * Debounce function
+ * @param {(...args: T[]) => void} func
+ * @param {number} timeout 
+ * @returns {(...args: T[]) => void}
+ */
+function debounce(func, timeout = 300) {
+    let timer
+    return (...args) => {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            timer = null
+            func(...args)
+        }, timeout)
+    }
+}

@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 User = get_user_model()
 
@@ -95,6 +96,19 @@ class MenuItem(models.Model):
 
 
 class Restaurant(models.Model):
+    CATEGORY_CHOICES = (
+        ('cafe', _('Cafe')),
+        ('bar', _('Bar')),
+        ('lounge', _('Lounge')),
+        ('hotel', _('Hotel')),
+        ('food_joint', _('Food Joint')),
+        ('street_vendor', _('Street Vendor'))        
+    )
+    BUSINESS_REGISTRATION_CHOICE = (
+        ('registered', _("Registered")),
+        ('unregistered', _("Unregistered"))
+    )
+    
     # Relationships
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
     country = models.ForeignKey(
@@ -106,8 +120,31 @@ class Restaurant(models.Model):
     address = models.CharField(max_length=130)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     name = models.CharField(max_length=30)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    email = models.EmailField(
+        verbose_name=_("email address"),
+        max_length=256,
+        unique=True
+    )
+    phone_number = PhoneNumberField(
+        blank=True,
+        null=True,
+        unique=True,
+        verbose_name=_("phone number"),
+        error_messages={
+            "unique": _("A restaurant with that phone number already exists."),
+        },
+    )
+    #business_category = model
+    business_reg_details = models.CharField(max_length=12,choices=BUSINESS_REGISTRATION_CHOICE)
+    cac_reg_number = models.CharField(max_length = 20, null=True, blank=True)
+    cac_certificate = models.FileField(upload_to="images/restaurant/cac_certificates")
+    business_license = models.FileField(upload_to="images/restaurant/business_license", null=True, blank=True)
 
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
+    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
+
+    
     class Meta:
         pass
 

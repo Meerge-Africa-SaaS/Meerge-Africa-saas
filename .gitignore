@@ -93,6 +93,6 @@ local_settings.py
 #iac
 .terraform
 terraform.tfstate
-terraform.tfstate.backup
+terraform.tfstahzte.backup
 .terraform.lock.hcl
 /.terraform/
