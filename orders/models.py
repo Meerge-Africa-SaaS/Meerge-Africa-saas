@@ -17,11 +17,11 @@ class DeliveryAgent(User):  # type: ignore
     ]
     
     # Personal extended
-    face_capture = models.ImageField(upload_to="images/profile_pic")
+    face_capture = models.ImageField(upload_to="images/profile_pic", blank=True, null=True)
     
     # Driving details
-    vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPE_CHOICE)
-    vehicle_brand = models.CharField(max_length=256)
+    vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPE_CHOICE, blank=True, null=True)
+    vehicle_brand = models.CharField(max_length=256, blank=True, null=True)
     plate_number = models.CharField(max_length=10, blank=True, null=True)
     drivers_license = models.FileField(upload_to="images/drivers_license", null=True, blank=True)
     drivers_license_id = models.CharField(max_length=20, null=True, blank=True)
@@ -31,22 +31,22 @@ class DeliveryAgent(User):  # type: ignore
     nin_number = models.CharField(max_length=11, null=True, blank=True)
     
     # Next of kin details
-    N_O_N_full_name = models.CharField(max_length=256)
+    N_O_N_full_name = models.CharField(max_length=256, blank=True, null=True)
     N_O_N_phone_number = phone_number = PhoneNumberField(
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
         verbose_name=_("next-of-kin's phone number"),
     )
     
     # Guarantor's details
-    guarantor_first_name = models.CharField(max_length=20)
-    guarantor_last_name = models.CharField(max_length=20)
+    guarantor_first_name = models.CharField(max_length=20, blank=True, null=True)
+    guarantor_last_name = models.CharField(max_length=20, blank=True, null=True)
     guarantor_phone_number = phone_number = PhoneNumberField(
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
         verbose_name=_("Guarantor's phone number"),
     )
-    guarantor_occupation = models.CharField(max_length=30)
+    guarantor_occupation = models.CharField(max_length=30, blank=True, null=True)
     
     address = models.ForeignKey(
         "cities_light.Country", on_delete=models.SET_NULL, null=True, blank=True
