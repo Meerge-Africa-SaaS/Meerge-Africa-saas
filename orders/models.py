@@ -3,6 +3,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 User = get_user_model()
 
 
@@ -32,7 +34,7 @@ class DeliveryAgent(User):  # type: ignore
     
     # Next of kin details
     N_O_N_full_name = models.CharField(max_length=256, blank=True, null=True)
-    N_O_N_phone_number = phone_number = PhoneNumberField(
+    N_O_N_phone_number = PhoneNumberField(
         blank=True,
         null=True,
         verbose_name=_("next-of-kin's phone number"),
@@ -41,7 +43,7 @@ class DeliveryAgent(User):  # type: ignore
     # Guarantor's details
     guarantor_first_name = models.CharField(max_length=20, blank=True, null=True)
     guarantor_last_name = models.CharField(max_length=20, blank=True, null=True)
-    guarantor_phone_number = phone_number = PhoneNumberField(
+    guarantor_phone_number = PhoneNumberField(
         blank=True,
         null=True,
         verbose_name=_("Guarantor's phone number"),
