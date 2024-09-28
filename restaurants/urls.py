@@ -70,6 +70,12 @@ urlpatterns = (
         name="restaurant_Menu_create",
     ),
     path(
+        "MenuCategory/create/",
+        views.MenuCategoryCreateView.as_view(),
+        name="restaurant_Menu_create",
+    ),
+    
+    path(
         "Menu/detail/<int:pk>/",
         views.MenuDetailView.as_view(),
         name="restaurant_Menu_detail",

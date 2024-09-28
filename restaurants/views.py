@@ -5,10 +5,16 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from formtools.wizard.views import SessionWizardView
+
+from restaurants.models import Restaurant
 
 from . import forms, models
 
+User = get_user_model()
 
 class SignupView(generic.CreateView):
     form_class = forms.SignupForm
@@ -84,6 +90,56 @@ class IngredientDeleteView(generic.DeleteView):
     success_url = reverse_lazy("restaurant_Ingredient_list")
 
 
+class MenuCategoryListView(LoginRequiredMixin, generic.ListView):
+    model = models.MenuCategory
+    form_class = forms.MenuCategoryForm
+    template_name = "MenuCategory.html"
+    
+class MenuCategoryCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.MenuCategory
+    form_class = forms.MenuCategoryForm
+    template_name = "CreateMenuCategory.html"
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "Kindly login to proceed"})
+        if not request.user.is_admin:
+            return JsonResponse({"error": "You do not have the permission to complete this process."})
+        
+        return super().dispatch(request, *args, **kwargs)
+    
+class MenuCategoryDetailView(generic.DetailView):
+    model = models.MenuCategory
+    form_class = forms.MenuCategoryForm
+    
+
+class MenuCategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.MenuCategory
+    form_class = forms.MenuCategoryForm
+    template_name = "MenuCategoryUpdate.html"
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "Kindly login to proceed"})
+        if not request.user.is_admin:
+            return JsonResponse({"error": "You do not have the permission to complete this process."})
+        
+        return super().dispatch(request, *args, **kwargs)
+    
+class MenuCategoryDeleteView(LoginRequiredMixin, generic.UpdateView):
+    model = models.MenuCategory
+    form_class = forms.MenuCategoryForm
+    template_name = "MenuCategoryDelete.html"
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "Kindly login to proceed"})
+        if not request.user.is_admin:
+            return JsonResponse({"error": "You do not have the permission to complete this process."})
+        
+        return super().dispatch(request, *args, **kwargs)
+
+
 class MenuListView(generic.ListView):
     model = models.Menu
     form_class = forms.MenuForm
@@ -92,6 +148,14 @@ class MenuListView(generic.ListView):
 class MenuCreateView(generic.CreateView):
     model = models.Menu
     form_class = forms.MenuForm
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "Kindly login to proceed"})
+        if not request.user.is_admin:
+            return JsonResponse({"error": "You do not have the permission to complete this process."})
+        
+        return super().dispatch(request, *args, **kwargs)
 
 
 class MenuDetailView(generic.DetailView):

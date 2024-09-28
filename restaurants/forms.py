@@ -145,10 +145,21 @@ class IngredientForm(forms.ModelForm):
         self.fields["menu_item"].queryset = MenuItem.objects.all()
 
 
+class MenuCategoryForm(forms.ModelForm):
+    class Meta:
+        model = models.MenuCategory
+        fields = [
+            "name",
+            "description",
+            "date_from",
+            "date_to"
+        ]
+
 class MenuForm(forms.ModelForm):
     class Meta:
         model = models.Menu
         fields = [
+            "category",
             "date_from",
             "name",
             "date_to",
