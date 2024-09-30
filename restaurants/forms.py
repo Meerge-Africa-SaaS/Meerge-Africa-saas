@@ -296,6 +296,70 @@ class MenuItemForm(forms.ModelForm):
         return discount_percentage
 
 
+class OwnerViewMenuItemForm(forms.ModelForm):
+    
+    class Meta:
+        model = models.MenuItem
+        fields = [
+            "name",
+            "price",
+            "menu",
+            "restaurant",
+            "portion",
+            "size",
+            "status",
+            "ready_in",
+            "add_ons",
+            "image",
+            "video",
+            "diet_type",
+            "spice_level",
+            "nutritional_info_summary",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', none)
+        super(OwnerViewMenuItemForm, self).__init__(*args, **kwargs)
+        self.fields['restaurant'].queryset = Restaurant.objects.filter(owner=self.user)
+        if 'restaurant' in self.fields:
+            restaurant = self.fields["restaurant"]
+        self.fields["menu"].queryset = Menu.objects.filter(restaurant=restaurant)
+        
+    def clean_restaurant(self):
+        restaurant = self.cleaned_data('restaurants')
+        if restaurant.owner != self.user:
+            raise forms.ValidationError("You do not own this restaurant")
+        return restaurant
+    
+
+class GeneralViewMenuItemForm(forms.ModelForm):
+    
+    class Meta:
+        model = models.MenuItem
+        fields = [
+            "name",
+            "price",
+            "menu",
+            "restaurant",
+            "portion",
+            "size",
+            "status",
+            "ready_in",
+            "add_ons",
+            "image",
+            "video",
+            "diet_type",
+            "spice_level",
+            "nutritional_info_summary",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', none)
+        super(GeneralViewMenuItemForm, self).__init__(*args, **kwargs)
+        if 'restaurant' in self.fields:
+            restaurant = self.fields["restaurant"]
+        self.fields["menu"].queryset = Menu.objects.filter(restaurant=restaurant)
+        
 
 class RestaurantCategoryForm(forms.ModelForm):
     class Meta:

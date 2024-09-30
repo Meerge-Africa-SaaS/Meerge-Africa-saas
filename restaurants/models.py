@@ -151,7 +151,7 @@ class MenuItem(models.Model):
     
     # Relationships
     menu = models.ForeignKey("restaurants.Menu", on_delete=models.CASCADE)
-    restaurant = models.ForeignKey('restaurants.Restaurant', models.CASCADE)
+    restaurant = models.ForeignKey('restaurants.Restaurant', models.CASCADE, related_name='menu_items')
     add_ons = models.ManyToManyField('restaurants.AddOn', related_name='menu_items', blank=True)
     ingredient_details = models.ManyToManyField('restaurants.Ingredient')
 
@@ -243,8 +243,9 @@ class Restaurant(models.Model):
     country = models.ForeignKey(
         Country, on_delete=models.SET_NULL, null=True, blank=True
     )
-    owner = models.ManyToManyField("core.User")
+    owner = models.ManyToManyField("core.User", related_name='restaurant_owner')
     business_category = models.ManyToManyField('restaurants.RestaurantCategory', related_name='restaurants')
+    add_ons = models.ManyToManyField('restaurants.AddOn', related_name='restaurant_add_ons', blank=True)
 
     # Fields
     address = models.CharField(max_length=130)
@@ -271,10 +272,7 @@ class Restaurant(models.Model):
 
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
-    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
-    
-    # Miscellanous
-    add_ons = models.ManyToManyField('restaurants.AddOn', related_name='restaurant_add_ons', blank=True)
+    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")    
 
     
     class Meta:
