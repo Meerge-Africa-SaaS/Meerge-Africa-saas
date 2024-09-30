@@ -5,16 +5,11 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
 from formtools.wizard.views import SessionWizardView
-
-from restaurants.models import Restaurant
 
 from . import forms, models
 
-User = get_user_model()
 
 class SignupView(generic.CreateView):
     form_class = forms.SignupForm
@@ -93,119 +88,152 @@ class IngredientDeleteView(generic.DeleteView):
 class MenuCategoryListView(LoginRequiredMixin, generic.ListView):
     model = models.MenuCategory
     form_class = forms.MenuCategoryForm
-    template_name = "MenuCategory.html"
-    
+
+
 class MenuCategoryCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.MenuCategory
     form_class = forms.MenuCategoryForm
-    template_name = "CreateMenuCategory.html"
-    
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return JsonResponse({"error": "Kindly login to proceed"})
-        if not request.user.is_admin:
-            return JsonResponse({"error": "You do not have the permission to complete this process."})
-        
-        return super().dispatch(request, *args, **kwargs)
-    
-class MenuCategoryDetailView(generic.DetailView):
+
+
+class MenuCategoryDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.MenuCategory
     form_class = forms.MenuCategoryForm
-    
+
 
 class MenuCategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.MenuCategory
     form_class = forms.MenuCategoryForm
-    template_name = "MenuCategoryUpdate.html"
+    pk_url_kwarg = "pk"
     
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return JsonResponse({"error": "Kindly login to proceed"})
-        if not request.user.is_admin:
-            return JsonResponse({"error": "You do not have the permission to complete this process."})
-        
-        return super().dispatch(request, *args, **kwargs)
-    
-class MenuCategoryDeleteView(LoginRequiredMixin, generic.UpdateView):
+
+class MenuCategoryDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.MenuCategory
-    form_class = forms.MenuCategoryForm
-    template_name = "MenuCategoryDelete.html"
+    success_url = reverse_lazy("restaurant_MenuCategory_list")
     
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return JsonResponse({"error": "Kindly login to proceed"})
-        if not request.user.is_admin:
-            return JsonResponse({"error": "You do not have the permission to complete this process."})
-        
-        return super().dispatch(request, *args, **kwargs)
+
+class MenuListView(LoginRequiredMixin, generic.ListView):
+    model = models.Menu
+    form_class = forms.ViewMenuForm
 
 
-class MenuListView(generic.ListView):
+class MenuCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.Menu
     form_class = forms.MenuForm
 
 
-class MenuCreateView(generic.CreateView):
+class MenuDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.Menu
-    form_class = forms.MenuForm
-    
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return JsonResponse({"error": "Kindly login to proceed"})
-        if not request.user.is_admin:
-            return JsonResponse({"error": "You do not have the permission to complete this process."})
-        
-        return super().dispatch(request, *args, **kwargs)
+    form_class = forms.ViewMenuForm
 
 
-class MenuDetailView(generic.DetailView):
-    model = models.Menu
-    form_class = forms.MenuForm
-
-
-class MenuUpdateView(generic.UpdateView):
+class MenuUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Menu
     form_class = forms.MenuForm
     pk_url_kwarg = "pk"
+    
 
-
-class MenuDeleteView(generic.DeleteView):
+class MenuDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Menu
     success_url = reverse_lazy("restaurant_Menu_list")
+    
 
+class AddOnListView(LoginRequiredMixin, generic.ListView):
+    model = models.AddOn
+    form_class = forms.ViewAddOnForm
+    
+    
+class AddOnCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.AddOn
+    form_class = forms.AddOnForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
 
-class MenuItemListView(generic.ListView):
+class AddOnDetailView(LoginRequiredMixin, generic.DetailView):
+    model = models.AddOn
+    form_class = forms.ViewAddOnForm
+    
+    
+class AddOnUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.AddOn
+    form_class = forms.AddOnForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
+    
+class AddOnDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = models.AddOn
+    success_url = reverse_lazy("MenuItem")
+
+class MenuItemListView(LoginRequiredMixin, generic.ListView):
     model = models.MenuItem
     form_class = forms.MenuItemForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
-class MenuItemCreateView(generic.CreateView):
+class MenuItemCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.MenuItem
     form_class = forms.MenuItemForm
+    template_name = 'menuitem_create.html'
+    #success_url = 
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
+    
 
-
-class MenuItemDetailView(generic.DetailView):
+class MenuItemDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.MenuItem
     form_class = forms.MenuItemForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
-class MenuItemUpdateView(generic.UpdateView):
+class MenuItemUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.MenuItem
     form_class = forms.MenuItemForm
     pk_url_kwarg = "pk"
+    template_name = 'menuitem_update.html'
+    #success_url = 
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
 
-
-class MenuItemDeleteView(generic.DeleteView):
+class MenuItemDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.MenuItem
     success_url = reverse_lazy("restaurant_MenuItem_list")
-
+    template_name = 'menuitem_delete.html'
+    #success_url = 
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 class RestaurantListView(generic.ListView):
     model = models.Restaurant
     form_class = forms.RestaurantForm
 
 
-class RestaurantCreateView(generic.CreateView):
+class RestaurantCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.Restaurant
     form_class = forms.RestaurantForm
 
@@ -215,13 +243,13 @@ class RestaurantDetailView(generic.DetailView):
     form_class = forms.RestaurantForm
 
 
-class RestaurantUpdateView(generic.UpdateView):
+class RestaurantUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Restaurant
     form_class = forms.RestaurantForm
     pk_url_kwarg = "pk"
 
 
-class RestaurantDeleteView(generic.DeleteView):
+class RestaurantDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Restaurant
     success_url = reverse_lazy("restaurant_Restaurant_list")
 

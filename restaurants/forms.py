@@ -3,7 +3,7 @@ from phonenumber_field.formfields import PhoneNumberField
 
 # from world.models import City
 from core.models import User
-from restaurants.models import Menu, MenuItem, Restaurant
+from restaurants.models import MenuCategory, Menu, MenuItem, Restaurant, RestaurantCategory
 
 from . import models
 
@@ -154,47 +154,192 @@ class MenuCategoryForm(forms.ModelForm):
             "date_from",
             "date_to"
         ]
+                
+        
 
 class MenuForm(forms.ModelForm):
     class Meta:
         model = models.Menu
         fields = [
-            "category",
             "date_from",
             "name",
             "date_to",
+            "category",
+            "restaurant"
         ]
+    
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.get('user', None)
+        super(MenuForm, self).__init__(*args, **kwargs)
+        self.fields["restaurant"].queryset = Restaurant.objects.filter(owner = self.user)
+        self.fields["category"].queryset = RestaurantCategory.objects.all()
+        
 
+class ViewMenuForm(forms.ModelForm):
+    
+    class Meta:
+        model = models.Menu
+        fields = [
+            "date_from",
+            "name",
+            "date_to",
+            "category",
+            "restaurant"
+        ]
+        
+    def __init__(self, *args, **kwargs):
+        super(ViewMenuForm, self).__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields["restaurant"].queryset = Restaurant.objects.filter(id = self.instance.restaurant.id)
+            self.fields["category"].queryset = MenuCategory.objects.filter(category_ID = self.instance.category.category_ID)
+        else:
+            self.fields["restaurant"].queryset = Restaurant.objects.none()
+            self.fields["category"].queryset = MenuCategory.objects.none()
+
+
+class AddOnForm(forms.ModelForm):
+    class Meta:
+        model = models.AddOn
+        fields = [
+            "restaurant",
+            "name",
+            "price",
+        ]
+        
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(AddOnForm, self).__init__(*args, **kwargs)
+        self.fields["restaurant"] = Restaurant.objects.filter(owner=self.user)
+        
+    def clean_name(self):
+        name = self.cleaned_data('name')
+        if not isinstance(name, str):
+            raise forms.ValidationError("Value input must be alphabet only.")
+        return name
+    
+    def clean_price(self):
+        price = self.cleaned_data('price')
+        if not price:
+            price = 0 
+        if price and price < 0:
+            raise forms.ValidationError('Price cannot be less than zero.')
+        return price
+        
+
+class ViewAddOnForm(forms.ModelForm):
+    class Meta:
+        model = models.AddOn
+        fields = [
+            "restaurant",
+            "name",
+            "price"
+        ]
+    def __init__(self, *args, **kwargs):
+        super(ViewAddOnForm, self).__init__(*args, **kwargs)
+        self.fields["restaurant"] = Restaurant.objects.filter(add_ons=self.instance.pk)
 
 class MenuItemForm(forms.ModelForm):
+    # Adding the password field
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Confirm Password",
+        help_text="Enter your password to confirm this action"
+    )
+    
     class Meta:
         model = models.MenuItem
         fields = [
+            "menu",
+            "restaurant",
             "name",
             "price",
-            "menu",
+            "portion",
+            "size",
+            "ingredient_details",
+            "diet_type",
+            "spice_level",
+            "status",
+            "nutritional_info_summary",
+            "add_ons",
+            "ready_in",
+            "discount_percentage",
+            "image",
+            "video",
         ]
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', none)
         super(MenuItemForm, self).__init__(*args, **kwargs)
-        self.fields["menu"].queryset = Menu.objects.all()
+        self.fields['restaurant'].queryset = Restaurant.objects.filter(owner=self.user)
+        
+    def clean_restaurant(self):
+        restaurant = self.cleaned_data('restaurant')
+        if restaurant.owner != self.user:
+            raise forms.ValidationError("You do not own this restaurant")
+        return restaurant
+        
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if not self.user.check_password(password):
+            raise forms.ValidationError("Incorrect Password")
+        return password
+    
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price < 0:
+            raise forms.ValidationError('Forms cannot be negative')        
+    
+    def clean_discount_percentage(self):
+        discount_percentage = self.cleaned_data.get('discount_percentage')
+        if discount_percentage < 0:
+            raise forms.ValidationError("Discount Percentage cannot be negative")
+        return discount_percentage
 
 
+
+class RestaurantCategoryForm(forms.ModelForm):
+    class Meta:
+        model = models.RestaurantCategory
+        fields = [
+            "name",
+            "description"
+        ]
+       
 class RestaurantForm(forms.ModelForm):
     class Meta:
         model = models.Restaurant
         fields = [
             "address",
             "name",
+            "email",
+            "phone_number",
+            "business_category",
+            "business_reg_details",
+            "cac_reg_number",
+            "cac_certificate",
+            "business_license",
+            "profile_img",
+            "cover_img",
             "city",
             "country",
             "owner",
+            "add_ons",
         ]
 
     def __init__(self, *args, **kwargs):
         super(RestaurantForm, self).__init__(*args, **kwargs)
         # self.fields["city"].queryset = City.objects.all()
         self.fields["owner"].queryset = User.objects.all()
+    
+    def clean_custom_link(self):
+        custom_link = self.cleaned_data.get('custom_link')
+        if not custom_link:
+            return custom_link
+        if not custom_link.isalnum():
+            raise forms.ValidationError("Special characters are not allowed.")
+        if custom_link and custom_link < 3:
+            raise forms.ValidationError("Custom link tagname cannot be less than 3 characters")
+        return custom_link
 
 
 """ 

@@ -4,7 +4,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
-from uuid import uuid4
+
+import uuid
 
 User = get_user_model()
 
@@ -36,39 +37,43 @@ class Ingredient(models.Model):
 
     def get_htmx_delete_url(self):
         return reverse("restaurant_Ingredient_htmx_delete", args=(self.pk,))
-    
+
 
 class MenuCategory(models.Model):
-    name = models.CharField(max_length = 30)
-    description = models.CharField(max_length=256, blank = True, null = True)
+    name = models.CharField(max_length=30)
+    description = models.CharField(max_length = 256, blank = True, null = True)
+    date_time_created = models.DateTimeField(auto_now_add=True, editable=False)
+    date_time_updated = models.DateTimeField(auto_now= True, editable=False)
     date_from = models.DateField()
-    created = models.DateTimeField(auto_now_add=True, editable=False)
     date_to = models.DateField()
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    category_ID = models.UUIDField(default = uuid.uuid4)
     
     class Meta:
         pass
-
+    
     def __str__(self):
         return str(self.name)
     
     def get_absolute_url(self):
-        return reverse("restaurant_MenuCategory_detail", args=(self.pk,))
+        return reverse("menuCategory_detail", args=(self.pk,))
 
     def get_update_url(self):
-        return reverse("restaurant_MenuCategory_update", args=(self.pk,))
+        return reverse("menuCategory_update", args=(self.pk,))
 
     @staticmethod
     def get_htmx_create_url():
-        return reverse("restaurant_MenuCategory_htmx_create")
+        return reverse("menuCategory_htmx_create")
 
     def get_htmx_delete_url(self):
-        return reverse("restaurant_MenuCategory_htmx_delete", args=(self.pk,))
+        return reverse("menuCategory_htmx_delete", args=(self.pk,))
 
 
 class Menu(models.Model):
+    # Relationships
+    category = models.ForeignKey("restaurants.MenuCategory", on_delete=models.DO_NOTHING)
+    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE)
+    
     # Fields
-    category = models.ForeignKey("restaurants.MenuCategory", on_delete = models.CASCADE)
     date_from = models.DateField()
     created = models.DateTimeField(auto_now_add=True, editable=False)
     name = models.CharField(max_length=30)
@@ -95,13 +100,79 @@ class Menu(models.Model):
         return reverse("restaurant_Menu_htmx_delete", args=(self.pk,))
 
 
+class AddOn(models.Model):
+    # Relationships
+    restaurant = models.ForeignKey('restaurants.Restaurant', on_delete=models.CASCADE)
+    
+    # Fields
+    name = models.CharField(max_length=50)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    add_on_ID = models.UUIDField(default=uuid.uuid4)
+    
+    # Time
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    
+    
+    class Meta:
+        pass
+    
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse("restaurant_MenuItem_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("restaurant_MenuItem_update", args=(self.pk,))
+    
+
+
 class MenuItem(models.Model):
+    # Choices
+    STATUS_CHOICES = [
+        ('available', 'Available'),
+        ('unlisted', 'Unlisted')
+    ]
+    
+    DIET_TYPE_CHOICES = [
+        ('vegan', 'VEGAN'),
+        ('gluten_free', 'GLUTEN FREE'),
+        ('low_carbs', 'LOW CARBS'),
+        ('keto', 'KETO'),
+        ('lactose_free', 'LACTOSE FREE')
+    ]
+    
+    SPICE_LEVEL_CHOICES = [
+        ('mild', 'Mild'),
+        ('medium', 'Medium'),
+        ('hot', 'Hot')
+    ]
+    
     # Relationships
     menu = models.ForeignKey("restaurants.Menu", on_delete=models.CASCADE)
+    restaurant = models.ForeignKey('restaurants.Restaurant', models.CASCADE)
+    add_ons = models.ManyToManyField('restaurants.AddOn', related_name='menu_items', blank=True)
+    ingredient_details = models.ManyToManyField('restaurants.Ingredient')
 
     # Fields
     name = models.CharField(max_length=30)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    portion = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField()
+    diet_type = models.CharField(max_length = 12, choices=DIET_TYPE_CHOICES, blank=True, null=True)
+    spice_level =  models.CharField(max_length = 6, choices=SPICE_LEVEL_CHOICES, blank=True, null=True)
+    status = models.CharField(max_length=9, choices=STATUS_CHOICES)
+    nutritional_info_summary = models.CharField(max_length = 256, blank=True, null=True)
+    ready_in = models.TimeField(blank=True, null=True)
+    discount_percentage = models.PositiveIntegerField(blank=True, null=True)
+    image = models.ImageField(upload_to='images/restaurant/Menu/MenuItem')
+    video = models.FileField(upload_to='video/Menu/MenuItem')
+    
+    # Miscellenous
+    menu_item_ID = models.UUIDField(default=uuid.uuid4)
+    
+    # Time
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
@@ -125,15 +196,43 @@ class MenuItem(models.Model):
         return reverse("restaurant_MenuItem_htmx_delete", args=(self.pk,))
 
 
+class RestaurantCategory(models.Model):
+    
+    # Fields
+    name = models.CharField(max_length=20)
+    description =  models.CharField(max_length=256, blank=True, null=True)
+    
+    class Meta:
+        pass
+    
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("restaurant_RestaurantCategory_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("restaurant_RestaurantCategory_update", args=(self.pk,))
+
+    @staticmethod
+    def get_htmx_create_url():
+        return reverse("restaurant_RestaurantCategory_htmx_create")
+
+    def get_htmx_delete_url(self):
+        return reverse("restaurant_RestaurantCategory_htmx_delete", args=(self.pk,))
+    
+
+
 class Restaurant(models.Model):
-    CATEGORY_CHOICES = (
+    ''' CATEGORY_CHOICES = (
         ('cafe', _('Cafe')),
         ('bar', _('Bar')),
         ('lounge', _('Lounge')),
         ('hotel', _('Hotel')),
         ('food_joint', _('Food Joint')),
         ('street_vendor', _('Street Vendor'))        
-    )
+    ) '''
+    
     BUSINESS_REGISTRATION_CHOICE = (
         ('registered', _("Registered")),
         ('unregistered', _("Unregistered"))
@@ -145,7 +244,7 @@ class Restaurant(models.Model):
         Country, on_delete=models.SET_NULL, null=True, blank=True
     )
     owner = models.ManyToManyField("core.User")
-    menu = models.ManyToManyField(Menu, on_delete)
+    business_category = models.ManyToManyField('restaurants.RestaurantCategory', related_name='restaurants')
 
     # Fields
     address = models.CharField(max_length=130)
@@ -165,9 +264,8 @@ class Restaurant(models.Model):
             "unique": _("A restaurant with that phone number already exists."),
         },
     )
-    #business_category = model
     business_reg_details = models.CharField(max_length=12,choices=BUSINESS_REGISTRATION_CHOICE)
-    cac_reg_number = models.CharField(max_length = 20, null=True, blank=True)
+    cac_reg_number = models.CharField(max_length=20, null=True, blank=True)
     cac_certificate = models.FileField(upload_to="images/restaurant/cac_certificates")
     business_license = models.FileField(upload_to="images/restaurant/business_license", null=True, blank=True)
 
@@ -175,7 +273,8 @@ class Restaurant(models.Model):
     profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
     cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
     
-    restaurant_id = models.UUIDField(default = uuid4)
+    # Miscellanous
+    add_ons = models.ManyToManyField('restaurants.AddOn', related_name='restaurant_add_ons', blank=True)
 
     
     class Meta:
