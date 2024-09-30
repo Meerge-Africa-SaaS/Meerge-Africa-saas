@@ -1,0 +1,42 @@
+.second-section {
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100px; */
+  /* width: 100%; */
+  height: fit-content;
+}
+
+.second-section h2 {
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 60px;
+  text-align: center;
+  width: 40%;
+  margin-top: 5rem;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+.card h3 {
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 42px;
+  text-align: center;
+  color: #000000;
+}
+.card p {
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 28.5px;
+  text-align: center;
+  color: #000000;
+  width: 50%;
+}
