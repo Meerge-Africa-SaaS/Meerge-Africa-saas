@@ -272,7 +272,10 @@ class Restaurant(models.Model):
 
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
-    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")    
+    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")   
+    
+    # Miscellanous
+    custom_link = models.SlugField(max_length=24, unique=True, help_text="Custom link for your restaurant URL", blank=True, null=True) 
 
     
     class Meta:

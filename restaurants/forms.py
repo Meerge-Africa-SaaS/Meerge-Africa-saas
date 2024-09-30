@@ -403,6 +403,9 @@ class RestaurantForm(forms.ModelForm):
             raise forms.ValidationError("Special characters are not allowed.")
         if custom_link and custom_link < 3:
             raise forms.ValidationError("Custom link tagname cannot be less than 3 characters")
+        if custom_link > 24:
+            raise forms.ValidationError("Custom link tagname cannot be more than 24 characters")
+        
         return custom_link
 
 
