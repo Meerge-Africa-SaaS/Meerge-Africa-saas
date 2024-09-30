@@ -8,17 +8,6 @@ const step2 = modal.querySelector('.step-2')
 const passwordInput = modal.querySelector('.password-input')
 const passwordInputField = passwordInput.querySelector('input')
 
-function debounce(func, timeout = 300) {
-    let timer
-    return (...args) => {
-        clearTimeout(timer)
-        timer = setTimeout(() => {
-            timer = null
-            func(...args)
-        }, timeout)
-    }
-}
-
 passwordInputField.addEventListener(
     'input',
     debounce(() => {

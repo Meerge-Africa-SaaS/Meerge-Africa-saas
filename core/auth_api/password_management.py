@@ -3,6 +3,9 @@ from .schema import SuccessMessageSchema, PasswordChangeRequestSchema, PasswordR
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest, JsonResponse
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
 from allauth.account.views import PasswordResetFromKeyView as allauthPasswordResetFromKeyView
 from allauth.account.forms import ResetPasswordForm as allauthResetPasswordForm
 
@@ -15,7 +18,7 @@ User = get_user_model()
 class CustomPasswordResetFromKeyView(allauthPasswordResetFromKeyView):
     template_name = None
     success_url = None
-    reset_url_key = "set-password"
+    #reset_url_key = "set-password"
 
 
 @p_router.post("/change", response = SuccessMessageSchema, tags=["Password management"])
@@ -64,17 +67,30 @@ def password_reset(request, email: str):
     
 @p_router.post("/reset/done")
 def password_reset_done(request, uid: str, token: str, new_password: str):
-    new_request = HttpRequest()
-    new_request.POST = {
+    #new_request = HttpRequest()
+    try:
+        uid = force_str(urlsafe_base64_decode(uid))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        form = ResetPasswordKeyForm(user, {"password1": new_password, "password2": new_password})
+        if form.is_valid():
+            form.save()
+            return {"message": "Password reset successfully."}
+    return {"message": "Invalid reset token."}
+    ''' new_request.POST = {
         "uidb36": uid,
-        "key": token,
+        "key": token}
+    '' ,
         "password1": new_password,
         "password2": new_password
-    }
+    } ''
     #view = allauthPasswordResetFromKeyView.as_view()
     view = CustomPasswordResetFromKeyView.as_view()
     response = view(new_request)
     if response.status_code == 302:
         return JsonResponse({'message': "Password reset successful"})
     else:
-        return JsonResponse({"message": "Invalid credentials"})
+        return JsonResponse({"message": "Invalid credentials"}) '''

@@ -1141,10 +1141,6 @@ input:checked + .toggle-bg {
   top: 0px;
 }
 
-.top-\[30\%\] {
-  top: 30%;
-}
-
 .top-\[22\%\] {
   top: 22%;
 }
@@ -1263,6 +1259,10 @@ input:checked + .toggle-bg {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.\!mt-0 {
+  margin-top: 0px !important;
 }
 
 .block {
@@ -1795,6 +1795,14 @@ input:checked + .toggle-bg {
   background-color: rgb(255 255 255 / 0.5);
 }
 
+.bg-primary {
+  background-color: rgba(14, 34, 84, 1);
+}
+
+.bg-secondary {
+  background-color: rgba(225, 93, 37, 1);
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -1994,6 +2002,10 @@ input:checked + .toggle-bg {
   text-transform: uppercase;
 }
 
+.lowercase {
+  text-transform: lowercase;
+}
+
 .leading-6 {
   line-height: 1.5rem;
 }
@@ -2096,6 +2108,12 @@ input:checked + .toggle-bg {
   transition-duration: 150ms;
 }
 
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
 .transition-opacity {
   transition-property: opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -2108,14 +2126,12 @@ input:checked + .toggle-bg {
   transition-duration: 150ms;
 }
 
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
 .ease-out {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #sidebar {
@@ -3214,6 +3230,30 @@ button.btn-secondary.btn-outline:focus, .btn.btn-secondary.btn-outline:focus {
   --tw-ring-color: rgb(249 128 128 / var(--tw-ring-opacity));
 }
 
+.peer:-moz-placeholder-shown ~ .peer-placeholder-shown\:\!invisible.tooltip > .tooltip-arrow:before {
+  visibility: hidden !important;
+}
+
+.peer:placeholder-shown ~ .peer-placeholder-shown\:\!invisible.tooltip > .tooltip-arrow:before {
+  visibility: hidden !important;
+}
+
+.peer:-moz-placeholder-shown ~ .peer-placeholder-shown\:\!invisible[role="tooltip"] > [data-popper-arrow]:before {
+  visibility: hidden !important;
+}
+
+.peer:placeholder-shown ~ .peer-placeholder-shown\:\!invisible[role="tooltip"] > [data-popper-arrow]:before {
+  visibility: hidden !important;
+}
+
+.peer:-moz-placeholder-shown ~ .peer-placeholder-shown\:\!invisible[role="tooltip"] > [data-popper-arrow]:after {
+  visibility: hidden !important;
+}
+
+.peer:placeholder-shown ~ .peer-placeholder-shown\:\!invisible[role="tooltip"] > [data-popper-arrow]:after {
+  visibility: hidden !important;
+}
+
 .group[data-active-tab='analytics'] .group-data-\[active-tab\=\'analytics\'\]\:tab-active {
   border-right-width: 4px;
   --tw-border-opacity: 1;
@@ -3469,12 +3509,16 @@ button.btn-secondary.btn-outline:focus, .btn.btn-secondary.btn-outline:focus {
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
-.peer:invalid ~ .peer-invalid\:visible {
-  visibility: visible;
+.peer:-moz-placeholder-shown ~ .peer-placeholder-shown\:\!invisible {
+  visibility: hidden !important;
 }
 
-.peer:invalid ~ .peer-invalid\:block {
-  display: block;
+.peer:placeholder-shown ~ .peer-placeholder-shown\:\!invisible {
+  visibility: hidden !important;
+}
+
+.peer:invalid ~ .peer-invalid\:visible {
+  visibility: visible;
 }
 
 .peer:focus ~ .peer-focus\:outline-none {

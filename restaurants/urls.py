@@ -60,6 +60,31 @@ urlpatterns = (
         name="restaurant_Ingredient_delete",
     ),
     path(
+        "MenuCategory/",
+        views.MenuCategoryListView.as_view(),
+        name="restaurant_MenuCategory_list",
+    ),
+    path(
+        "MenuCategory/create/",
+        views.MenuCategoryCreateView.as_view(),
+        name="restaurant_MenuCategory_create",
+    ),
+    path(
+        "MenuCategory/detail/<int:pk>/",
+        views.MenuCategoryDetailView.as_view(),
+        name="restaurant_MenuCategory_detail",
+    ),
+    path(
+        "MenuCategory/update/<int:pk>/",
+        views.MenuCategoryUpdateView.as_view(),
+        name="restaurant_MenuCategory_update",
+    ),
+    path(
+        "MenuCategory/delete/<int:pk>/",
+        views.MenuCategoryDeleteView.as_view(),
+        name="restaurant_MenuCategory_delete",
+    ),
+    path(
         "Menu/",
         views.MenuListView.as_view(),
         name="restaurant_Menu_list",
@@ -83,6 +108,31 @@ urlpatterns = (
         "Menu/delete/<int:pk>/",
         views.MenuDeleteView.as_view(),
         name="restaurant_Menu_delete",
+    ),
+    path(
+        "AddOn/",
+        views.AddOnListView.as_view(),
+        name="restaurant_AddOn_list",
+    ),
+    path(
+        "AddOn/create/",
+        views.AddOnCreateView.as_view(),
+        name="restaurant_AddOn_create",
+    ),
+    path(
+        "AddOn/detail/<int:pk>/",
+        views.AddOnDetailView.as_view(),
+        name="restaurant_AddOn_detail",
+    ),
+    path(
+        "AddOn/update/<int:pk>/",
+        views.AddOnUpdateView.as_view(),
+        name="restaurant_AddOn_update",
+    ),
+    path(
+        "AddOn/delete/<int:pk>/",
+        views.AddOnDeleteView.as_view(),
+        name="restaurant_AddOn_delete",
     ),
     path(
         "MenuItem/",

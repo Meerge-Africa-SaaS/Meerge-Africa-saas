@@ -34,7 +34,7 @@ from ninja.security import HttpBearer
 
 from core.auth_api.schema import CustomerSignupRequestSchema
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
-from core.models import EmailVerification
+#from core.models import EmailVerification
 from customers.models import Customer
 from inventory.models import SupplyManager
 from orders.models import DeliveryAgent
@@ -80,31 +80,38 @@ registration_successful = "Registration successful"
 SOCIAL ACCOUNTS NOT SETUP YET.
 """
 
-
+"""
 @receiver(user_signed_up)
 def socialaccount_user_signup(request, user, **kwargs):
+    print("\n"*5,request.session, "\n"*5)
     if request.session.get("actor_type"):
+        print("Session is here", request.session.get("actor_type"))
         actor_type = request.session.get("actor_type")  # noqa: F841
         # Get the actor type from the session that was stored during the signup.
-        """ if actor_type == 'customer':
+        if actor_type == 'customer':
             user = User.objects.get(email = user.email)
-            try:
-                 customer = user.customer  # Retrieve existing Customer instance
-            except Customer.DoesNotExist:
+            
+            if not isinstance(user, Customer): 
+                # Retrieve existing Customer instance
+            
                  # Create a new Customer instance associated with this User
-                customer = Customer(user_ptr=user, username=user.username, email=user.email, address="abuja")
+                customer = Customer(user_ptr=user, address="abuja")
                 customer.set_password(user.password)
+                #user.delete()
                 customer.save()
             
         elif actor_type == 'supplymanager':
-            SupplyManager.objects.create_user(user=user) """
-        """ if actor_type == 'chef':
-            Chef.objects.create_user(user=user) """
-        """ elif actor_type == 'deliveryagent':
-            DeliveryAgent.objects.create_user(user=user) """
+            SupplyManager.objects.create_user(user=user)
+        "" if actor_type == 'chef':
+            Chef.objects.create_user(user=user) ""
+        "" elif actor_type == 'deliveryagent':
+            DeliveryAgent.objects.create_user(user=user) ""
 
         del request.session["actor_type"]
-
+        
+    else:
+        print("Session is not here")
+"""
 
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
 
@@ -231,6 +238,12 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
     customer.set_password(data.password)
     customer.is_active = False
     customer.save()
+    
+    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
+        user=customer,
+        email=data.email,
+        defaults={"verified": True, "primary": True},
+    )
     return JsonResponse({"message": "Saved"})
 
 
@@ -412,3 +425,15 @@ def phonenumber_login(request, data: PhoneNumberLoginRequestSchema):
 
     except Exception:
         return 404, {"message": "Error in processing requests."}
+
+
+@router.get("/google/{actor_type}", tags=["Social Auth"], auth=None)
+def google_auth(request: HttpRequest, actor_type:str):
+    try:
+        request.session["actor_type"] = actor_type
+        callback_url = request.build_absolute_uri(reverse('google_callback'))
+        adapter = GoogleOAuth2Adapter(request)
+        return redirect("/accounts/google/login/")
+    
+    except Exception:
+        return JsonResponse({"error": "actor_type required"})
