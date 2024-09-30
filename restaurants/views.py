@@ -173,7 +173,7 @@ class AddOnDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 class MenuItemListView(LoginRequiredMixin, generic.ListView):
     model = models.MenuItem
-    form_class = forms.MenuItemForm
+    form_class = forms.OwnerViewMenuItemForm
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -192,16 +192,10 @@ class MenuItemCreateView(LoginRequiredMixin, generic.CreateView):
         kwargs["user"] = self.request.user
         return kwargs
     
-    
 
 class MenuItemDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.MenuItem
-    form_class = forms.MenuItemForm
-    
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
+    form_class = forms.GeneralViewMenuItemForm
 
 
 class MenuItemUpdateView(LoginRequiredMixin, generic.UpdateView):
