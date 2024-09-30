@@ -235,7 +235,7 @@ class RestaurantCreateView(LoginRequiredMixin, generic.CreateView):
 class RestaurantDetailView(generic.DetailView):
     model = models.Restaurant
     form_class = forms.RestaurantForm
-
+    
 
 class RestaurantUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Restaurant
