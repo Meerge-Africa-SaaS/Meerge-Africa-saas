@@ -23,6 +23,20 @@ class IngredientAdmin(admin.ModelAdmin):
         "created",
     ]
 
+class MenuCategoryForm(forms.ModelForm):
+    class Meta:
+        model = models.MenuCategory
+        fields = "__all__"
+        
+class MenuCategoryAdmin(admin.ModelAdmin):
+    form = MenuCategoryForm
+    list_display = [
+        "name",
+        "description",
+        "date_from",
+        "date_to"
+    ]
+
 
 class MenuAdminForm(forms.ModelForm):
     class Meta:
@@ -35,6 +49,8 @@ class MenuAdmin(admin.ModelAdmin):
     list_display = [
         "date_from",
         "created",
+        "category",
+        "restaurant",
         "name",
         "date_to",
         "last_updated",
@@ -43,10 +59,30 @@ class MenuAdmin(admin.ModelAdmin):
         "date_from",
         "created",
         "name",
+        "restaurant",
+        "category",
         "date_to",
         "last_updated",
     ]
 
+
+class AddOnAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.AddOn
+        fields = "__all__"
+        
+
+class AddOnAdmin(admin.ModelAdmin):
+    form = AddOnAdminForm
+    list_display = [
+        "name",
+        "price"
+    ]
+    readonly_fields = [
+        "name",
+        "price",
+        "restaurant",
+    ]
 
 class MenuItemAdminForm(forms.ModelForm):
     class Meta:
@@ -59,16 +95,49 @@ class MenuItemAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "price",
+        "menu",
+        "restaurant",
         "created",
         "last_updated",
     ]
     readonly_fields = [
+        "menu",
+        "restaurant",
+        "add_ons",
         "name",
         "price",
+        "portion",
+        "size",
+        "ingredient_details",
+        "diet_type",
+        "spice_level",
+        "status",
+        "nutritional_info_summary",
+        "ready_in",
+        "discount_percentage",
+        "image",
+        "video",
         "created",
         "last_updated",
     ]
+    filter_horizontal = ('add_ons',)
 
+
+class RestaurantCategoryAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.RestaurantCategory
+        fields = "__all__"
+        
+
+class RestaurantCategoryAdmin(admin.ModelAdmin):
+    form = RestaurantCategoryAdminForm
+    list_display=[
+        "name"
+    ]
+    readonly_fields=[
+        "name",
+        "description"
+    ]
 
 class RestaurantAdminForm(forms.ModelForm):
     class Meta:
@@ -86,9 +155,18 @@ class RestaurantAdmin(admin.ModelAdmin):
     ]
     readonly_fields = [
         "address",
-        "created",
+        "add_ons",
         "name",
+        "email",
+        "phone_number",
+        "business_category",
+        "business_reg_details",
+        "cac_reg_number",
+        "cac_certificate",
+        "business_license",
         "last_updated",
+        "profile_img",
+        "cover_img",
     ]
 ''' 
 
@@ -130,7 +208,9 @@ class StaffAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Ingredient, IngredientAdmin)
 admin.site.register(models.Menu, MenuAdmin)
+admin.site.register(models.AddOn, AddOnAdmin)
 admin.site.register(models.MenuItem, MenuItemAdmin)
+admin.site.register(models.MenuCategory, MenuCategoryAdmin)
 admin.site.register(models.Restaurant, RestaurantAdmin)
 #admin.site.register(models.Chef, ChefAdmin)
 admin.site.register(models.Staff, StaffAdmin)

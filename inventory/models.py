@@ -148,6 +148,7 @@ class Supplier(models.Model):
     business_license = models.FileField(upload_to="images/supplier/business_license", null=True, blank=True)
     category = models.CharField(choices=SUPPLIER_CATEGORY, max_length = 21)
     
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
     profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
     cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
 
