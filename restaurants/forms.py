@@ -394,7 +394,7 @@ class RestaurantForm(forms.ModelForm):
         super(RestaurantForm, self).__init__(*args, **kwargs)
         # self.fields["city"].queryset = City.objects.all()
         self.fields["owner"].queryset = User.objects.all()
-    
+    ''' 
     def clean_custom_link(self):
         custom_link = self.cleaned_data.get('custom_link')
         if not custom_link:
@@ -407,7 +407,7 @@ class RestaurantForm(forms.ModelForm):
             raise forms.ValidationError("Custom link tagname cannot be more than 24 characters")
         
         return custom_link
-
+ '''
 
 """ 
 
