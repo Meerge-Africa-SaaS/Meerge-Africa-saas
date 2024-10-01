@@ -30,5 +30,5 @@ class SettingsView(RestaurantMixin, generic.DetailView):
 
 urlpatterns = (
     path("", DashboardView.as_view(), name="dashboard"),
-    path("/settings", SettingsView.as_view(), name="settings"),
+    path("settings/", SettingsView.as_view(), name="settings"),
 )

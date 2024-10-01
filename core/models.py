@@ -46,7 +46,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email,
             username=username,
-            phone_number=None,
+            # phone_number=phone_number,
             password=password,
         )
         user.is_admin = True
@@ -136,6 +136,8 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
 
+""" 
+
 class EmailVerification(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="email_verification_codes"
@@ -146,9 +148,9 @@ class EmailVerification(models.Model):
 
     def __str__(self):
         return self.user.email
+ 
 
 
-"""
 class SmsVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
     phone_number = PhoneNumberField()
