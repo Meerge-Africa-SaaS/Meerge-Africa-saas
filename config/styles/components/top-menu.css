@@ -1,11 +1,13 @@
 section#top-menu {
-    @apply max-w-full w-full overflow-x-auto
+    @apply max-w-full w-full overflow-x-hidden
     gap-4 p-4 lg:p-6
     bg-white rounded-lg shadow-sm;
 }
 
 #top-menu > #top-menu__list {
-    @apply flex items-start justify-start gap-4;
+    @apply flex items-stretch justify-start gap-4
+    max-w-full
+    overflow-x-auto py-6;
 }
 
 #top-menu > .section-title {
@@ -13,7 +15,8 @@ section#top-menu {
 }
 
 .top-menu__item {
-    @apply relative w-[19%] min-w-56
+    @apply relative w-[19%] min-w-56 flex
+    flex-col items-start justify-start
 }
 
 .top-menu__item > .item-image > img {
@@ -35,7 +38,7 @@ section#top-menu {
 }
 
 .top-menu__item > .item-details {
-    @apply space-y-2 mt-2;
+    @apply space-y-2 mt-2 grow flex flex-col items-start justify-between;
 }
 
 .top-menu__item .item-name {
