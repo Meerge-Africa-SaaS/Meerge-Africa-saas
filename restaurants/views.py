@@ -230,6 +230,11 @@ class RestaurantListView(generic.ListView):
 class RestaurantCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.Restaurant
     form_class = forms.RestaurantForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class RestaurantDetailView(generic.DetailView):
@@ -241,6 +246,11 @@ class RestaurantUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Restaurant
     form_class = forms.RestaurantForm
     pk_url_kwarg = "pk"
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class RestaurantDeleteView(LoginRequiredMixin, generic.DeleteView):

@@ -69,3 +69,5 @@ class Customer(User):  # type: ignore
 
     def get_htmx_delete_url(self):
         return reverse("customers_Customer_htmx_delete", args=(self.pk,))
+
+
