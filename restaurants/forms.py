@@ -388,13 +388,20 @@ class RestaurantForm(forms.ModelForm):
             "country",
             "owner",
             "add_ons",
+            "custom_link",
         ]
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super(RestaurantForm, self).__init__(*args, **kwargs)
         # self.fields["city"].queryset = City.objects.all()
-        self.fields["owner"].queryset = User.objects.all()
-    ''' 
+        #
+        if self.instance.pk:
+            self.fields["owner"].queryset = Restaurant.objects.filter(owner=user)
+        
+        else:
+            self.fields["owner"].queryset = User.objects.all()
+    
     def clean_custom_link(self):
         custom_link = self.cleaned_data.get('custom_link')
         if not custom_link:
@@ -407,7 +414,49 @@ class RestaurantForm(forms.ModelForm):
             raise forms.ValidationError("Custom link tagname cannot be more than 24 characters")
         
         return custom_link
- '''
+
+
+class GeneralViewRestaurantForm(forms.ModelForm):
+    class Meta:
+        model = models.Restaurant
+        fields = [
+            "address",
+            "name",
+            "email",
+            "phone_number",
+            "business_category",
+            "business_reg_details",
+            "cac_reg_number",
+            "cac_certificate",
+            "business_license",
+            "profile_img",
+            "cover_img",
+            "city",
+            "country",
+            "owner",
+            "add_ons",
+            "custom_link",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(GeneralViewRestaurantForm, self).__init__(*args, **kwargs)
+        # self.fields["city"].queryset = City.objects.all()
+        self.fields["owner"].queryset = User.objects.all()
+        self.fields["restaurant"] = Restaurant.objects.all()
+    
+    def clean_custom_link(self):
+        custom_link = self.cleaned_data.get('custom_link')
+        if not custom_link:
+            pass
+        if not custom_link.isalnum():
+            raise forms.ValidationError("Special characters are not allowed.")
+        if custom_link and custom_link < 3:
+            raise forms.ValidationError("Custom link tagname cannot be less than 3 characters")
+        if custom_link > 24:
+            raise forms.ValidationError("Custom link tagname cannot be more than 24 characters")
+        
+        return custom_link
+
 
 """ 
 
