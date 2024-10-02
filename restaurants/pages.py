@@ -3,10 +3,19 @@ from typing import Any
 from django.urls import path
 from django.views import generic
 
+from restaurants.models import Restaurant
+
 app_name = "restaurants"
 
 
-class DashboardView(generic.TemplateView):
+class RestaurantMixin:
+    model = Restaurant
+    slug_field = "slug"
+    slug_url_kwarg = "restaurant"
+    context_object_name = "restaurant"
+
+
+class DashboardView(RestaurantMixin, generic.DetailView):
     template_name = "restaurants/pages/dashboard.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
@@ -15,7 +24,7 @@ class DashboardView(generic.TemplateView):
         return context
 
 
-class SettingsView(generic.TemplateView):
+class SettingsView(RestaurantMixin, generic.DetailView):
     template_name = "restaurants/pages/settings.html"
 
 
