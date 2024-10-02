@@ -265,6 +265,7 @@ class MenuItemForm(forms.ModelForm):
             "discount_percentage",
             "image",
             "video",
+            "listed",
         ]
 
     def __init__(self, *args, **kwargs):

@@ -117,6 +117,8 @@ class MenuItemAdmin(admin.ModelAdmin):
         "discount_percentage",
         "image",
         "video",
+        "menu_item_ID",
+        "listed",
         "created",
         "last_updated",
     ]
@@ -212,5 +214,6 @@ admin.site.register(models.AddOn, AddOnAdmin)
 admin.site.register(models.MenuItem, MenuItemAdmin)
 admin.site.register(models.MenuCategory, MenuCategoryAdmin)
 admin.site.register(models.Restaurant, RestaurantAdmin)
+admin.site.register(models.RestaurantCategory, RestaurantCategoryAdmin)
 #admin.site.register(models.Chef, ChefAdmin)
 admin.site.register(models.Staff, StaffAdmin)

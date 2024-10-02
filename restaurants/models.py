@@ -171,6 +171,7 @@ class MenuItem(models.Model):
     
     # Miscellenous
     menu_item_ID = models.UUIDField(default=uuid.uuid4)
+    listed = models.BooleanField(default = True)
     
     # Time
     created = models.DateTimeField(auto_now_add=True, editable=False)
