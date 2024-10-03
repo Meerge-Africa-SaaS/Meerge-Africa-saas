@@ -16,7 +16,6 @@
 .product-card .cards-row-1 {
   display: flex;
   justify-content: flex-start;
-  gap: 30px;
 }
 
 .product-card .card {
