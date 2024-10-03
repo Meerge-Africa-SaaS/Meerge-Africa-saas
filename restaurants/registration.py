@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
 from django.views import generic
-from phonenumber_field.formfields import PhoneNumberField
+
+from config.form_fields import PhoneNumberField
 
 # from world.models import City
 from core.models import User

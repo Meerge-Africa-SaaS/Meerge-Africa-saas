@@ -20,9 +20,9 @@
       <div class="flex flex-col bg-white max-w-full w-[700px] py-4 px-8 sm:px-20 gap-4 rounded-md" id="container">
         {% block header %}
           <div class="flex items-center justify-center gap-2" id="header">
-            <img src="{% static 'images/logo.png' %}" alt="logo" class="w-10 h-10" />
+            <img src="{% static 'images/logo.png' %}" alt="logo" class="w-auto h-10" />
 
-            <h1 class="text-[30px] md:text-[40px] font-semibold font-sans"><span class="text-primary">Meerge</span> <span class="text-secondary">Africa</span></h1>
+            {% comment %} <h1 class="text-[30px] md:text-[40px] font-semibold font-sans"><span class="text-primary">Meerge</span> <span class="text-secondary">Africa</span></h1> {% endcomment %}
           </div>
         {% endblock %}
         {% block body %}
