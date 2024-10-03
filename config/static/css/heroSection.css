@@ -85,7 +85,7 @@ nav.scrolled button:hover {
   color: #ffffff;
 }
 .hero-section {
-  background-image: url("/config/static/assets/bg-img.png");
+  background-image: url("../assets/bg-img.png");
   background-size: cover;
   background-position: center;
   min-height: 100vh;

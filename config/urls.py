@@ -15,7 +15,7 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("", include("home.urls")),
-    path('<slug:custom_link>', restaurant_views.RestaurantDetailView),
+    path('<slug:custom_link>', restaurant_views.RestaurantDetailView.as_view()),
     path("api/", include("core.urls")),
     path("accounts/", include("allauth.urls")),
     path("", include(api)),
