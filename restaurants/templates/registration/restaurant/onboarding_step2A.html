@@ -1,0 +1,36 @@
+{% load wagtailadmin_tags %}
+<div class="flex-col w-full justify-start items-center" id="body">
+  <div class="text-center">
+    <p class="text-2xl font-bold">Let's get you started</p>
+    <p class="text-lg text-gray-700">Enter your details to get started</p>
+  </div>
+  <form class="" hx-post="{% url 'restaurant_onboarding_wizard' %}" hx-target="#body" hx-swap="outerHTML" novalidate>
+    <div class="hidden">{{ form.errors }}</div>
+    {% csrf_token %}
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+      {{ wizard.form.management_form }}
+    {% endif %}
+    {% comment %}business registration number{% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% formattedfield field=form.business_registration_number %}
+    </div>
+
+    {% comment %}business document{% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% include 'components/dropzone.html' with field=form.business_document %}
+    </div>
+
+    {% comment %}premises license{% endcomment %}
+    <div class="form-group min-w-full mt-4">
+      {% include 'components/dropzone.html' with field=form.premises_license %}
+    </div>
+    <div class="flex items-center justify-end mt-6 gap-2">
+      <svg class="animate-spin htmx-indicator" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+      </svg>
+      <button name="wizard_goto_step" type="submit" class="btn-primary btn-outline !w-fit" value="{{ wizard.steps.prev }}"><span>Prev</span></button>
+      <button type="submit" class="!w-fit"><span>Next</span></button>
+    </div>
+  </form>
+</div>

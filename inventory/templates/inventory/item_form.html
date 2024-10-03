@@ -1,0 +1,68 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    
+<p>
+    <a class="btn btn-light" href="{% url 'inventory_Item_list' %}">
+    Item Listing
+    </a>
+</p>
+    
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{form.errors}}
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="last_updated">last_updated: </label>
+      <input class="form-control col-sm-10"
+         id="last_updated" type="datetime-local"
+         name="last_updated" value="{{ object.last_updated }}" disabled>
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="unit_of_measure">unit_of_measure: </label>
+      <input class="form-control col-sm-10"
+         id="unit_of_measure" type="text"
+         name="unit_of_measure" value="{{ object.unit_of_measure }}">
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="name">name: </label>
+      <input class="form-control col-sm-10"
+         id="name" type="text"
+         name="name" value="{{ object.name }}">
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="id">id: </label>
+      <input class="form-control col-sm-10"
+         id="id" type="text"
+         name="id" value="{{ object.id }}" disabled>
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="price">price: </label>
+      <input class="form-control col-sm-10"
+         id="price" type="text"
+         name="price" value="{{ object.price }}">
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="created">created: </label>
+      <input class="form-control col-sm-10"
+         id="created" type="datetime-local"
+         name="created" value="{{ object.created }}" disabled>
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="expiry_date">expiry_date: </label>
+      <input class="form-control col-sm-10"
+         id="expiry_date" type="date"
+         name="expiry_date" value="{{ object.expiry_date }}">
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="category">category: </label>
+      {{ form.category }}
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="supplier">supplier: </label>
+      {{ form.supplier }}
+  </div>
+  <input type="submit" value="Save" class="btn btn-primary">
+</form>
+
+{% endblock %}

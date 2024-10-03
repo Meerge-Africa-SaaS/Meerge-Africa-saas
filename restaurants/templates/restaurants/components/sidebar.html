@@ -1,0 +1,70 @@
+{% load static wagtailadmin_tags %}
+
+<aside id="sidebar" class="active" aria-label="Sidenav">
+  <div>
+    <div id="sidebar-header">
+      <img src="{% static 'images/logo.png' %}" id="sidebar-logo" alt="Logo" />
+      {% comment %} <h1 class="brand-name">
+        <span>Meerge</span>
+        <span>Africa</span>
+      </h1> {% endcomment %}
+    </div>
+    <ul id="sidebar-list" class="group" hx-boost="true" role="navigation" data-active-tab="{{ active_tab }}">
+      <li class="sidebar__item">
+        <a class="group-data-[active-tab='dashboard']:tab-active" href="{% url 'restaurants:dashboard' %}">
+          {% include 'svg/dashboard.html' %}
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a class="group-data-[active-tab='orders']:tab-active" href="">
+          {% include 'svg/basket.html' %}
+          <span>Orders</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a class="group-data-[active-tab='menu']:tab-active" href="">
+          {% include 'svg/dish.html' %}
+          <span>Menu</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a class="group-data-[active-tab='workboard']:tab-active" href="">
+          {% include 'svg/notepad.html' %}
+          <span>Workboard</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a class="group-data-[active-tab='inventory']:tab-active" href="">
+          {% include 'svg/inventory.html' %}
+          <span>Inventory</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a class="group-data-[active-tab='payment']:tab-active" href="">
+          {% include 'svg/wallet.html' %}
+          <span>Payment</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a class="group-data-[active-tab='quick-market']:tab-active" href="">
+          {% include 'svg/cart.html' %}
+          <span>Quick-Market</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a class="group-data-[active-tab='analytics']:tab-active" href="">
+          {% include 'svg/analytics.html' %}
+          <span>Analytics</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a class="group-data-[active-tab='settings']:tab-active" href="{% url 'restaurants:settings' %}">
+          {% include 'svg/settings.html' %}
+          <span>Settings</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
+<div id="sidebar-overlay" aria-hidden="true"></div>

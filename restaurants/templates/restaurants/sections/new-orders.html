@@ -1,0 +1,55 @@
+<section id="new-orders">
+  <div>
+    <h2 class="section-title">New Orders Today</h2>
+    <button id="btn_new-order" class="btn btn-primary">
+      <span>Create Order</span>
+      {% comment %} {% include 'svg/plus-circle.html' with class='icon' %} {% endcomment %}
+    </button>
+  </div>
+  <table id="new-orders__table">
+    <thead>
+      <tr>
+        <th>Order No.</th>
+        <th>Menu Item(s)</th>
+        <th>Price</th>
+        <th>Order Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if empty %}
+        <tr>
+          <td colspan="5" class="!w-full !text-left">No Available Orders Data</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td>RBP-3456</td>
+          <td>BBQ Full Chicken</td>
+          <td>10,500</td>
+          <td>Eat-In</td>
+          <td>
+            {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
+          </td>
+        </tr>
+        <tr>
+          <td>RBP-4673</td>
+          <td>BBQ Chicken Thighs</td>
+          <td>7,000</td>
+          <td>Take-Out</td>
+          <td>
+            {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
+          </td>
+        </tr>
+        <tr>
+          <td>RBP-2345</td>
+          <td>Grilled Fish with Fried Plantain With Salad</td>
+          <td>2,500</td>
+          <td>Delivery</td>
+          <td>
+            {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</section>
