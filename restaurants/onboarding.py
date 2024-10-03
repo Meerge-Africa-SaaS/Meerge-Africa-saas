@@ -162,6 +162,8 @@ class OnboardingWizardView(SessionWizardView):
         # create a restaurant
         restaurant = Restaurant.objects.create(
             name=form_list[0].cleaned_data["name"],
+            phone_number=form_list[0].cleaned_data["business_phone_number"],
+            email=form_list[0].cleaned_data["business_email"],
             city=None,
             country=None,
             address=form_list[0].cleaned_data["business_address"],
@@ -173,7 +175,7 @@ class OnboardingWizardView(SessionWizardView):
             self.request,
             "Your restaurant has been created successfully.",
         )
-        return redirect(reverse("restaurants:dashboard", args=[restaurant.slug]))
+        return redirect(reverse("restaurants:dashboard", args=[restaurant.custom_link]))
 
 
 class OnboardingView(generic.TemplateView):

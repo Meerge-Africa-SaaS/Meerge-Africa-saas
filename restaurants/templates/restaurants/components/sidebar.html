@@ -11,7 +11,7 @@
     </div>
     <ul id="sidebar-list" class="group" role="navigation" data-active-tab="{{ active_tab }}">
       <li class="sidebar__item">
-        <a class="group-data-[active-tab='dashboard']:tab-active" href="{% url 'restaurants:dashboard' restaurant.slug %}">
+        <a class="group-data-[active-tab='dashboard']:tab-active" href="{% url 'restaurants:dashboard' restaurant.custom_link %}">
           {% include 'svg/dashboard.html' %}
           <span>Dashboard</span>
         </a>
@@ -59,7 +59,7 @@
         </a>
       </li>
       <li class="sidebar__item">
-        <a class="group-data-[active-tab='settings']:tab-active" href="{% url 'restaurants:settings' restaurant.slug %}">
+        <a class="group-data-[active-tab='settings']:tab-active" href="{% url 'restaurants:settings' restaurant.custom_link %}">
           {% include 'svg/settings.html' %}
           <span>Settings</span>
         </a>
