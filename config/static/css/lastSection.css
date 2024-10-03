@@ -1,6 +1,6 @@
 .last-section {
   position: relative;
-  background-image: url("/assets/bar-man.png");
+  background-image: url("/config/static/assets/bar-man.png");
   background-size: cover;
   background-position: center;
   height: 100vh;

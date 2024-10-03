@@ -3,7 +3,7 @@
 }
 
 .features-card {
-  background-image: url("/assets/chef-chopping-tomatoes.png");
+  background-image: url("/config/static/assets/chef-chopping-tomatoes.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
