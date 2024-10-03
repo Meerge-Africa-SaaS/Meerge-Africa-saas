@@ -1297,10 +1297,6 @@ input:checked + .toggle-bg {
   margin-top: 2rem;
 }
 
-.\!mt-0 {
-  margin-top: 0px !important;
-}
-
 .block {
   display: block;
 }
@@ -1937,14 +1933,6 @@ input:checked + .toggle-bg {
   background-color: rgb(255 255 255 / 0.5);
 }
 
-.bg-primary {
-  background-color: rgba(14, 34, 84, 1);
-}
-
-.bg-secondary {
-  background-color: rgba(225, 93, 37, 1);
-}
-
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -2301,12 +2289,12 @@ input:checked + .toggle-bg {
   transition-duration: 150ms;
 }
 
-.ease-out {
-  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-}
-
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ease-out {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 #sidebar {

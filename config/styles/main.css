@@ -8,6 +8,7 @@
 @import "./components/new-orders.css";
 @import "./components/sales-history.css";
 @import "./components/modal.css";
+@import "./pages/business-profile.css";
 
 
 body {
