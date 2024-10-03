@@ -1,6 +1,8 @@
 from django.urls import include, path
 from rest_framework import routers
 
+from restaurants import onboarding, registration
+
 from . import api, htmx, views
 
 router = routers.DefaultRouter()
@@ -12,11 +14,10 @@ router.register("Restaurant", api.RestaurantViewSet)
 router.register("Staff", api.StaffViewSet)
 
 urlpatterns = (
-    path("", include("restaurants.pages", namespace="pages")),
     path("api/v1/", include(router.urls)),
     path(
         "signup/",
-        views.SignupView.as_view(),
+        registration.SignupView.as_view(),
         name="restaurant_signup",
     ),
     path(
@@ -26,12 +27,12 @@ urlpatterns = (
     ),
     path(
         "onboarding/",
-        views.OnboardingView.as_view(),
+        onboarding.OnboardingView.as_view(),
         name="restaurant_onboarding",
     ),
     path(
         "onboarding/wizard",
-        views.OnboardingWizardView.as_view(),
+        onboarding.OnboardingWizardView.as_view(),
         name="restaurant_onboarding_wizard",
     ),
     path(
@@ -326,4 +327,5 @@ urlpatterns = (
     #     htmx.HTMXStaffDeleteView.as_view(),
     #     name="restaurant_Staff_htmx_delete",
     # ),
+    path("<slug:restaurant>/", include("restaurants.pages", namespace="pages")),
 )

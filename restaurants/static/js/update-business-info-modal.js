@@ -1,6 +1,6 @@
 (() => {
     /**@type {HTMLDivElement} */
-    const modal = document.getElementById('add-employee-modal');
+    const modal = document.getElementById('update-business-info-modal');
     /**@type {HTMLButtonElement} */
     const cancelBtn = modal.querySelector('button.cancel');
     /**@type {HTMLButtonElement} */
