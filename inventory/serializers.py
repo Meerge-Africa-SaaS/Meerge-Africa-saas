@@ -49,6 +49,7 @@ class SupplierSerializer(serializers.ModelSerializer):
             "id",
             "created",
             "name",
+            "owner",
             "last_updated",
             "city",
         ]

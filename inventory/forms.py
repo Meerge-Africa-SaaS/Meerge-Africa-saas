@@ -54,6 +54,7 @@ class SupplierForm(forms.ModelForm):
         model = models.Supplier
         fields = [
             "name",
+            "owner",
             "city",
         ]
 
