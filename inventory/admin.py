@@ -87,6 +87,10 @@ class SupplierAdmin(admin.ModelAdmin):
         "created",
         "name",
         "last_updated",
+        "owner",
+        "email",
+        "phone_number",
+        
     ]
     readonly_fields = [
         "id",
