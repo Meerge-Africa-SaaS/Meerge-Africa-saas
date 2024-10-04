@@ -9,12 +9,13 @@
 
 .second-section h2 {
   font-size: 40px;
+  background-color: red;
   font-weight: 500;
   line-height: 60px;
   text-align: center;
   width: 40%;
   margin-top: 5rem;
-}
+} */
 
 .card {
   background: #ffffff;
