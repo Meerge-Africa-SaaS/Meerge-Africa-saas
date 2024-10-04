@@ -3,6 +3,14 @@ from django.urls import reverse_lazy
 from . import models
 from . import forms
 
+from django.dispatch import receiver
+
+@receiver(delivery_request_created)
+def handle_delivery_request_created(sender, instance, created, kwargs):
+    if created:
+        print("\n"*10, instance, "\n"*10)
+
+
 
 class DeliveryAgentListView(generic.ListView):
     model = models.DeliveryAgent

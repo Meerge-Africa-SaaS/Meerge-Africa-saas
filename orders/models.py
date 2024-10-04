@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from phonenumber_field.modelfields import PhoneNumberField
+from customers.models import Order
 
 User = get_user_model()
 
@@ -75,3 +76,25 @@ class DeliveryAgent(User):  # type: ignore
 
     def get_htmx_delete_url(self):
         return reverse("orders_DeliveryAgent_htmx_delete", args=(self.pk,))
+
+
+class DeliveryRequest(models.Model):
+    DELIVERY_REQUEST_STATUSES = [
+        ("pending", _("Pending")),
+        ("in_motion", _("On the way")),
+        ("delivered", _("Delivered"))
+    ]
+    
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    status = models.CharField(choices=DELIVERY_REQUEST_STATUSES, max_length=10)
+    created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Delivery Request for Order {order.id}"
+    
+    
+    def save(self):
+        super().__init__()
+        from .signals import delivery_request_created
+        delivery_request_created.send(sender = self.__class__, instance = instance, created = True)
