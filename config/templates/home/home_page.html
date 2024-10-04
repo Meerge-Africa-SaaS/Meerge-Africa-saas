@@ -20,7 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
-    <title>MergeAfrica</title>
+    <title>MeergeAfrica</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
@@ -102,7 +102,7 @@
       class="second-section h2 flex flex-col items-center justify-center pt-12 w-full bg-[#f3f5f7]"
     >
       <h2>
-        Food business is <strong> serious as fun!</strong> Ease the
+        Food business is  <strong>as serious as fun!</strong> <br>  Ease the
         stress<strong> by 0.1%</strong>
       </h2>
 
@@ -115,8 +115,16 @@
           competitive prices.
         </p>
       </div>
+      <br>
+      <br>
+      <br>
 
-      <section class="parent-wrapper" id="parent-wrapper-overlay">
+      <section class="parent-wrapper" id="parent-wrapper-overlay" style="
+      background-image: url('{% static 'assets/chef-chopping-tomatoes.png' %}');
+      background-size: cover; /* Ensures the image covers the entire section */
+      background-repeat: no-repeat; /* Prevents the image from repeating */
+      background-position: center; /* Centers the image */
+      ">
         <div class="overlay"></div>
         <section class="features-card" id="features-card">
           <div>
@@ -366,7 +374,7 @@
       <header
         class="head-txt text-center text-3xl font-semibold mb-16 w-full mt-20"
       >
-        Here's what <strong>our trusted partners</strong> say about us
+        Here's what <strong>our trusted partners</strong> <br> say about us
       </header>
 
       <div class="flex justify-center items-center space-x-16 mt-16">
@@ -439,7 +447,9 @@
       </div>
     </section>
 
-    <section class="last-section">
+    <section class="last-section" style="background-image: url('{% static 'assets/bar-man.png' %}');">
+ 
+ 
       <div class="mx-20">
         <p class="w-[662px]">
           Managing your restaurant has never been more effortless.
