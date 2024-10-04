@@ -6,16 +6,18 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from config import api
-from search import views as search_views
 from restaurants import views as restaurant_views
+from search import views as search_views
 
 urlpatterns = [
     path("meerge/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
+
     path("", include("home.urls")),
     path('<slug:custom_link>', restaurant_views.RestaurantDetailView.as_view()),
+
     path("api/", include("core.urls")),
     path("accounts/", include("allauth.urls")),
     path("", include(api)),
@@ -24,6 +26,11 @@ urlpatterns = [
     path("customers/", include("customers.urls")),
     path("inventory/", include("inventory.urls")),
     path("orders/", include("orders.urls")),
+    path(
+        "<slug:custom_link>",
+        restaurant_views.RestaurantDetailView.as_view(),
+        name="restaurant_detail",
+    ),
 ]
 
 

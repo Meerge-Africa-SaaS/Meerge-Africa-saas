@@ -10,7 +10,7 @@ app_name = "restaurants"
 
 class RestaurantMixin:
     model = Restaurant
-    slug_field = "slug"
+    slug_field = "custom_link"
     slug_url_kwarg = "restaurant"
     context_object_name = "restaurant"
 
@@ -28,7 +28,17 @@ class SettingsView(RestaurantMixin, generic.DetailView):
     template_name = "restaurants/pages/settings.html"
 
 
+class ProfileView(RestaurantMixin, generic.DetailView):
+    template_name = "restaurants/pages/user-profile.html"
+
+
+class BusinessView(RestaurantMixin, generic.DetailView):
+    template_name = "restaurants/pages/business-profile.html"
+
+
 urlpatterns = (
     path("", DashboardView.as_view(), name="dashboard"),
     path("settings/", SettingsView.as_view(), name="settings"),
+    path("profile/", ProfileView.as_view(), name="user_profile"),
+    path("business/", BusinessView.as_view(), name="business_profile"),
 )
