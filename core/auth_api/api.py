@@ -118,6 +118,33 @@ def owner_signup(request, data: SignupRequestSchema):
     # Return info.
     return {"message": registration_successful}
 
+@router.post("/supply-owner-signup", tags = ["Default Signup"])
+def owner_signup(request, data: SignupRequestSchema):
+    # Model signup
+    if data.actor_type != "owner":
+        return JsonResponse({"message": "Not an owner."})
+    
+    owner = User.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username)
+    owner.set_password(data.password)
+    owner.is_active = False
+    owner.save()
+    
+    # Get the model instance for allauth implementation.
+    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
+        user=owner,
+        email=data.email,
+        defaults={'verified': False, 'primary': True}
+    )
+
+    # Create EmailConfirmation instance and send verification mail
+    confirmation = allauthEmailConfirmation.create(email_address = allauthemail_address)
+    confirmation.send(request = request, signup=True)
+    confirmation.sent = timezone.now()
+    confirmation.save()
+    
+    # Return info.
+    return {"message": registration_successful}
+
 @router.get("confirm-email/{key_token}", url_name="verifybytoken")
 def verify_key(request, key_token: str):
     
