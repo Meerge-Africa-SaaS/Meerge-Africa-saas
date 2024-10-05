@@ -1,4 +1,4 @@
-<
+
 import secrets
 from random import randint
 
