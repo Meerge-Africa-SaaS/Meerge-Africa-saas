@@ -1,0 +1,8 @@
+{% if field.errors %}
+  <ul class="text-red-500 text-xs field-error-list">
+    {% for error in field.errors %}
+      <li class="field-error-item">{{ error }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+  

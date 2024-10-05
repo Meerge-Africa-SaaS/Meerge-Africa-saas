@@ -1,0 +1,67 @@
+{% extends 'restaurants/layout.html' %}
+{% load static %}
+
+{% block title %}
+  Settings
+{% endblock %}
+
+{% block sidebar %}
+  {% include 'restaurants/components/sidebar.html' with active_tab='settings' %}
+{% endblock %}
+
+{% block navbar %}
+  {% include 'restaurants/components/navbar.html' with page_name='Profile' %}
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'js/dashboard.js' %}" defer></script>
+  <script src="{% static 'js/deactivate-account-modal.js' %}" defer></script>
+  <script src="{% static 'js/change-password-modal.js' %}" defer></script>
+{% endblock %}
+
+{% block main_class %}
+  w-full h-full space-y-6 bg-slate-200 overflow-y-auto
+{% endblock %}
+
+{% block main %}
+  {% include 'restaurants/components/deactivate-account-modal.html' %}
+  {% include 'restaurants/components/change-password-modal.html' %}
+  <div class="flex items-start p-8 gap-8 h-full w-full">
+    <div class="bg-white flex-[0.2] h-full pl-10 py-6">
+      <ul class="space-y-2 text-secondary text-xl">
+        <li>Account & Security</li>
+      </ul>
+    </div>
+    <div class="bg-white flex-[0.8] h-full py-6 px-10 space-y-14">
+      <div class="mt-14">
+        <h1 class="text-4xl font-light mt-14">Account & Security</h1>
+        <p class="text-gray-400">Manage your account and security information</p>
+      </div>
+      <div class="flex items-end justify-between">
+        <div class="flex-[0.6]">
+          <h2 class="text-xl font-semibold">Password</h2>
+          <p class="text-gray-400">Set a unique password to protect your account</p>
+        </div>
+        <a class="text-secondary cursor-pointer change-password-trigger">Change Password</a>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="flex-[0.6]">
+          <h2 class="text-xl font-semibold">Two-Step Verification</h2>
+          <p class="text-gray-400">We will use this to prevent unrestricted access to your account</p>
+        </div>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox" value="" class="sr-only peer" />
+          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+        </label>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="flex-[0.6]">
+          <h2 class="text-xl font-semibold">Deactivate Account</h2>
+          <p class="text-gray-400">This will shut down your account. Your account will be reactivated when you sign in again</p>
+        </div>
+        <a class="text-secondary cursor-pointer deactivate-account-trigger">Deactivate Account</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -23,6 +28,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
+                     "unfold",
                      "home",
                      "search",
                      "wagtail.contrib.forms",
@@ -44,7 +50,7 @@ INSTALLED_APPS = [
                      "django.contrib.sessions",
                      "django.contrib.messages",
                      "django.contrib.staticfiles",
-                 ] + [
+                 ]  + [
                      # packages
                      'rest_framework',
                      'django_htmx',
@@ -55,8 +61,9 @@ INSTALLED_APPS = [
                      # apps
 
                  ]
+
 # Customer User Model
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = "core.User"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -64,15 +71,21 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
+    # "allauth.usersessions.middleware.UserSessionsMiddleware", May need installation before we use.
 ]
 
 ROOT_URLCONF = "config.urls"
+
+
+
+##### Django stuff continues from here.
 
 TEMPLATES = [
     {
@@ -97,11 +110,15 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+db_config = dj_database_url.config(default=os.getenv("DATABASE_URL"))
+db_config["ATOMIC_REQUESTS"] = True
 DATABASES = {
+    # "supa": db_config,
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+    },
 }
 
 # Password validation
@@ -121,6 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -186,7 +204,18 @@ WAGTAILADMIN_BASE_URL = "http://MeergeAfrica.com"
 # This can be omitted to allow all files, but note that this may present a security risk
 # if untrusted users are allowed to upload files -
 # see https://docs.wagtail.org/en/stable/advanced_topics/deploying.html#user-uploaded-files
-WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+WAGTAILDOCS_EXTENSIONS = [
+    "csv",
+    "docx",
+    "key",
+    "odt",
+    "pdf",
+    "pptx",
+    "rtf",
+    "txt",
+    "xlsx",
+    "zip",
+]
 
 
 def load_settings(setting):

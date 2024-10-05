@@ -84,17 +84,18 @@ class StockDeleteView(generic.DeleteView):
 
 class SupplierListView(generic.ListView):
     model = models.Supplier
-    form_class = forms.SupplierForm
+    form_class = forms.ViewSupplierForm
+    
 
-
-class SupplierCreateView(generic.CreateView):
+class SupplierCreateView(generic.TemplateView):
     model = models.Supplier
     form_class = forms.SupplierForm
+    template_name = "inventory/supplier_registration/base.html"
 
 
 class SupplierDetailView(generic.DetailView):
     model = models.Supplier
-    form_class = forms.SupplierForm
+    form_class = forms.ViewSupplierForm
 
 
 class SupplierUpdateView(generic.UpdateView):

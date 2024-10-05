@@ -1,8 +1,21 @@
-Django>=4.2,<5.1
+Django>=4.2,<5.2
 wagtail>=6.2,<6.3
+python-dotenv
+dj_database_url
+psycopg2-binary
+django-allauth
+django-unfold
 django-extensions
 djangorestframework
 django-htmx
 PyJWT
 cryptography
 django-cities-light
+django-ninja
+django-phonenumber-field
+django-phonenumbers
+pyOpenSSL
+# secrets
+django-browser-reload
+django-compressor
+django-formtools
