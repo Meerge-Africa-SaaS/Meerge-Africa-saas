@@ -152,7 +152,7 @@ def owner_signup(request, data: SignupRequestSchema):
 
 
 @router.post("/supply-owner-signup", tags = ["Default Signup"])
-def owner_signup(request, data: SignupRequestSchema):
+def supply_owner_signup(request, data: SignupRequestSchema):
     # Model signup
     if data.actor_type != "owner":
         return JsonResponse({"message": "Not an owner."})

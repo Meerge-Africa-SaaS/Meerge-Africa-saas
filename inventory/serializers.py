@@ -70,4 +70,10 @@ class SupplyManagerSerializer(serializers.ModelSerializer):
             "last_updated",
             "created",
             "supplier",
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "supply_business",
         ]

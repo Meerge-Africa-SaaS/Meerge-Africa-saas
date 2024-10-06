@@ -209,13 +209,34 @@ class ViewSupplierForm(forms.ModelForm):
         self.fields["city"].queryset = City.objects.all()
 
 
-class SupplyManagerForm(forms.ModelForm):
+class SupplyManagerSignupForm(forms.ModelForm):
     class Meta:
         model = models.SupplyManager
         fields = [
-            "supplier",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "password",
+            "supply_business",
         ]
 
     def __init__(self, *args, **kwargs):
         super(SupplyManagerForm, self).__init__(*args, **kwargs)
-        self.fields["supplier"].queryset = Supplier.objects.all()
+        self.fields["supply_business"].queryset = Supplier.objects.all()
+
+
+class SupplyManagerForm(forms.ModelForm):
+    class Meta:
+        model = models.SupplyManager
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "supply_business",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(SupplyManagerForm, self).__init__(*args, **kwargs)
+        self.fields["supply_business"].queryset = Supplier.objects.all()

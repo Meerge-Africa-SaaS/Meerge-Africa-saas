@@ -178,7 +178,7 @@ class Supplier(models.Model):
 
 class SupplyManager(User):  # type: ignore
     # Relationships
-    supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
+    supply_business = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
 
     # Fields
     # last_updated = models.DateTimeField(auto_now=True, editable=False)
