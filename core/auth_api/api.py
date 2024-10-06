@@ -82,7 +82,7 @@ SOCIAL ACCOUNTS NOT SETUP YET.
 """
 
 
-"""
+
 @receiver(user_signed_up)
 def socialaccount_user_signup(request, user, **kwargs):
     print("\n"*5,request.session, "\n"*5)
@@ -99,21 +99,21 @@ def socialaccount_user_signup(request, user, **kwargs):
                  # Create a new Customer instance associated with this User
                 customer = Customer(user_ptr=user, address="abuja")
                 customer.set_password(user.password)
-                #user.delete()
+                user.delete()
                 customer.save()
             
         elif actor_type == 'supplymanager':
             SupplyManager.objects.create_user(user=user)
-        "" if actor_type == 'chef':
+        """ if actor_type == 'chef':
             Chef.objects.create_user(user=user) ""
         "" elif actor_type == 'deliveryagent':
-            DeliveryAgent.objects.create_user(user=user) ""
+            DeliveryAgent.objects.create_user(user=user) """
 
         del request.session["actor_type"]
         
     else:
         print("Session is not here")
-"""
+
 
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
 
