@@ -1,10 +1,13 @@
-from django.views import generic
-from django.urls import reverse_lazy
-from django.shortcuts import HttpResponse
-from django.template.response import TemplateResponse
+from typing import Any
 
-from . import models
-from . import forms
+from django.forms.forms import BaseForm
+from django.http import HttpRequest
+from django.shortcuts import HttpResponse, redirect
+from django.template.response import TemplateResponse
+from django.urls import reverse_lazy
+from django.views import generic
+
+from . import forms, models
 
 
 class HTMXIngredientListView(generic.ListView):
@@ -214,7 +217,8 @@ class HTMXRestaurantDeleteView(generic.DeleteView):
         super().form_valid(form)
         return HttpResponse()
 
-''' 
+
+""" 
 class HTMXChefListView(generic.ListView):
     model = models.Chef
     form_class = forms.ChefForm
@@ -265,7 +269,8 @@ class HTMXChefDeleteView(generic.DeleteView):
     def form_valid(self, form):
         super().form_valid(form)
         return HttpResponse()
- '''
+ """
+
 
 class HTMXStaffListView(generic.ListView):
     model = models.Staff
@@ -317,3 +322,64 @@ class HTMXStaffDeleteView(generic.DeleteView):
     def form_valid(self, form):
         super().form_valid(form)
         return HttpResponse()
+
+
+class HTMXRestaurantLogoView(generic.FormView, generic.DetailView):
+    model = models.Restaurant
+    form_class = forms.RestaurantLogoForm
+    template_name = "restaurants/components/business-profile/logo.html"
+    context_object_name = "restaurant"
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.get_form()
+        context["logo"] = (
+            self.object.profile_img.url if self.object.profile_img else None
+        )
+        print(context)
+        return context
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["instance"] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+
+class HTMXRestaurantCoverView(generic.FormView, generic.DetailView):
+    model = models.Restaurant
+    form_class = forms.RestaurantCoverForm
+    template_name = "restaurants/components/business-profile/cover.html"
+    context_object_name = "restaurant"
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.get_form()
+        context["cover_image"] = (
+            self.object.cover_img.url if self.object.cover_img else None
+        )
+        return context
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["instance"] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)

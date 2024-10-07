@@ -9,7 +9,7 @@
 }
 
 .modal-content {
-    @apply relative w-fit max-w-lg
+    @apply relative w-fit max-w-lg mt-40
     bg-white shadow-lg rounded-lg
     p-4 md:p-6
     transform scale-95
