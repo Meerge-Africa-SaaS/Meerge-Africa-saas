@@ -62,6 +62,7 @@ urlpatterns = (
     path(
         "Stock/create/", views.StockCreateView.as_view(), name="inventory_Stock_create"
     ),
+     path('api/stock-create',views.StockCreateAPIView.as_view(), name='stock-create'),
     path(
         "Stock/detail/<int:pk>/",
         views.StockDetailView.as_view(),

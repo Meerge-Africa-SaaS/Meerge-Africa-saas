@@ -38,6 +38,20 @@ class StockSerializer(serializers.ModelSerializer):
             "id",
             "created",
             "item",
+            "SKU_No",
+            "Product_Name",
+            "Product_Image",
+            "Product_Category",
+            "Manufacturer_Name",
+            "Price",
+            "Units_Available",
+            "Size",
+            "Weight",
+            "Availability_Status",
+            "Discount_Percentage",
+            "Delivery_Time_Estimate",
+            "Pickup_Option",
+            "Password",
         ]
 
 

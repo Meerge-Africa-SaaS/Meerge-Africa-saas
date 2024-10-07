@@ -80,9 +80,7 @@ class SupplierBasicInfoForm(forms.Form):
         if not any(char.islower() for char in password):
             errors.append("Password must contain at least one lowercase letter")
         if not any(char in string.punctuation for char in password):
-            errors.append(
-                "Password must contain at least one special character"
-            )
+            errors.append("Password must contain at least one special character")
         if errors:
             raise forms.ValidationError(errors)
         return password
@@ -152,8 +150,19 @@ class StockForm(forms.ModelForm):
     class Meta:
         model = models.Stock
         fields = [
-            "quantity",
             "item",
+            "quantity",
+            "SKU_number",
+            "product_name",
+            "product_image",
+            "product_category",
+            "manufacture_name",
+            "price",
+            "unit_available",
+            "size",
+            "weight",
+            "discount_percentage",
+            "pickup_available",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -184,3 +193,23 @@ class SupplyManagerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SupplyManagerForm, self).__init__(*args, **kwargs)
         self.fields["supplier"].queryset = Supplier.objects.all()
+
+
+# class StockForm(forms.ModelForm):
+#     class Meta:
+#         model = Stock
+#         fields = [
+#             "item",
+#             "quantity",
+#             "SKU_number",
+#             "product_name",
+#             "product_image",
+#             "product_category",
+#             "manufacture_name",
+#             "price",
+#             "unit_available",
+#             "size",
+#             "weight",
+#             "discount_percentage",
+#             "pickup_available",
+#         ]

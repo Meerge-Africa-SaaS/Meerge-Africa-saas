@@ -1,7 +1,12 @@
-from django.views import generic
 from django.urls import reverse_lazy
-from . import models
-from . import forms
+from django.views import generic
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Stock
+from .serializers import StockSerializer
+
+from . import forms, models
 
 
 class SupplierCreateView(generic.TemplateView):
@@ -68,6 +73,21 @@ class StockListView(generic.ListView):
 class StockCreateView(generic.CreateView):
     model = models.Stock
     form_class = forms.StockForm
+
+
+class StockCreateAPIView(generics.CreateAPIView):
+    queryset = Stock.objects.all()
+    serializer_class = StockSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            stock = serializer.save()
+            return Response(
+                {"id": stock.id, "message": "Stock created successfully."},
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StockDetailView(generic.DetailView):

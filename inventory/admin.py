@@ -1,5 +1,5 @@
-from django.contrib import admin
 from django import forms
+from django.contrib import admin
 
 from . import models
 
@@ -62,10 +62,10 @@ class StockAdmin(admin.ModelAdmin):
     form = StockAdminForm
     list_display = [
         "quantity",
-        "last_updated",
-        "id",
-        "created",
+        "product_name",
+      
     ]
+
     readonly_fields = [
         "quantity",
         "last_updated",

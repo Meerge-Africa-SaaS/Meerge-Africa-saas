@@ -42,3 +42,4 @@ class SupplyManagerViewSet(viewsets.ModelViewSet):
     queryset = models.SupplyManager.objects.all()
     serializer_class = serializers.SupplyManagerSerializer
     permission_classes = [permissions.IsAuthenticated]
+
