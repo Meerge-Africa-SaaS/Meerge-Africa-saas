@@ -296,6 +296,16 @@ urlpatterns = (
         htmx.HTMXRestaurantDeleteView.as_view(),
         name="restaurant_Restaurant_htmx_delete",
     ),
+    path(
+        "htmx/Restaurant/logo/<int:pk>/",
+        htmx.HTMXRestaurantLogoView.as_view(),
+        name="restaurant_Restaurant_htmx_logo",
+    ),
+    path(
+        "htmx/Restaurant/cover/<int:pk>/",
+        htmx.HTMXRestaurantCoverView.as_view(),
+        name="restaurant_Restaurant_htmx_cover",
+    ),
     # TODO: Add Chef views
     # path(
     #     "htmx/Chef/",

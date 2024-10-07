@@ -356,3 +356,15 @@ class StaffForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(StaffForm, self).__init__(*args, **kwargs)
         self.fields["restaurants"].queryset = Restaurant.objects.all()
+
+
+class RestaurantLogoForm(forms.ModelForm):
+    class Meta:
+        model = models.Restaurant
+        fields = ["profile_img"]
+
+
+class RestaurantCoverForm(forms.ModelForm):
+    class Meta:
+        model = models.Restaurant
+        fields = ["cover_img"]
