@@ -25,7 +25,7 @@ def add_placeholder(field: str, form: forms.Form) -> None:
     form.fields[field].widget.attrs["placeholder"] = PLACEHOLDERS[field]
 
 
-class SignupForm(forms.ModelForm):
+class RegistrationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
@@ -47,7 +47,7 @@ class SignupForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(SignupForm, self).__init__(*args, **kwargs)
+        super(RegistrationForm, self).__init__(*args, **kwargs)
         for field in self.fields:
             add_placeholder(field, self)
 
@@ -62,8 +62,8 @@ class SignupForm(forms.ModelForm):
         return user
 
 
-class SignupView(generic.CreateView):
-    form_class = SignupForm
+class RegistrationView(generic.CreateView):
+    form_class = RegistrationForm
     success_url = reverse_lazy("core_User_signin")
     template_name = "restaurants/onboarding/registration.html"
 
