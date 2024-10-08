@@ -38,8 +38,36 @@ class StockSerializer(serializers.ModelSerializer):
             "id",
             "created",
             "item",
+            "SKU_No",
+            "Product_Name",
+            "Product_Image",
+            "Product_Category",
+            "Manufacturer_Name",
+            "Price",
+            "Units_Available",
+            "Size",
+            "Weight",
+            "Availability_Status",
+            "Discount_Percentage",
+            "Delivery_Time_Estimate",
+            "Pickup_Option",
+            "Password",
         ]
 
+class AdminViewAllProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Stock
+        fields = [
+            "id",
+            "Product_Name",
+            "Product_Image",
+            "Product_Category",
+            "Price",
+            "Units_Available",
+            "Size",
+            "Discount_Percentage",
+            "Availability_Status",
+        ]
 
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:

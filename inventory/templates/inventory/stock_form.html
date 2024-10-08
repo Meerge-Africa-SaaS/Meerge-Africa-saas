@@ -1,46 +1,112 @@
-
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    
-<p>
-    <a class="btn btn-light" href="{% url 'inventory_Stock_list' %}">
-    Stock Listing
-    </a>
-</p>
-    
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{form.errors}}
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="quantity">quantity: </label>
-      <input class="form-control col-sm-10"
-         id="quantity" type="number"
-         name="quantity" value="{{ object.quantity }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="last_updated">last_updated: </label>
-      <input class="form-control col-sm-10"
-         id="last_updated" type="datetime-local"
-         name="last_updated" value="{{ object.last_updated }}" disabled>
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="id">id: </label>
-      <input class="form-control col-sm-10"
-         id="id" type="text"
-         name="id" value="{{ object.id }}" disabled>
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="created">created: </label>
-      <input class="form-control col-sm-10"
-         id="created" type="datetime-local"
-         name="created" value="{{ object.created }}" disabled>
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="item">item: </label>
-      {{ form.item }}
-  </div>
-  <input type="submit" value="Save" class="btn btn-primary">
-</form>
+
+<div style="max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+    <h2 style="margin-bottom: 20px; text-align: center;">Create/Update Stock Item</h2>
+
+    <p style="text-align: center;">
+        <a style="padding: 10px 15px; background-color: #f8f9fa; border: 1px solid #007bff; color: #007bff; text-decoration: none; border-radius: 5px;" href="{% url 'inventory_Stock_list' %}">
+            Stock Listing
+        </a>
+    </p>
+
+    <form method="post" enctype="multipart/form-data" style="margin-top: 20px;">
+        {% csrf_token %}
+        {{ form.errors }}
+
+        <div style="margin-bottom: 15px;">
+            <label for="quantity" style="display: block; font-weight: bold;">Quantity:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="quantity" type="number" name="quantity" value="{{ object.quantity }}" required>
+            <div style="color: red; display: none;">Please provide a valid quantity.</div>
+        </div>
+        
+
+        <div style="margin-bottom: 15px;">
+            <label for="item" style="display: block; font-weight: bold;">Item:</label>
+            {{ form.item }}
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="SKU_No" style="display: block; font-weight: bold;">SKU No:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="SKU_No" type="text" name="SKU_No" value="{{ object.SKU_No }}" placeholder="Enter SKU Number" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Product_Name" style="display: block; font-weight: bold;">Product Name:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Product_Name" type="text" name="Product_Name" value="{{ object.Product_Name }}" placeholder="Enter Product Name" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Product_Image" style="display: block; font-weight: bold;">Product Image:</label>
+            <input style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Product_Image" type="file" name="Product_Image" accept="image/*">
+            {% if object.Product_Image %}
+                <small>Current Image:</small>
+                <img src="{{ object.Product_Image.url }}" alt="Current Image" style="max-width: 150px; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Product_Category" style="display: block; font-weight: bold;">Product Category:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Product_Category" type="text" name="Product_Category" value="{{ object.Product_Category }}" placeholder="Enter Category" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Manufacturer_Name" style="display: block; font-weight: bold;">Manufacturer Name:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Manufacturer_Name" type="text" name="Manufacturer_Name" value="{{ object.Manufacturer_Name }}" placeholder="Enter Manufacturer Name" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Price" style="display: block; font-weight: bold;">Price:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Price" type="number" step="0.01" name="Price" value="{{ object.Price }}" placeholder="Enter Price" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Units_Available" style="display: block; font-weight: bold;">Units Available:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Units_Available" type="number" step="0.01" name="Units_Available" value="{{ object.Units_Available }}" placeholder="Enter Units Available" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Size" style="display: block; font-weight: bold;">Size:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Size" type="number" step="0.01" name="Size" value="{{ object.Size }}" placeholder="Enter Size" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Weight" style="display: block; font-weight: bold;">Weight:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Weight" type="number" step="0.01" name="Weight" value="{{ object.Weight }}" placeholder="Enter Weight" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Availability_Status" style="display: block; font-weight: bold;">Availability Status:</label>
+            <select style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Availability_Status" name="Availability_Status" required>
+                <option value="">Select Availability</option>
+                <option value="pre_order" {% if object.Availability_Status == "pre_order" %}selected{% endif %}>Pre-order</option>
+                <option value="in_stock" {% if object.Availability_Status == "in_stock" %}selected{% endif %}>In-stock</option>
+                <option value="out_of_stock" {% if object.Availability_Status == "out_of_stock" %}selected{% endif %}>Out of stock</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Discount_Percentage" style="display: block; font-weight: bold;">Discount Percentage:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Discount_Percentage" type="number" step="0.01" name="Discount_Percentage" value="{{ object.Discount_Percentage }}" placeholder="Enter Discount Percentage" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="Delivery_Time_Estimate" style="display: block; font-weight: bold;">Delivery Time Estimate:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Delivery_Time_Estimate" type="text" name="Delivery_Time_Estimate" value="{{ object.Delivery_Time_Estimate }}" placeholder="Enter Delivery Time Estimate" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <input type="checkbox" id="Pickup_Option" name="Pickup_Option" style="margin-right: 10px;" {% if object.Pickup_Option %}checked{% endif %}>
+            <label for="Pickup_Option" style="font-weight: bold;">Pickup Option Available</label>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="Password" style="display: block; font-weight: bold;">Password:</label>
+            <input style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" id="Password" type="password" name="Password" placeholder="Enter Password" required>
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px;">Save</button>
+    </form>
+</div>
 
 {% endblock %}
