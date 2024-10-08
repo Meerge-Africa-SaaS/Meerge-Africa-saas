@@ -65,7 +65,7 @@ class SignupForm(forms.ModelForm):
 class SignupView(generic.CreateView):
     form_class = SignupForm
     success_url = reverse_lazy("core_User_signin")
-    template_name = "registration/restaurant/signup.html"
+    template_name = "restaurants/onboarding/registration.html"
 
     def form_valid(self, form: forms.BaseModelForm) -> HttpResponse:
         messages.success(
