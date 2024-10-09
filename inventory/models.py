@@ -154,7 +154,6 @@ class Supplier(models.Model):
     cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
 
     address = models.CharField(max_length=130)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         pass
