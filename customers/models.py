@@ -10,7 +10,7 @@ User = get_user_model()
 
 class Order(models.Model):
     # Relationships
-    customer = models.ForeignKey('customers.Customer', on_delete=models.CASCADE)
+    customer = models.ForeignKey('customers.Customer', on_delete=models.DO_NOTHING)
     restaurant = models.ForeignKey('restaurants.Restaurant', on_delete=models.DO_NOTHING)
     menu_item = models.ForeignKey('restaurants.MenuItem', on_delete=models.DO_NOTHING)
     add_on = models.ForeignKey('restaurants.AddOn', on_delete=models.DO_NOTHING, blank=True, null=True)
