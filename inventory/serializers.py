@@ -89,3 +89,7 @@ class SupplyManagerSerializer(serializers.ModelSerializer):
             "created",
             "supplier",
         ]
+class StoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Store
+        fields = ['name', 'business_section_name', 'description']

@@ -10,6 +10,8 @@ from rest_framework.permissions import IsAdminUser
 from .serializers import AdminViewAllProductSerializer
 from django.shortcuts import render, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from .models import Store
+from .serializers import StoreSerializer
 
 
 
@@ -146,7 +148,11 @@ class StockCreateAPIView(generics.CreateAPIView):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+class StockViewApi(generics.ListAPIView):
+    queryset = models.Stock.objects.all()
+    serializer_class = StockSerializer
+    permission_classes = [IsAuthenticated]
+    
 class StockDetailView(generic.DetailView):
     model = models.Stock
     form_class = forms.StockForm
@@ -208,3 +214,13 @@ class SupplyManagerUpdateView(generic.UpdateView):
 class SupplyManagerDeleteView(generic.DeleteView):
     model = models.SupplyManager
     success_url = reverse_lazy("inventory_SupplyManager_list")
+
+class CreateStoreView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = StoreSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()  
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

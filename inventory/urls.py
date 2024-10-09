@@ -3,6 +3,8 @@ from rest_framework import routers
 from .views import AdminStockListView
 from .views import AdminStockListApi
 from .views import SupplierStockListView
+from .views import CreateStoreView
+from .views import StockViewApi
 
 
 from . import api, htmx, views
@@ -207,4 +209,6 @@ urlpatterns = (
         htmx.HTMXSupplyManagerDeleteView.as_view(),
         name="inventory_SupplyManager_htmx_delete",
     ),
+       path('api/stores/create/', CreateStoreView.as_view(), name='create-store'),
+       path('api/stock-details/', StockViewApi.as_view(), name='product-stock'),
 )
