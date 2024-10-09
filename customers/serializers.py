@@ -8,7 +8,12 @@ class OrderSerializer(serializers.ModelSerializer):
         model = models.Order
         fields = [
             "id",
+            "customer",
+            "restaurant",
+            "menu_item",
+            "add_on",            
             "delivery_address",
+            "driver_note",
             "created",
             "last_updated",
         ]
