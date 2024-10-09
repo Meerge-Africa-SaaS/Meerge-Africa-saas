@@ -2,7 +2,9 @@ from django.urls import include, path
 from rest_framework import routers
 from .views import AdminStockListView
 from .views import AdminStockListApi
-from .views import SuplierStockListView
+from .views import SupplierStockListView
+from .views import CreateStoreView
+from .views import StockViewApi
 
 
 from . import api, htmx, views
@@ -69,7 +71,7 @@ urlpatterns = (
      path('api/stock-create',views.StockCreateAPIView.as_view(), name='stock-create'),
      path('stock/admin/products/', AdminStockListView.as_view(), name='admin_product_list'),
      path('api/admin/products/', AdminStockListApi.as_view(), name='admin_api_product_list'),
-       path('supplier/<uuid:supplier_id>/products/', SuplierStockListView, name='products_by_supplier'),
+       path('supplier/<uuid:supplier_id>/products/', SupplierStockListView.as_view(), name='products_by_supplier'),
 
     path(
         "Stock/detail/<int:pk>/",
@@ -207,4 +209,6 @@ urlpatterns = (
         htmx.HTMXSupplyManagerDeleteView.as_view(),
         name="inventory_SupplyManager_htmx_delete",
     ),
+       path('api/stores/create/', CreateStoreView.as_view(), name='create-store'),
+       path('api/stock-details/', StockViewApi.as_view(), name='product-stock'),
 )
