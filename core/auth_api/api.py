@@ -61,6 +61,7 @@ from .schema import (
     StaffSignupRequestSchema,
     StaffSignupResponseSchema,
     SuccessMessageSchema,
+    DeactivateAccountSchema
 )
 from .token_management import *  # noqa: F403
 
@@ -412,3 +413,12 @@ def phonenumber_login(request, data: PhoneNumberLoginRequestSchema):
 
     except Exception:
         return 404, {"message": "Error in processing requests."}
+
+
+@router.post(
+    '/deactivate-account',
+    tags=["Deactivate Account"],
+    response={200: }
+)
+def deactivate_account(request, data:DeactivateAccountSchema):
+    

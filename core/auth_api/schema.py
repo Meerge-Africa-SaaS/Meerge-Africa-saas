@@ -147,3 +147,8 @@ class PasswordResetRequestDoneSchema(Schema):
     email: str
     token: str 
   
+  
+  
+
+class DeactivateAccountSchema(Schema):
+    password: str
