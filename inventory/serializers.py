@@ -38,8 +38,36 @@ class StockSerializer(serializers.ModelSerializer):
             "id",
             "created",
             "item",
+            "SKU_number",
+            "product_name",
+            "product_image",
+            "product_category",
+            "manufacture_name",
+            "price",
+            "unit_available",
+            "size",
+            "weight",
+            #"availability_status",
+            "discount_percentage",
+            #"delivery_time_estimate",
+            #"pickup_option",
+            #"password",
         ]
 
+class AdminViewAllProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Stock
+        fields = [
+            "id",
+            "Product_Name",
+            "Product_Image",
+            "Product_Category",
+            "Price",
+            "Units_Available",
+            "Size",
+            "Discount_Percentage",
+            "Availability_Status",
+        ]
 
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,3 +89,7 @@ class SupplyManagerSerializer(serializers.ModelSerializer):
             "created",
             "supplier",
         ]
+class StoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Store
+        fields = ['name', 'business_section_name', 'description']

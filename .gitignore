@@ -89,6 +89,7 @@ node_modules
 .env.*
 !.env.example
 local_settings.py
+media
 
 #iac
 .terraform
@@ -100,4 +101,3 @@ terraform.tfstahzte.backup
 
 # IDE
 .vscode
-migrations

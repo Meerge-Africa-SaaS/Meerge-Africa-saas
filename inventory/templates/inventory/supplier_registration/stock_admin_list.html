@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-center my-5 text-2xl font-bold text-gray-800">Admin View - All Products</h1>
+
+<div class="max-w-7xl mx-auto p-5 border border-gray-300 rounded-lg shadow-md">
+    <table class="w-full border-collapse table-auto">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="p-3 border border-gray-300 text-left text-sm font-medium text-gray-600">Product Name</th>
+                <th class="p-3 border border-gray-300 text-left text-sm font-medium text-gray-600">Product Image</th>
+                <th class="p-3 border border-gray-300 text-left text-sm font-medium text-gray-600">Product Category</th>
+                <th class="p-3 border border-gray-300 text-left text-sm font-medium text-gray-600">Price</th>
+                <th class="p-3 border border-gray-300 text-left text-sm font-medium text-gray-600">Units Available</th>
+                <th class="p-3 border border-gray-300 text-left text-sm font-medium text-gray-600">Size</th>
+                <th class="p-3 border border-gray-300 text-left text-sm font-medium text-gray-600">Discount Percentage</th>
+                <th class="p-3 border border-gray-300 text-left text-sm font-medium text-gray-600">Availability Status</th>
+            </tr>
+        </thead>
+        <tbody id="product-table-body">
+            {% include "htmx/product_table_body.html" %}
+        </tbody>
+    </table>
+
+    {% if products|length == 0 %}
+        <div class="text-center my-5 text-gray-500">
+            <strong>No products available 😒😒.</strong>
+        </div>
+    {% endif %}
+    {% for product in products %}
+    <tr>
+        <td class="p-3 border border-gray-300 text-sm text-gray-700">{{ product.Product_Name }}</td>
+        <td class="p-3 border border-gray-300">
+            <img src="{{ product.Product_Image.url }}" alt="{{ product.Product_Name }}" class="w-24 h-auto object-cover rounded">
+        </td>
+        <td class="p-3 border border-gray-300 text-sm text-gray-700">{{ product.Product_Category }}</td>
+        <td class="p-3 border border-gray-300 text-sm text-gray-700">${{ product.Price }}</td>
+        <td class="p-3 border border-gray-300 text-sm text-gray-700">{{ product.Units_Available }}</td>
+        <td class="p-3 border border-gray-300 text-sm text-gray-700">{{ product.Size }}</td>
+        <td class="p-3 border border-gray-300 text-sm text-gray-700">{{ product.Discount_Percentage }}%</td>
+        <td class="p-3 border border-gray-300 text-sm text-gray-700">{{ product.Availability_Status }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="8" class="text-center p-3 border border-gray-300 text-gray-500">No products available.</td>
+    </tr>
+    {% endfor %}
+</div>
+
+{% endblock %}
