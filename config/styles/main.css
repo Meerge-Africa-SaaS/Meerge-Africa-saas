@@ -1,12 +1,20 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import "./components/toast.css";
 @import "./components/sidebar.css";
 @import "./components/navbar.css";
 @import "./components/stats.css";
 @import "./components/top-menu.css";
 @import "./components/new-orders.css";
 @import "./components/sales-history.css";
+@import "./components/modal.css";
+@import "./pages/business-profile.css";
+
+
+body {
+    @apply font-poppins;
+}
 
 .help {
     @apply text-xs text-gray-500
@@ -74,7 +82,7 @@ select {
 }
 
 button, .btn {
-    @apply px-5 py-2.5 mx-2.5 my-0 rounded-lg font-medium
+    @apply px-5 py-2.5 my-0 rounded-lg font-medium
     text-sm focus:ring-4 focus:outline-none text-center
 }
 

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
                      # packages
                      'rest_framework',
                      'django_htmx',
+                     'rest_framework_swagger',
                  ] + [
                      # core
                      "core.apps.CoreConfig",

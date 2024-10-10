@@ -1,0 +1,133 @@
+{% extends 'components/modal.html' %}
+{% load static %}
+
+{% block main %}
+  {% with name='update-business-info' title='Update Business Information' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block form_fields %}
+  <div id="business-category-input">
+    <label class="required">Business Category</label>
+    <select class="w-full p-2 border border-gray-300 rounded-lg">
+      <option value="" selected disabled hidden>Select Business Category</option>
+      <option value="cafe">Cafe</option>
+      <option value="hotel">Hotel</option>
+      <option value="lounge">Lounge</option>
+      <option value="food-joint">Food Joint</option>
+      <option value="street-vendor">Street Vendor</option>
+    </select>
+  </div>
+  <div id="business-email-input">
+    <label class="required">Business Email</label>
+    <input type="email" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Business Email" autocomplete="off" value="{{ business.email }}" />
+  </div>
+  <div id="business-phone-input">
+    <label class="required">Business Phone Number</label>
+    <div class="gap-2 w-full phone-input-group">
+      <div class="border-r pr-4 border-gray-300 m-0">
+        <svg width="28" height="22" viewBox="0 0 33 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <mask id="mask0_3268_512" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="33" height="27">
+            <path d="M0 5.5C0 2.73858 2.23858 0.5 5 0.5H28C30.7614 0.5 33 2.73858 33 5.5V21.24C33 24.0014 30.7614 26.24 28 26.24H5C2.23858 26.24 0 24.0014 0 21.24V5.5Z" fill="#D9D9D9" />
+          </mask>
+          <g mask="url(#mask0_3268_512)">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M-1.32031 -0.160156H34.3197V26.2398H-1.32031V-0.160156Z" fill="white" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M22.436 -0.160156H34.3197V26.2398H22.436V-0.160156ZM-1.32031 -0.160156H10.5578V26.2398H-1.32031V-0.160156Z" fill="#008753" />
+          </g>
+        </svg>
+      </div>
+      <p class="text-gray-700">+234</p>
+      <input type="tel" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Business Phone Number" autocomplete="off" value="{{ business.phone }}" />
+    </div>
+  </div>
+  <div id="opening-hours-input">
+    <label class="required">Opening Hours</label>
+    <ul class="w-full gap-2">
+      <li class="flex gap-2 items-center justify-between">
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="w-4 h-4" />
+          <p class="text-gray-700 w-[100px]">Monday</p>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+        </div>
+        <p class="text-2xl font-light">&times;</p>
+      </li>
+      <li class="flex gap-2 items-center justify-between">
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="w-4 h-4" />
+          <p class="text-gray-700 w-[100px]">Tuesday</p>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+        </div>
+        <p class="text-2xl font-light">&times;</p>
+      </li>
+      <li class="flex gap-2 items-center justify-between">
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="w-4 h-4" />
+          <p class="text-gray-700 w-[100px]">Wednesday</p>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+        </div>
+        <p class="text-2xl font-light">&times;</p>
+      </li>
+      <li class="flex gap-2 items-center justify-between">
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="w-4 h-4" />
+          <p class="text-gray-700 w-[100px]">Thursday</p>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+        </div>
+        <p class="text-2xl font-light">&times;</p>
+      </li>
+      <li class="flex gap-2 items-center justify-between">
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="w-4 h-4" />
+          <p class="text-gray-700 w-[100px]">Friday</p>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+        </div>
+        <p class="text-2xl font-light">&times;</p>
+      </li>
+      <li class="flex gap-2 items-center justify-between">
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="w-4 h-4" />
+          <p class="text-gray-700 w-[100px]">Saturday</p>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+        </div>
+        <p class="text-2xl font-light">&times;</p>
+      </li>
+      <li class="flex gap-2 items-center justify-between">
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="w-4 h-4" />
+          <p class="text-gray-700 w-[100px]">Sunday</p>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+          <input type="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="18:00" value="00:00" required />
+        </div>
+        <p class="text-2xl font-light">&times;</p>
+      </li>
+    </ul>
+  </div>
+{% endblock %}
+
+{% block buttons %}
+  <div class="flex justify-end mt-8">
+    <button class="text-lg cancel">Cancel</button>
+    <button class="bg-primary disabled:bg-gray-700 disabled:cursor-not-allowed text-lg text-white ml-4 add">Update</button>
+  </div>
+{% endblock %}

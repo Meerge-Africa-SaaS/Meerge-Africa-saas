@@ -24,12 +24,12 @@
   <div class="header">
     <h1 class="text-xl">
       <span class="">Welcome,</span>
-      <span class="font-semibold">Rita Barbeque Paradise</span>
+      <span class="font-semibold">{{restaurant.name}}</span>
     </h1>
   </div>
   {% include 'restaurants/sections/stats.html' %}
   {% include 'restaurants/sections/top-menu.html' %}
-  <div class="flex items-start justify-between gap-4 w-full max-w-full flex-wrap max-md:flex-col">
+  <div class="flex items-stretch justify-between gap-4 w-full max-w-full flex-wrap max-md:flex-col">
     {% include 'restaurants/sections/new-orders.html' %}
     {% include 'restaurants/sections/sales-history.html' %}
   </div>
