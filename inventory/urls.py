@@ -5,6 +5,8 @@ from .views import AdminStockListApi
 from .views import SupplierStockListView
 from .views import CreateStoreView
 from .views import StockViewApi
+from .views import CreateCategoryAndItemView
+
 
 
 from . import api, htmx, views
@@ -64,6 +66,8 @@ urlpatterns = (
         views.ItemDeleteView.as_view(),
         name="inventory_Item_delete",
     ),
+     path('create-category-item/<int:stock_id>/', CreateCategoryAndItemView.as_view(), name='create-category-item'),
+
     path("Stock/", views.StockListView.as_view(), name="inventory_Stock_list"),
     path(
         "Stock/create/", views.StockCreateView.as_view(), name="inventory_Stock_create"
