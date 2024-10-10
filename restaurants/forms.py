@@ -104,6 +104,7 @@ class ViewAddOnForm(forms.ModelForm):
         self.fields["restaurant"] = Restaurant.objects.filter(add_ons=self.instance.pk)
 
 
+# For both menuitem create and update by the restaurant owner
 class MenuItemForm(forms.ModelForm):
     # Adding the password field
     password = forms.CharField(
