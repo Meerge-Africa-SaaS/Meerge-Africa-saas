@@ -48,6 +48,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             "last_updated",
             "city",
             "owner",
+            "custom_link"
         ]
 
 

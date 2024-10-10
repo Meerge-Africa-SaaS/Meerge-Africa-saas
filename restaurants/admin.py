@@ -167,6 +167,7 @@ class RestaurantAdmin(admin.ModelAdmin):
         "last_updated",
         "profile_img",
         "cover_img",
+        "custom_link",
     ]
 ''' 
 
