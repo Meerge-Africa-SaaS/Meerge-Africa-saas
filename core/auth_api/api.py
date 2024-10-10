@@ -418,7 +418,22 @@ def phonenumber_login(request, data: PhoneNumberLoginRequestSchema):
 @router.post(
     '/deactivate-account',
     tags=["Deactivate Account"],
-    response={200: }
+    response={200: SuccessMessageSchema, 404: NotFoundSchema}
 )
 def deactivate_account(request, data:DeactivateAccountSchema):
+    user = request.user
+    password = data.password
     
+    try:
+        user = User.objects.get(email = request.user)
+        if user.check_password(password) != True:
+            return 404, {"message": "Invalid credentials"}
+        
+        user.is_active = False
+        return 200, {"message": "Account deactivated"}
+        
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+    
+    except Exception:
+        return 404, {"message": "Error processing request"}
