@@ -14,6 +14,7 @@ from .models import Store
 from .serializers import StoreSerializer
 from .serializers import CategorySerializer
 from .serializers import ItemSerializer
+from .serializers import ViewStockSerializer
 
 
 
@@ -277,6 +278,23 @@ class CreateCategoryAndItemView(APIView):
             else:
                 return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+
+
+class StockDetailViewApi(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, item_id):
+        user = request.user
+        item = get_object_or_404(Item, id=item_id, supplier=user)
+        stock = get_object_or_404(Stock, item=item)
+        low_stock_alert = stock.quantity < 5
+
+        stock_data = ViewStockSerializer(stock).data
+        stock_data['low_stock_alert'] = low_stock_alert
+        return Response(stock_data)
 
 
 # class CreateCategoryAndItemView(APIView):

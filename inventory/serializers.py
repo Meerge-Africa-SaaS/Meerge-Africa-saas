@@ -14,18 +14,32 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
+    item_name = serializers.CharField(source='item.name')
+    category = serializers.CharField(source='item.category.name')
+    unit_of_measure = serializers.CharField(source='item.unit_of_measure')
+
     class Meta:
-        model = models.Item
+        model = models.Stock
         fields = [
-            "last_updated",
-            "unit_of_measure",
-            "name",
-            "id",
-            "price",
-            "created",
-            "expiry_date",
-            "category",
-            "supplier",
+            'item_name',          
+            'product_image',      
+            'category',           
+            'availability_status',
+            'price',            
+            'quantity',          
+            'unit_of_measure',   
+        ]
+class ViewStockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Stock
+        fields = [
+            'product_name',
+            'product_image',
+            'product_category',
+            'price',
+            'unit_available',
+            'unit_of_measure',
+            'low_stock_alert_unit',
         ]
 
 
