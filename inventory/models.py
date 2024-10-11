@@ -74,10 +74,7 @@ class Item(models.Model):
 
 
 class Stock(models.Model):
-    # Relationships
     item = models.ForeignKey("inventory.Item", on_delete=models.DO_NOTHING)
-
-    # Fields
     quantity = models.IntegerField()
     last_updated = models.DateTimeField(
         auto_now=True, editable=False, blank=True, null=True
