@@ -6,6 +6,7 @@ from .views import SupplierStockListView
 from .views import CreateStoreView
 from .views import StockViewApi
 from .views import CreateCategoryAndItemView
+from .views import StockDetailViewApi
 
 
 
@@ -68,6 +69,9 @@ urlpatterns = (
     ),
      path('create-category-item/<int:stock_id>/', CreateCategoryAndItemView.as_view(), name='create-category-item'),
 
+  path('stock-details/<int:item_id>/', StockDetailViewApi.as_view(), name='stock-details'),
+
+
     path("Stock/", views.StockListView.as_view(), name="inventory_Stock_list"),
     path(
         "Stock/create/", views.StockCreateView.as_view(), name="inventory_Stock_create"
@@ -75,7 +79,7 @@ urlpatterns = (
      path('api/stock-create',views.StockCreateAPIView.as_view(), name='stock-create'),
      path('stock/admin/products/', AdminStockListView.as_view(), name='admin_product_list'),
      path('api/admin/products/', AdminStockListApi.as_view(), name='admin_api_product_list'),
-       path('supplier/<uuid:supplier_id>/products/', SupplierStockListView.as_view(), name='products_by_supplier'),
+       path('supplier/<int:supplier_id>/products/', SupplierStockListView.as_view(), name='products_by_supplier'),
 
     path(
         "Stock/detail/<int:pk>/",
