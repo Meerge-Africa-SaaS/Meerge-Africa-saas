@@ -17,6 +17,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
     def get_email_confirmation_url(self, request, emailconfirmation):
         key = emailconfirmation.key
         user = emailconfirmation.email_address.user
+
                 
         if isinstance(user, Customer):
             actor_type = "customer"

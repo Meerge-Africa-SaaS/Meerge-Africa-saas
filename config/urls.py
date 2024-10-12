@@ -19,7 +19,6 @@ urlpatterns = [
     path("search/", search_views.search, name="search"),
 
     path("", include("home.urls")),
-
     path("api/", include("core.urls")),
     path(
         "shema_api/", 

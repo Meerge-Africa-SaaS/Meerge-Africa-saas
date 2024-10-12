@@ -12,16 +12,15 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from .models import Store
 from .serializers import StoreSerializer
+from .serializers import CategorySerializer
+from .serializers import ItemSerializer
+from .serializers import ViewStockSerializer
 
 
 
 
 
 from . import forms, models
-
-
-class SupplierCreateView(generic.TemplateView):
-    template_name = "inventory/supplier_registration/base.html"
 
 
 class CategoryListView(generic.ListView):
@@ -171,12 +170,18 @@ class StockDeleteView(generic.DeleteView):
 
 class SupplierListView(generic.ListView):
     model = models.Supplier
+    form_class = forms.ViewSupplierForm
+    
+
+class SupplierCreateView(generic.TemplateView):
+    model = models.Supplier
     form_class = forms.SupplierForm
+    template_name = "inventory/supplier_registration/base.html"
 
 
 class SupplierDetailView(generic.DetailView):
     model = models.Supplier
-    form_class = forms.SupplierForm
+    form_class = forms.ViewSupplierForm
 
 
 class SupplierUpdateView(generic.UpdateView):
@@ -224,3 +229,156 @@ class CreateStoreView(APIView):
             serializer.save()  
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class CreateCategoryAndItemView(APIView):
+    def post(self, request):
+        category_name = request.data.get('category', {}).get('name')
+        if not category_name:
+            return Response({'error': 'Category name is required'}, status=status.HTTP_400_BAD_REQUEST)
+        category, _ = models.Category.objects.get_or_create(name=category_name)
+        item_data = request.data.get('item')
+        if not item_data or not item_data.get('name'):
+            return Response({'error': 'Item name is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        item_name = item_data.get('name')
+        item = Item.objects.filter(name=item_name, category=category).first()
+        
+        if item:
+            stock = Stock.objects.filter(item=item).first()
+            if stock:
+                stock.quantity += item_data.get('quantity', 0)
+                stock.save()
+                return Response({
+                    'message': 'Stock quantity updated.',
+                    'category': CategorySerializer(category).data,
+                    'item': ItemSerializer(item).data,
+                    'stock': StockSerializer(stock).data
+                }, status=status.HTTP_200_OK)
+            return Response({
+                'message': 'New stock created for existing item.',
+                'category': CategorySerializer(category).data,
+                'item': ItemSerializer(item).data,
+                'stock': StockSerializer(stock).data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            item_data['category'] = category.id  
+            item_serializer = ItemSerializer(data=item_data)
+            if item_serializer.is_valid():
+                item = item_serializer.save()
+                stock = Stock.objects.create(
+                    item=item,
+                    quantity=item_data.get('quantity', 0),
+                    product_image=item_data.get('product_image')
+                )
+                return Response({
+                    'message': 'New item and stock created.',
+                    'category': CategorySerializer(category).data,
+                    'item': ItemSerializer(item).data,
+                    'stock': StockSerializer(stock).data
+                }, status=status.HTTP_201_CREATED)
+            else:
+                return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+class StockDetailViewApi(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, item_id):
+        user = request.user
+        item = get_object_or_404(Item, id=item_id, supplier=user)
+        stock = get_object_or_404(Stock, item=item)
+        low_stock_alert = stock.quantity < 5
+
+        stock_data = ViewStockSerializer(stock).data
+        stock_data['low_stock_alert'] = low_stock_alert
+        return Response(stock_data)
+
+
+# class CreateCategoryAndItemView(APIView):
+#     def post(self, request):
+#         # Step 1: Get the category name from the request data
+#         category_name = request.data.get('category', {}).get('name')
+#         if not category_name:
+#             return Response({'error': 'Category name is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         # Step 2: Get or create the category based on the provided name
+#         category, _ = models.Category.objects.get_or_create(name=category_name)
+
+#         # Step 3: Get the item data from the request data
+#         item_data = request.data.get('item')
+#         if not item_data or not item_data.get('name'):
+#             return Response({'error': 'Item name is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         item_name = item_data.get('name')
+
+#         # Step 4: Check if the item exists within the given category
+#         item = Item.objects.filter(name=item_name, category=category).first()
+
+#         if item:
+#             # Step 5: If item exists, check if stock exists for the item
+#             stock = Stock.objects.filter(item=item).first()
+#             if stock:
+#                 # Step 6: If stock exists, update the stock quantity
+#                 stock.quantity += item_data.get('quantity', 0)
+#                 stock.save()
+#                 return Response({
+#                     'message': 'Stock quantity updated.',
+#                     'category': CategorySerializer(category).data,
+#                     'item': ItemSerializer(item).data,
+#                     'stock': StockSerializer(stock).data
+#                 }, status=status.HTTP_200_OK)
+
+#             else:
+#                 # Step 7: If item exists but no stock, create new stock for the item
+#                 stock = Stock.objects.create(
+#                     item=item,  # Linking the item to stock
+#                     quantity=item_data.get('quantity', 0),  # Set quantity, defaulting to 0 if not provided
+#                     product_image=item_data.get('product_image'),  # Use product image from the request
+#                     SKU_No=item_data.get('SKU_No', ''),  # Optional SKU, default to empty string
+#                     Product_Name=item_data.get('Product_Name', item.name),  # Default to item name if not provided
+#                     Product_Category=item_data.get('Product_Category', category.name),  # Default to category name
+#                     Manufacturer_Name=item_data.get('Manufacturer_Name', ''),  # Optional, default to empty string
+#                     Price=item_data.get('Price', 0.00),  # Optional, default to 0.00
+#                     Units_Available=item_data.get('Units_Available', 0),  # Optional, default to 0
+#                     Size=item_data.get('Size', ''),  # Optional, default to empty string
+#                     Weight=item_data.get('Weight', ''),  # Optional, default to empty string
+#                     Availability_Status=item_data.get('Availability_Status', 'In Stock'),  # Optional, default status
+#                     Discount_Percentage=item_data.get('Discount_Percentage', 0.00),  # Optional, default to 0%
+#                     Delivery_Time_Estimate=item_data.get('Delivery_Time_Estimate', ''),  # Optional, default to empty string
+#                     Pickup_Option=item_data.get('Pickup_Option', 'No Pickup'),  # Optional, default to 'No Pickup'
+#                     Password=item_data.get('Password', '')  # Optional, default to empty string
+#                 )
+#                 return Response({
+#                     'message': 'New stock created for existing item.',
+#                     'category': CategorySerializer(category).data,
+#                     'item': ItemSerializer(item).data,
+#                     'stock': StockSerializer(stock).data
+#                 }, status=status.HTTP_201_CREATED)
+        
+#         else:
+#             # Step 8: If the item doesn't exist, create a new item and stock
+#             item_data['category'] = category.id
+#             item_serializer = ItemSerializer(data=item_data)
+#             if item_serializer.is_valid():
+#                 item = item_serializer.save()
+                
+#                 # Create the stock for the new item
+#                 stock = Stock.objects.create(
+#                     item=item,
+#                     quantity=item_data.get('quantity', 0),
+#                     product_image=item_data.get('product_image')
+#                 )
+#                 return Response({
+#                     'message': 'New item and stock created.',
+#                     'category': CategorySerializer(category).data,
+#                     'item': ItemSerializer(item).data,
+#                     'stock': StockSerializer(stock).data
+#                 }, status=status.HTTP_201_CREATED)
+#             else:
+#                 # Step 9: Handle invalid item serializer data
+#                 return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

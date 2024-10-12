@@ -74,10 +74,7 @@ class Item(models.Model):
 
 
 class Stock(models.Model):
-    # Relationships
     item = models.ForeignKey("inventory.Item", on_delete=models.DO_NOTHING)
-
-    # Fields
     quantity = models.IntegerField()
     last_updated = models.DateTimeField(
         auto_now=True, editable=False, blank=True, null=True
@@ -179,6 +176,7 @@ class Supplier(models.Model):
     city = models.ManyToManyField(
         City
     )  # , on_delete=models.SET_NULL, null=True, blank=True
+    owner = models.ForeignKey('core.User', on_delete=models.CASCADE)
 
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -209,7 +207,6 @@ class Supplier(models.Model):
     cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
 
     address = models.CharField(max_length=130)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         pass
@@ -233,7 +230,7 @@ class Supplier(models.Model):
 
 class SupplyManager(User):  # type: ignore
     # Relationships
-    supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
+    supply_business = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
 
     # Fields
     # last_updated = models.DateTimeField(auto_now=True, editable=False)
