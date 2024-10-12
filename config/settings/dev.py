@@ -16,12 +16,11 @@ ALLOWED_HOSTS = ["*"]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'#getenv("EMAIL_HOST")
+EMAIL_HOST = getenv("EMAIL_HOST")#'smtp.gmail.com'#
 EMAIL_PORT = 587#getenv("EMAIL_PORT")
-EMAIL_HOST_USER = 'crownprincesamuelaadeyemo@gmail.com'#getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = 'tkkt kzsu oqgy xzkc'#getenv("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = getenv("EMAIL_HOST_USER")#'crownprincesamuelaadeyemo@gmail.com'#
+EMAIL_HOST_PASSWORD = getenv("EMAIL_HOST_PASSWORD")#'tkkt kzsu oqgy xzkc'#
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
 
 
 DATABASES = {
