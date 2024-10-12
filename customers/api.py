@@ -3,6 +3,7 @@ from rest_framework import viewsets, permissions
 from . import serializers
 from . import models
 
+from core.__permissions import IsUserOrReadOnly
 
 class OrderViewSet(viewsets.ModelViewSet):
     """ViewSet for the Order class"""
@@ -17,4 +18,4 @@ class CustomerViewSet(viewsets.ModelViewSet):
 
     queryset = models.Customer.objects.all()
     serializer_class = serializers.CustomerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsUserOrReadOnly]

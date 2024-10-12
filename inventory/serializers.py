@@ -90,8 +90,18 @@ class SupplierSerializer(serializers.ModelSerializer):
             "id",
             "created",
             "name",
+            "owner",
             "last_updated",
             "city",
+            "email",
+            "phone_number",
+            "cac_reg_number",
+            "cac_certificate",
+            "business_license",
+            "category",
+            "profile_img",
+            "cover_img",
+            "address",
         ]
 
 
@@ -102,6 +112,12 @@ class SupplyManagerSerializer(serializers.ModelSerializer):
             "last_updated",
             "created",
             "supplier",
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "supply_business",
         ]
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
