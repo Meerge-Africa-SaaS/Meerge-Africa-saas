@@ -84,7 +84,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
-
+AUTHENTICATION_BACKENDS = [
+    'core.CustomFiles.CustomBackend.EmailAuthBackend',
+    'core.CustomFiles.CustomBackend.PhoneAuthBackend',
+    "core.backends.EmailBackend"
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 ##### Django stuff continues from here.
 
