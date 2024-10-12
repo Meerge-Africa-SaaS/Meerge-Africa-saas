@@ -35,7 +35,7 @@ from ninja.security import HttpBearer
 
 from core.auth_api.schema import CustomerSignupRequestSchema
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
-#from core.models import EmailVerification
+from core.models import EmailVerification
 from customers.models import Customer
 from inventory.models import SupplyManager
 from orders.models import DeliveryAgent
@@ -122,32 +122,62 @@ def socialaccount_user_signup(request, user, **kwargs):
 def owner_signup(request, data: SignupRequestSchema):
     # Model signup
     if data.actor_type != "owner":
-        return JsonResponse({"message": "Not a restaurant owner."})
+        return JsonResponse({"message": "Not a business owner."})
     
-    owner = User.objects.create(
-        first_name=data.first_name,
-        last_name=data.last_name,
-        email=data.email,
-        phone_number=data.phone_number,
-        username=data.username,
-    )
-    owner.set_password(data.password)
-    owner.is_active = False
-    owner.save()
+    try:
+        if not (User.objects.filter(email = data.email).exists()):
+            owner = User.objects.create(
+                first_name=data.first_name,
+                last_name=data.last_name,
+                email=data.email,
+                phone_number=data.phone_number,
+                username=data.username,
+            )
+            owner.set_password(data.password)
+            owner.is_active = False
+            owner.save()
+        else:
+            return {"message": "User already exists"}
+        
+        if (data.is_mobile == True):
+            owner = User.objects.get(email = data.email)
+            EmailVerification.objects.create(user = owner, expires_at=timezone.now() + timezone.timedelta(minutes = 10))
+            
+            email_token = EmailVerification.objects.filter(user = owner).last()
+            subject =  "Email Verification"
+            message = f"""
+                    Hello, here is your one time email verification code {email_token.email_code}
+                    """
+            sender ="dev@kittchens.com"
+            receiver = [owner.email]
+            
+            email_send = send_mail(subject, message, sender, receiver)
+            
+            if email_send:
+                return JsonResponse({"message": "email sent"})
+                #return 200, EmailVerificationSchema(email = data.email)
+            else:
+                #return 404, NotFoundSchema(message = "Not verified")
+                return JsonResponse({"message": "email not sent"})
+        
+        else:
+            # Get the model instance for allauth implementation.
+            owner = User.objects.get(email = data.email)
+            allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
+                user=owner, email=data.email, defaults={"verified": False, "primary": True}
+            )
 
-    # Get the model instance for allauth implementation.
-    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
-        user=owner, email=data.email, defaults={"verified": False, "primary": True}
-    )
+            # Create EmailConfirmation instance and send verification mail
+            confirmation = allauthEmailConfirmation.create(email_address=allauthemail_address)
+            confirmation.send(request=request, signup=True)
+            confirmation.sent = timezone.now()
+            confirmation.save()
 
-    # Create EmailConfirmation instance and send verification mail
-    confirmation = allauthEmailConfirmation.create(email_address=allauthemail_address)
-    confirmation.send(request=request, signup=True)
-    confirmation.sent = timezone.now()
-    confirmation.save()
+            # Return info.
+            return {"message": registration_successful}
 
-    # Return info.
-    return {"message": registration_successful}
+    except Exception:
+        return {"message": "Error processing request."}
 
 
 
