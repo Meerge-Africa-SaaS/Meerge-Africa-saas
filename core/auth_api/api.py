@@ -486,17 +486,20 @@ def email_login(request, data: EmailLoginRequestSchema):
         return 404, "Incomplete details"
 
     try:
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=email, password=password)
+        print(email)
+        print(user)
+        print(password)
         if user is not None:
             token_expiry_period = 14 if remember_me is True else 1
             login(request, user, backend="EmailAuthBackend")
-            token = create_token(  # noqa: F405
+            token = create_token( 
                 user_id=str(user.id), expiry_period=token_expiry_period
             )
 
             return 200, {"token": token}
         else:
-            return 404, {"message": "Not saved, User is not none"}
+            return 404, {"message": "Not saved, User is none"}
 
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
@@ -521,7 +524,7 @@ def phonenumber_login(request, data: PhoneNumberLoginRequestSchema):
         return 404, "Incomplete details"
 
     try:
-        user = authenticate(request, phone_number=phone_number, password=password)
+        user = authenticate(request, username=phone_number, password=password)
         if user is not None:
             token_expiry_period = 14 if remember_me is True else 1
             login(request, user, backend="PhoneAuthBackend")

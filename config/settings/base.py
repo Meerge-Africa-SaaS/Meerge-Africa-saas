@@ -67,6 +67,13 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = "core.User"
 
 
+AUTHENTICATION_BACKENDS = [
+    "core.CustomFiles.CustomBackend.EmailAuthBackend",
+    "core.CustomFiles.CustomBackend.PhoneAuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+    "core.backends.EmailBackend"
+]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MIDDLEWARE = [

@@ -52,6 +52,17 @@ class RestaurantSerializer(serializers.ModelSerializer):
         ]
 
 
+class RestaurantStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.RestaurantStore
+        fields = [
+            "restaurant",
+            "name",
+            "description",
+            "image",
+            "section_name"
+        ]
+
 """ 
 class ChefSerializer(serializers.ModelSerializer):
 

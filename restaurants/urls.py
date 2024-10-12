@@ -10,6 +10,7 @@ router.register("Ingredient", api.IngredientViewSet)
 router.register("Menu", api.MenuViewSet)
 router.register("MenuItem", api.MenuItemViewSet)
 router.register("Restaurant", api.RestaurantViewSet)
+router.register("RestaurantStore", api.RestaurantStoreViewSet)
 # router.register("Chef", api.ChefViewSet)
 router.register("Staff", api.StaffViewSet)
 
