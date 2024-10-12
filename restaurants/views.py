@@ -206,7 +206,7 @@ class RestaurantUpdateView(LoginRequiredMixin, generic.UpdateView):
         kwargs["user"] = self.request.user
         return kwargs
 
-
+ 
 class RestaurantDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Restaurant
     success_url = reverse_lazy("restaurant_Restaurant_list")
