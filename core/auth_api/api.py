@@ -34,7 +34,7 @@ from ninja.security import HttpBearer
 
 from core.auth_api.schema import CustomerSignupRequestSchema
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
-#from core.models import EmailVerification
+from core.models import EmailVerification
 from customers.models import Customer
 from inventory.models import SupplyManager
 from orders.models import DeliveryAgent
@@ -75,6 +75,39 @@ registration_successful = "Registration successful"
 
 
 #############      SIGNALS EMITTED        ############
+@receiver(post_save, sender = Customer)
+@receiver(post_save, sender = SupplyManager)
+@receiver(post_save, sender = DeliveryAgent)
+def create_email_token(sender, instance, created, **kwargs):
+    if created:
+        if instance.is_superuser:
+            pass
+        else:     
+            if EmailVerification.objects.filter(user=instance).exists():
+                pass
+            else:       
+                EmailVerification.objects.create(user = instance, expires_at=timezone.now() + timezone.timedelta(minutes = 10))
+                instance.is_active = False
+                instance.save()
+            
+        email_token = EmailVerification.objects.filter(user = instance).last()
+        subject =  "Email Verification"
+        message = f"""
+                Hello, here is your one time email verification code {email_token.email_code}
+                """
+        sender ="kittchens.com"
+        receiver = [instance.email]
+        
+        email_send = send_mail(subject, message, sender, receiver)
+        
+        if email_send:
+            return JsonResponse({"message": "email sent", "status-code": 200})
+            #return 200, EmailVerificationSchema(email = data.email)
+        else:
+            #return 404, NotFoundSchema(message = "Not verified")
+            return JsonResponse({"message": "email not sent", "status-code": 404})
+
+
 ### EMITTED ONLY WHEN USER SIGNED UP THROUGH PROVIDERS
 """
 SOCIAL ACCOUNTS NOT SETUP YET.
@@ -137,12 +170,17 @@ def owner_signup(request, data: SignupRequestSchema):
     allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
         user=owner, email=data.email, defaults={"verified": False, "primary": True}
     )
-
-    # Create EmailConfirmation instance and send verification mail
-    confirmation = allauthEmailConfirmation.create(email_address=allauthemail_address)
-    confirmation.send(request=request, signup=True)
-    confirmation.sent = timezone.now()
-    confirmation.save()
+    
+    if data.is_mobile == True:
+        create_email_token(sender=None, instance=owner, created=True)
+        return {"message": "Email verification has been sent."}
+    
+    else:
+        # Create EmailConfirmation instance and send verification mail
+        confirmation = allauthEmailConfirmation.create(email_address=allauthemail_address)
+        confirmation.send(request=request, signup=True)
+        confirmation.sent = timezone.now()
+        confirmation.save()
 
     # Return info.
     return {"message": registration_successful}
@@ -307,6 +345,26 @@ def verify_key(request, key_token: str):
 
 
 #### VERIFICATION BASICALLY FOR PEOPLE THAT DID NOT SIGN IN WITH GOOGLE ACCOUNT PROVIDER ####
+# Email verification
+
+@router.post("/verify-email")#, response = {404: NotFoundSchema}, tags=["Email Verification"])
+def verify_email(request, data: EmailVerificationSchema):
+    email = data.email
+    email_token = data.token
+    user = User.objects.get(email = email)
+    verify_model = EmailVerification.objects.get(user = user)#.last()
+    if verify_model.email_code == email_token:
+        if verify_model.expires_at > timezone.now():
+            allauthemail = allauthEmailAddress.objects.get(user = user, email = data.email)
+            allauthemail.verified = True
+            allauthemail.save()
+            user.is_active = True
+            user.save()
+            
+            EmailVerification.objects.get(user = user).delete()
+            return JsonResponse({"message": "Email verified"})
+
+
 # Phone Number verification
 @router.post("/verify-phonenumber")
 def verify_phonenumber(request):
