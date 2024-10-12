@@ -44,6 +44,15 @@ class RestaurantStoreViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.RestaurantStoreSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
+
+class RestaurantStockViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Restaurant's Store class"""
+
+    queryset = models.RestaurantStock.objects.all()
+    serializer_class = serializers.RestaurantStockSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+
 ''' 
 class ChefViewSet(viewsets.ModelViewSet):
     """ViewSet for the Chef class"""

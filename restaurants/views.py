@@ -237,6 +237,33 @@ class RestaurantStoreUpdateView(LoginRequiredMixin, generic.UpdateView):
 class RestaurantStoreListView(LoginRequiredMixin, generic.ListView):
     model = models.RestaurantStore
     form_class = forms.RestauarantStoreForm
+    
+    
+class RestaurantStockListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
+    
+class RestaurantStockCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+class RestaurantStockUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
+class RestaurantStockListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
 
 
 """ 

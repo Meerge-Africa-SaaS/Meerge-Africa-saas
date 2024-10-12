@@ -340,6 +340,21 @@ class RestauarantStoreForm(forms.ModelForm):
             "image",
             "section_name"
         ]
+        
+
+class RestauarantStockForm(forms.ModelForm):
+    class Meta:
+        model = models.RestaurantStock
+        fields = [
+            "category",
+            "name",
+            "image",
+            "stock_type",
+            "purchasing_price",
+            "quantity",
+            "measuring_unit",
+            "restaurant",
+        ]
 
 
 """ 

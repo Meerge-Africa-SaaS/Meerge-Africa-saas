@@ -196,9 +196,10 @@ class MenuItem(models.Model):
     def get_htmx_delete_url(self):
         return reverse("restaurant_MenuItem_htmx_delete", args=(self.pk,))
 
-class Stock(models.Model):
+class RestaurantStock(models.Model):
     # Relationships
     category =  models.ForeignKey("inventory.Category", on_delete = models.DO_NOTHING)
+    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete = models.CASCADE)
     
     # Fields
     name = models.CharField(max_length=128)
