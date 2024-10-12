@@ -80,12 +80,8 @@ registration_successful = "Registration successful"
 @receiver(post_save, sender = DeliveryAgent)
 def create_email_token(sender, instance, created, **kwargs):
     if created:
-        if instance.is_superuser:
-            pass
-        else:     
-            if EmailVerification.objects.filter(user=instance).exists():
-                pass
-            else:       
+        if not instance.is_superuser:     
+            if not EmailVerification.objects.filter(user=instance).exists():       
                 EmailVerification.objects.create(user = instance, expires_at=timezone.now() + timezone.timedelta(minutes = 10))
                 instance.is_active = False
                 instance.save()
@@ -95,16 +91,16 @@ def create_email_token(sender, instance, created, **kwargs):
         message = f"""
                 Hello, here is your one time email verification code {email_token.email_code}
                 """
-        sender ="kittchens.com"
+        business_email_sender ="dev@kittchens.com"
         receiver = [instance.email]
         
-        email_send = send_mail(subject, message, sender, receiver)
+        email_send = send_mail(subject, message, business_email_sender, receiver)
         
         if email_send:
             return JsonResponse({"message": "email sent", "status-code": 200})
-            #return 200, EmailVerificationSchema(email = data.email)
+            
         else:
-            #return 404, NotFoundSchema(message = "Not verified")
+            
             return JsonResponse({"message": "email not sent", "status-code": 404})
 
 
