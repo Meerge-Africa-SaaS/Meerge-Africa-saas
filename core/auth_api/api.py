@@ -76,6 +76,35 @@ registration_successful = "Registration successful"
 
 
 #############      SIGNALS EMITTED        ############
+@receiver(post_save, sender = Customer)
+@receiver(post_save, sender = SupplyManager)
+@receiver(post_save, sender = DeliveryAgent)
+def create_email_token(sender, instance, created, **kwargs):
+    if created:
+        if not instance.is_superuser:     
+            if not EmailVerification.objects.filter(user=instance).exists():       
+                EmailVerification.objects.create(user = instance, expires_at=timezone.now() + timezone.timedelta(minutes = 10))
+                instance.is_active = False
+                instance.save()
+            
+        email_token = EmailVerification.objects.filter(user = instance).last()
+        subject =  "Email Verification"
+        message = f"""
+                Hello, here is your one time email verification code {email_token.email_code}
+                """
+        business_email_sender ="dev@kittchens.com"
+        receiver = [instance.email]
+        
+        email_send = send_mail(subject, message, business_email_sender, receiver)
+        
+        if email_send:
+            return JsonResponse({"message": "email sent", "status-code": 200})
+            
+        else:
+            
+            return JsonResponse({"message": "email not sent", "status-code": 404})
+
+
 ### EMITTED ONLY WHEN USER SIGNED UP THROUGH PROVIDERS
 """
 SOCIAL ACCOUNTS NOT SETUP YET.
@@ -365,6 +394,26 @@ def verify_key(request, key_token: str):
 
 
 #### VERIFICATION BASICALLY FOR PEOPLE THAT DID NOT SIGN IN WITH GOOGLE ACCOUNT PROVIDER ####
+# Email verification
+
+@router.post("/verify-email")#, response = {404: NotFoundSchema}, tags=["Email Verification"])
+def verify_email(request, data: EmailVerificationSchema):
+    email = data.email
+    email_token = data.token
+    user = User.objects.get(email = email)
+    verify_model = EmailVerification.objects.get(user = user)#.last()
+    if verify_model.email_code == email_token:
+        if verify_model.expires_at > timezone.now():
+            allauthemail = allauthEmailAddress.objects.get(user = user, email = data.email)
+            allauthemail.verified = True
+            allauthemail.save()
+            user.is_active = True
+            user.save()
+            
+            EmailVerification.objects.get(user = user).delete()
+            return JsonResponse({"message": "Email verified"})
+
+
 # Phone Number verification
 @router.post("/verify-phonenumber")
 def verify_phonenumber(request):
