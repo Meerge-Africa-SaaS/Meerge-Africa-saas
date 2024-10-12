@@ -17,9 +17,10 @@ MOBILE_APP_SCHEME = "app://localhost:5000/"
 WEB_APP_SCHEME = "http://localhost:8000/"
 
 AUTHENTICATION_BACKENDS = [
+    "core.CustomFiles.CustomBackend.EmailAuthBackend",
+    "core.CustomFiles.CustomBackend.PhoneAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
-    "core.CustomFiles.CustomBackend.PhoneAuthBackend",
     "core.backends.EmailBackend"
 ]
 

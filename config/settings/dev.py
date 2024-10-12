@@ -1,6 +1,6 @@
 # ruff: noqa: F405
 from config.environ import getenv
-from mail import EMAIL_BACKEND, EMAIL_PORT, EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_USE_TLS
+#from mail import EMAIL_BACKEND, EMAIL_PORT, EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_USE_TLS
 from .base import *  # noqa: F403
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -14,6 +14,13 @@ ALLOWED_HOSTS = ["*"]
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = getenv("EMAIL_HOST")#'smtp.gmail.com'#
+EMAIL_PORT = 587#getenv("EMAIL_PORT")
+EMAIL_HOST_USER = getenv("EMAIL_HOST_USER")#'crownprincesamuelaadeyemo@gmail.com'#
+EMAIL_HOST_PASSWORD = getenv("EMAIL_HOST_PASSWORD")#'tkkt kzsu oqgy xzkc'#
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 DATABASES = {

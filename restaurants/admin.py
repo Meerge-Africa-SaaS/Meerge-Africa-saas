@@ -169,6 +169,29 @@ class RestaurantAdmin(admin.ModelAdmin):
         "cover_img",
         "custom_link",
     ]
+   
+
+class RestaurantStoreAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.RestaurantStore
+        fields = "__all__" 
+        
+
+class RestaurantStoreAdmin(admin.ModelAdmin):
+    form = RestaurantStoreAdminForm
+    list_display = [
+        "name",
+        "restaurant"
+    ]
+    readonly_fields = [
+        "restaurant",
+        "name",
+        "description",
+        "image",
+        "section_name"
+    ]
+    
+    
 ''' 
 
 class ChefAdminForm(forms.ModelForm):
@@ -213,5 +236,6 @@ admin.site.register(models.AddOn, AddOnAdmin)
 admin.site.register(models.MenuItem, MenuItemAdmin)
 admin.site.register(models.MenuCategory, MenuCategoryAdmin)
 admin.site.register(models.Restaurant, RestaurantAdmin)
+admin.site.register(models.RestaurantStore, RestaurantStoreAdmin)
 #admin.site.register(models.Chef, ChefAdmin)
 admin.site.register(models.Staff, StaffAdmin)

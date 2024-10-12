@@ -28,7 +28,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonRes
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils import timezone
+from django.utils import timezone as django_timezone
 from django.utils.http import urlsafe_base64_decode
 from ninja import Router
 from ninja.security import HttpBearer
@@ -81,28 +81,26 @@ registration_successful = "Registration successful"
 @receiver(post_save, sender = DeliveryAgent)
 def create_email_token(sender, instance, created, **kwargs):
     if created:
-        if not instance.is_superuser:     
-            if not EmailVerification.objects.filter(user=instance).exists():       
-                EmailVerification.objects.create(user = instance, expires_at=timezone.now() + timezone.timedelta(minutes = 10))
+        if not instance.is_superuser: 
+            if not EmailVerification.objects.filter(user=instance).exists(): 
+                EmailVerification.objects.create(user = instance, expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
                 instance.is_active = False
                 instance.save()
+            email_token = EmailVerification.objects.filter(user = instance).last()
+            subject =  "Email Verification"
+            message = f"""
+                    Hello, here is your one time email verification code {email_token.email_code}
+                    """
+            business_email_sender ="dev@kittchens.com"
+            receiver = [instance.email]
+            email_send = send_mail(subject, message, business_email_sender, receiver)
             
-        email_token = EmailVerification.objects.filter(user = instance).last()
-        subject =  "Email Verification"
-        message = f"""
-                Hello, here is your one time email verification code {email_token.email_code}
-                """
-        business_email_sender ="dev@kittchens.com"
-        receiver = [instance.email]
-        
-        email_send = send_mail(subject, message, business_email_sender, receiver)
-        
-        if email_send:
-            return JsonResponse({"message": "email sent", "status-code": 200})
-            
-        else:
-            
-            return JsonResponse({"message": "email not sent", "status-code": 404})
+            if email_send:
+                return JsonResponse({"message": "email sent", "status_code": 200})
+                
+            else:
+                
+                return JsonResponse({"message": "email not sent", "status_code": 404})
 
 
 ### EMITTED ONLY WHEN USER SIGNED UP THROUGH PROVIDERS
@@ -170,9 +168,18 @@ def owner_signup(request, data: SignupRequestSchema):
         
         if (data.is_mobile == True):
             owner = User.objects.get(email = data.email)
-            EmailVerification.objects.create(user = owner, expires_at=timezone.now() + timezone.timedelta(minutes = 10))
+            #EmailVerification.objects.create(user = owner, expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
             
-            email_token = EmailVerification.objects.filter(user = owner).last()
+            #email_token = EmailVerification.objects.filter(user = owner).last()
+            try:
+                email_send_func = create_email_token(sender = None, instance = owner, created = True)
+                return email_send_func
+                
+            except Exception as e:
+                print(e)
+                return {"message": "error sending email"}
+            
+            ''' 
             subject =  "Email Verification"
             message = f"""
                     Hello, here is your one time email verification code {email_token.email_code}
@@ -187,7 +194,8 @@ def owner_signup(request, data: SignupRequestSchema):
                 #return 200, EmailVerificationSchema(email = data.email)
             else:
                 #return 404, NotFoundSchema(message = "Not verified")
-                return JsonResponse({"message": "email not sent"})
+                
+                return JsonResponse({"message": "email not sent"}) '''
         
         else:
             # Get the model instance for allauth implementation.
@@ -199,14 +207,14 @@ def owner_signup(request, data: SignupRequestSchema):
             # Create EmailConfirmation instance and send verification mail
             confirmation = allauthEmailConfirmation.create(email_address=allauthemail_address)
             confirmation.send(request=request, signup=True)
-            confirmation.sent = timezone.now()
+            confirmation.sent = django_timezone.now()
             confirmation.save()
 
             # Return info.
             return {"message": registration_successful}
 
-    except Exception:
-        return {"message": "Error processing request."}
+    except Exception as e:
+        return {"message": e}
 
 
 
@@ -231,7 +239,7 @@ def supply_owner_signup(request, data: SignupRequestSchema):
     # Create EmailConfirmation instance and send verification mail
     confirmation = allauthEmailConfirmation.create(email_address = allauthemail_address)
     confirmation.send(request = request, signup=True)
-    confirmation.sent = timezone.now()
+    confirmation.sent = django_timezone.now()
     confirmation.save()
     
     # Return info.
@@ -269,7 +277,7 @@ def add_employee(request, data: AddEmployeeSchema):
     # Create EmailConfirmation instance and send verification mail
     confirmation = allauthEmailConfirmation.create(email_address=allauthemail_address)
     confirmation.send(request=request, signup=True)
-    confirmation.sent = timezone.now()
+    confirmation.sent = django_timezone.now()
     confirmation.save()
 
     # Return info.
@@ -403,10 +411,8 @@ def verify_email(request, data: EmailVerificationSchema):
     user = User.objects.get(email = email)
     verify_model = EmailVerification.objects.get(user = user)#.last()
     if verify_model.email_code == email_token:
-        if verify_model.expires_at > timezone.now():
-            allauthemail = allauthEmailAddress.objects.get(user = user, email = data.email)
-            allauthemail.verified = True
-            allauthemail.save()
+        if verify_model.expires_at > django_timezone.now():
+            allauthEmailAddress.objects.get_or_create(user = user, email = data.email, defaults={"verified": True, "primary": True})
             user.is_active = True
             user.save()
             
@@ -435,7 +441,7 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
             email_address=allauthemail_address
         )
         confirmation.send(request=request, signup=True)
-        confirmation.sent = timezone.now()
+        confirmation.sent = django_timezone.now()
         confirmation.save()
 
     except allauthEmailAddress.DoesNotExist:
@@ -480,17 +486,20 @@ def email_login(request, data: EmailLoginRequestSchema):
         return 404, "Incomplete details"
 
     try:
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=email, password=password)
+        print(email)
+        print(user)
+        print(password)
         if user is not None:
             token_expiry_period = 14 if remember_me is True else 1
             login(request, user, backend="EmailAuthBackend")
-            token = create_token(  # noqa: F405
+            token = create_token( 
                 user_id=str(user.id), expiry_period=token_expiry_period
             )
 
             return 200, {"token": token}
         else:
-            return 404, {"message": "Not saved, User is not none"}
+            return 404, {"message": "Not saved, User is none"}
 
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
@@ -515,7 +524,7 @@ def phonenumber_login(request, data: PhoneNumberLoginRequestSchema):
         return 404, "Incomplete details"
 
     try:
-        user = authenticate(request, phone_number=phone_number, password=password)
+        user = authenticate(request, username=phone_number, password=password)
         if user is not None:
             token_expiry_period = 14 if remember_me is True else 1
             login(request, user, backend="PhoneAuthBackend")
