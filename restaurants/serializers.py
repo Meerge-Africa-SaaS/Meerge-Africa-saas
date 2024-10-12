@@ -4,7 +4,6 @@ from . import models
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Ingredient
         fields = [
@@ -14,8 +13,8 @@ class IngredientSerializer(serializers.ModelSerializer):
             "menu_item",
         ]
 
-class MenuSerializer(serializers.ModelSerializer):
 
+class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Menu
         fields = [
@@ -26,8 +25,8 @@ class MenuSerializer(serializers.ModelSerializer):
             "last_updated",
         ]
 
-class MenuItemSerializer(serializers.ModelSerializer):
 
+class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.MenuItem
         fields = [
@@ -38,8 +37,8 @@ class MenuItemSerializer(serializers.ModelSerializer):
             "menu",
         ]
 
-class RestaurantSerializer(serializers.ModelSerializer):
 
+class RestaurantSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Restaurant
         fields = [
@@ -49,10 +48,14 @@ class RestaurantSerializer(serializers.ModelSerializer):
             "last_updated",
             "city",
             "owner",
+            "custom_link"
         ]
-''' 
+
+
+""" 
 class ChefSerializer(serializers.ModelSerializer):
 
+class ChefSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Chef
         fields = [
@@ -60,9 +63,10 @@ class ChefSerializer(serializers.ModelSerializer):
             "last_updated",
             "restaurants",
         ]
- '''
-class StaffSerializer(serializers.ModelSerializer):
+ """
 
+
+class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Staff
         fields = [

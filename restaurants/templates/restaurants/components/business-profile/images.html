@@ -1,0 +1,6 @@
+<div id="restaurant-images" class="relative mb-24">
+  <div hx-get="{% url 'restaurant_Restaurant_htmx_cover' restaurant.id %}" hx-swap="outerHTML" hx-trigger="load">
+  </div>
+  <div hx-get="{% url 'restaurant_Restaurant_htmx_logo' restaurant.id %}" hx-swap="outerHTML" hx-trigger="load">
+  </div>
+</div>

@@ -5,7 +5,6 @@ from . import models
 
 
 class OrderAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Order
         fields = "__all__"
@@ -15,12 +14,14 @@ class OrderAdmin(admin.ModelAdmin):
     form = OrderAdminForm
     list_display = [
         "id",
+        "customer",
         "delivery_address",
         "created",
         "last_updated",
     ]
     readonly_fields = [
         "id",
+        "customer",
         "delivery_address",
         "created",
         "last_updated",
@@ -28,7 +29,6 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class CustomerAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Customer
         fields = "__all__"

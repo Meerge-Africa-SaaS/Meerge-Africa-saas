@@ -5,7 +5,6 @@ from . import models
 
 
 class CategoryAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Category
         fields = "__all__"
@@ -26,7 +25,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ItemAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Item
         fields = "__all__"
@@ -55,7 +53,6 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 class StockAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Stock
         fields = "__all__"
@@ -65,20 +62,12 @@ class StockAdmin(admin.ModelAdmin):
     form = StockAdminForm
     list_display = [
         "quantity",
-        "last_updated",
-        "id",
-        "created",
-    ]
-    readonly_fields = [
-        "quantity",
-        "last_updated",
-        "id",
-        "created",
+        "product_name",
+      
     ]
 
 
 class SupplierAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Supplier
         fields = "__all__"
@@ -90,18 +79,30 @@ class SupplierAdmin(admin.ModelAdmin):
         "id",
         "created",
         "name",
+        "owner",
+        "email",
         "last_updated",
     ]
     readonly_fields = [
         "id",
         "created",
         "name",
+        "owner",
         "last_updated",
+        "email",
+        "phone_number",
+        "cac_reg_number",
+        "cac_certificate",
+        "business_license",
+        "category",
+        "profile_img",
+        "cover_img",
+        "address",
+        "city"
     ]
 
 
 class SupplyManagerAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.SupplyManager
         fields = "__all__"

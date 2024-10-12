@@ -4,18 +4,22 @@ from . import models
 
 
 class OrderSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Order
         fields = [
             "id",
+            "customer",
+            "restaurant",
+            "menu_item",
+            "add_on",            
             "delivery_address",
+            "driver_note",
             "created",
             "last_updated",
         ]
 
-class CustomerSerializer(serializers.ModelSerializer):
 
+class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Customer
         fields = [

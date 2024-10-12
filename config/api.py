@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from core.api import UserViewSet
-from customers.api import OrderViewSet, CustomerViewSet
+from customers.api import CustomerViewSet, OrderViewSet
 from inventory.api import (
     CategoryViewSet,
     ItemViewSet,
@@ -12,11 +12,11 @@ from inventory.api import (
 )
 from orders.api import DeliveryAgentViewSet
 from restaurants.api import (
+    # ChefViewSet,
     IngredientViewSet,
-    MenuViewSet,
     MenuItemViewSet,
+    MenuViewSet,
     RestaurantViewSet,
-    ChefViewSet,
     StaffViewSet,
 )
 
@@ -26,11 +26,8 @@ router.register("Ingredient", IngredientViewSet)
 router.register("Menu", MenuViewSet)
 router.register("MenuItem", MenuItemViewSet)
 router.register("Restaurant", RestaurantViewSet)
-router.register("Chef", ChefViewSet)
+# router.register("Chef", ChefViewSet)
 router.register("Staff", StaffViewSet)
-
-router.register("Order", OrderViewSet)
-router.register("Customer", CustomerViewSet)
 
 router.register("User", UserViewSet)
 router.register("Order", OrderViewSet)

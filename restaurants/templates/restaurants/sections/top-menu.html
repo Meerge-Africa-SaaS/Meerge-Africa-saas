@@ -1,0 +1,81 @@
+{% load static %}
+
+<section id="top-menu">
+  <h2 class="section-title">Top Menu Of The Day</h2>
+  <ul id="top-menu__list">
+    {% if empty %}
+      <div class="top-menu__item placeholder">
+        <div class="item-count">
+          <span>0</span>
+        </div>
+        <div class="item-image">
+          <img src="{% static 'images/food/placeholder.png' %}" alt="Placeholder Image" />
+        </div>
+        <div class="item-details">
+          <h3 class="item-name">No menu items yet</h3>
+        </div>
+      </div>
+    {% else %}
+      <div class="top-menu__item">
+        <div class="item-count">
+          <span>10</span>
+        </div>
+        <div class="item-image">
+          <img src="{% static 'images/food/food1.png' %}" alt="Food 1" />
+        </div>
+        <div class="item-details">
+          <h3 class="item-name">BBQ Full Chicken</h3>
+          <p class="item-price">₦5,400</p>
+        </div>
+      </div>
+      <div class="top-menu__item">
+        <div class="item-count">
+          <span>7</span>
+        </div>
+        <div class="item-image">
+          <img src="{% static 'images/food/food2.png' %}" alt="Food 2" />
+        </div>
+        <div class="item-details">
+          <h3 class="item-name">BBQ Chicken Burger</h3>
+          <p class="item-price">₦3000</p>
+        </div>
+      </div>
+      <div class="top-menu__item">
+        <div class="item-count">
+          <span>5</span>
+        </div>
+        <div class="item-image">
+          <img src="{% static 'images/food/food3.png' %}" alt="Food 3" />
+        </div>
+        <div class="item-details">
+          <h3 class="item-name">Grilled Fish with Fried Plantain</h3>
+          <p class="item-price">₦2,500</p>
+        </div>
+      </div>
+      <div class="top-menu__item">
+        <div class="item-count">
+          <span>4</span>
+        </div>
+        <div class="item-image">
+          <img src="{% static 'images/food/food4.png' %}" alt="Food 4" />
+        </div>
+        <div class="item-details">
+          <h3 class="item-name">BBQ Chicken Thighs</h3>
+          <p class="item-price">₦2000</p>
+        </div>
+      </div>
+      <div class="top-menu__item">
+        <div class="item-count">
+          <span>2</span>
+        </div>
+        <div class="item-image">
+          <img src="{% static 'images/food/food5.png' %}" alt="Food 5" />
+        </div>
+        <div class="item-details">
+          <h3 class="item-name">BBQ Chicken Drumsticks</h3>
+          <p class="item-price">₦1500</p>
+        </div>
+      </div>
+    {% endif %}
+  </ul>
+</section>

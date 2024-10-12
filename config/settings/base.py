@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -22,8 +27,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 # Application definition
 
-
 INSTALLED_APPS = [
+                     "unfold",
                      "home",
                      "search",
                      "wagtail.contrib.forms",
@@ -49,56 +54,35 @@ INSTALLED_APPS = [
                      # packages
                      'rest_framework',
                      'django_htmx',
-                     'allauth',
-                     'allauth.account',
-                     'allauth.socialaccount',
-                     'allauth.socialaccount.providers.google',
-                     'allauth.socialaccount.providers.facebook',
-                     'ninja',
-                     'phonenumber_field',
+                     'rest_framework_swagger',
                  ] + [
                      # core
                      "core.apps.CoreConfig",
                  ] + [
                      # apps
-                     
+
                  ]
+
 # Customer User Model
 AUTH_USER_MODEL = "core.User"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'core.CustomFiles.CustomBackend.PhoneAuthBackend',
-    'core.CustomFiles.CustomBackend.EmailAuthBackend',
-]
-
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    #"django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
-    
     "allauth.account.middleware.AccountMiddleware",
-    #"allauth.usersessions.middleware.UserSessionsMiddleware", May need installation before we use.
+    # "allauth.usersessions.middleware.UserSessionsMiddleware", May need installation before we use.
 ]
 
 ROOT_URLCONF = "config.urls"
-
-
-###################################################
-############    ALLAUTH SETTINGS     ##############
-###################################################
-
-SITE_ID = 1
-MOBILE_APP_SCHEME = "app://localhost:5000/"
-WEB_APP_SCHEME = "http://localhost:8000/"
 
 AUTHENTICATION_BACKENDS = [
     'core.CustomFiles.CustomBackend.EmailAuthBackend',
@@ -107,75 +91,6 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
-
-ACCOUNT_ADAPTER = 'core.CustomFiles.CustomAdapterFile.CustomAccountAdapter'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_EMAIL_SUBJECT_PREFIX = "Meerge Africa"
-ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
-ACCOUNT_EMAIL_CONFIRMATION_URL = WEB_APP_SCHEME+'api/authenticate/auth-api/confirm-email/'
-
-
-######### ALL-AUTH PROVIDERS   ########
-# Google provider details
-client_id = ""
-client_secret = ""
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile'
-]
-# Facebook provider details
-
-# Provider settings
-SOCIALACCOUNT_PROVIDERS = {
-  'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'OAUTH_PKCE_ENABLED': True,
-        'EMAIL_AUTHENTICATION': True,
-        'FETCH_USERINFO' : True,
-        
-        'REDIRECT_URI': 'http://localhost:8000/accounts/google/login/callback/'
-    },
-  
-  'facebook': {
-        'METHOD': 'oauth2',  # Set to 'js_sdk' to use the Facebook connect SDK
-        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
-        'SCOPE': [
-            'email', 
-            'public_profile'
-        ],
-        'AUTH_PARAMS': {
-            'auth_type': 'reauthenticate'
-            },
-        'INIT_PARAMS': {
-            'cookie': True
-            },
-        'FIELDS': [
-            'id',
-            'first_name',
-            'last_name',
-            'middle_name',
-            'name',
-            'name_format',
-            'picture',
-            'short_name'
-        ],
-        'EXCHANGE_TOKEN': True,
-        #'LOCALE_FUNC': 'path.to.callable',
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v20.0',
-        'GRAPH_API_URL': 'https://graph.facebook.com/v20.0',
-    }
-}
-
 
 ##### Django stuff continues from here.
 
@@ -202,11 +117,15 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+db_config = dj_database_url.config(default=os.getenv("DATABASE_URL"))
+db_config["ATOMIC_REQUESTS"] = True
 DATABASES = {
+    # "supa": db_config,
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+    },
 }
 
 # Password validation
@@ -227,7 +146,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTHENTICATION_BACKENDS = ["core.backends.EmailBackend"]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

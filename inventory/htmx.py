@@ -156,6 +156,27 @@ class HTMXStockListView(generic.ListView):
         }
         return TemplateResponse(request, "htmx/list.html", context)
 
+class HTMXAdminStockListView(generic.ListView):
+   model = models.Stock
+   template_name = "htmx/stock_admin_list.html"  
+
+   def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
+
+   def get(self, request, *args, **kwargs):
+        super().get(request, *args, **kwargs)
+        context = {
+            "model_id": self.model._meta.verbose_name_raw,
+            "objects": self.get_queryset(),
+        }
+
+        if request.htmx:  
+            return TemplateResponse(request, "htmx/stock_admin_list.html", context)
+
+        
+        return TemplateResponse(request, self.template_name, context)
+
 
 class HTMXStockCreateView(generic.CreateView):
     model = models.Stock
@@ -198,7 +219,7 @@ class HTMXStockDeleteView(generic.DeleteView):
 
 class HTMXSupplierListView(generic.ListView):
     model = models.Supplier
-    form_class = forms.SupplierForm
+    form_class = forms.ViewSupplierForm
 
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)

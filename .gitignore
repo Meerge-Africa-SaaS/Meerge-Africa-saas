@@ -86,11 +86,18 @@ db.sqlite3
 __pycache__
 node_modules
 .env
+.env.*
+!.env.example
 local_settings.py
+media
 
 #iac
 .terraform
 terraform.tfstate
-terraform.tfstate.backup
+terraform.tfstahzte.backup
 .terraform.lock.hcl
 /.terraform/
+
+
+# IDE
+.vscode

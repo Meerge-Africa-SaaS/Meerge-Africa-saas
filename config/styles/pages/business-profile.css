@@ -1,0 +1,285 @@
+#overview {
+    @apply flex flex-col max-w-full w-full space-y-4;
+}
+
+.overview__header {
+    @apply flex justify-between items-baseline w-full px-4 md:px-0;
+}
+
+.overview__header > h2 {
+    @apply text-2xl;
+}
+
+.overview__header > a {
+    @apply flex items-baseline gap-1
+}
+
+.overview__header > a > span {
+    @apply text-lg text-secondary;
+}
+
+.overview__header a svg {
+    @apply h-4 w-auto;
+}
+
+.overview__list {
+    @apply
+    rounded-lg md:shadow-lg md:border border-gray-200 p-4
+    md:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6;
+}
+
+.overview__item {
+    @apply flex items-start gap-4;
+}
+
+.overview__icon {
+    @apply
+    rounded-full bg-gray-400 w-[30px] h-[30px]
+    flex justify-center items-center flex-shrink-0;
+}
+
+.overview__icon > svg {
+    @apply h-[14px] w-auto text-white;
+}
+
+.overview__content {
+    @apply
+    flex flex-col justify-start text-sm
+    basis-4/5 max-w-[calc(100%_-30px-1rem)] h-full
+}
+
+.overview__content h3 {
+    @apply text-gray-500;
+}
+
+.overview__content p {
+    @apply truncate;
+}
+
+/* Locations */
+#locations {
+    @apply flex flex-col max-w-full w-full space-y-4;
+}
+
+.locations__header {
+    @apply flex justify-between items-baseline w-full px-4 md:px-0;
+}
+
+.locations__header > h2 {
+    @apply text-2xl;
+}
+
+.locations__header > a {
+    @apply flex items-baseline gap-1
+}
+
+.locations__header > a > span {
+    @apply text-lg text-secondary;
+}
+
+.locations__header a svg {
+    @apply h-4 w-auto;
+}
+
+.locations__list {
+    @apply
+    rounded-lg md:shadow-lg md:border border-gray-200 p-4
+    md:p-6 lg:p-8 grid grid-cols-1 gap-6;
+}
+
+.locations__item {
+    @apply flex items-start gap-4;
+}
+
+.locations__icon {
+    @apply
+    rounded-full bg-gray-400 w-[30px] h-[30px]
+    flex justify-center items-center flex-shrink-0;
+}
+
+.locations__icon > svg {
+    @apply h-[14px] w-auto text-white;
+}
+
+.locations__content {
+    @apply
+    flex flex-col justify-between text-sm
+    basis-4/5 max-w-[calc(100%_-30px-1rem)] h-full
+}
+
+.locations__content > h3 {
+    @apply text-gray-500;
+}
+
+.locations__content p {
+    @apply truncate;
+}
+
+/* Bank Details */
+#bank-details {
+    @apply flex flex-col max-w-full w-full space-y-4
+    rounded-lg shadow-lg border border-gray-200 p-4
+    md:p-6 lg:p-8 
+
+}
+
+.bank-details__header {
+    @apply flex justify-between items-center w-full;
+}
+
+.bank-details__header > h2 {
+    @apply text-2xl;
+}
+
+.bank-details__header > a {
+    @apply flex items-baseline gap-1
+}
+
+.bank-details__header > a > span {
+    @apply sr-only
+}
+
+.bank-details__header a svg {
+    @apply h-[44px] w-auto;
+}
+
+.bank-details__list {
+    @apply grid grid-cols-1 gap-6;
+}
+
+.bank-details__item {
+    @apply flex flex-col md:flex-row justify-between items-baseline gap-y-2;
+}
+
+.bank-details__item > p {
+    @apply text-base font-extralight truncate;
+}
+
+/* EMPLOYEES */
+#employees {
+    @apply flex flex-grow flex-col max-w-full w-full space-y-4
+    rounded-lg shadow-lg border border-gray-200 p-4
+    md:p-6 lg:p-8;
+}
+
+.employees__header {
+    @apply flex justify-between items-center w-full;
+}
+
+.employees__header > h2 {
+    @apply text-2xl;
+}
+
+.employees__header > a {
+    @apply flex items-center justify-center
+    gap-1 w-[44px] h-[44px] bg-gray-300 rounded-full;
+}
+
+.employees__header > a > span {
+    @apply sr-only
+} 
+
+.employees__header a svg {
+    @apply h-[25px] w-auto;
+}
+
+.employees__list {
+    @apply grid grid-cols-1 gap-6;
+}
+
+.employees__list.pending {
+    @apply opacity-50 !mt-8;
+}
+
+.employees__list-title {
+    @apply italic font-extralight;
+}
+
+.employees__item {
+    @apply flex items-center gap-4;
+}
+
+.employees__avatar {
+    @apply
+    w-[50px] h-[50px] rounded-full
+    bg-gray-300 flex justify-center items-center;
+}
+
+.employees__avatar img {
+    @apply w-full h-full object-cover rounded-full;
+}
+
+.employees__avatar svg {
+    @apply h-[30px] w-auto text-primary;
+}
+
+.employees__content {
+    @apply flex flex-col justify-between text-sm
+    basis-4/5 max-w-[calc(100%_-54px-1rem)] h-full
+}
+
+.employees__content > h3 {
+    @apply text-base truncate;
+}
+
+.employees__content p {
+    @apply truncate text-gray-500 text-sm;
+}
+
+/* OTHER INFORMATION */
+
+#other-information {
+    @apply flex flex-col max-w-full w-full space-y-4
+    rounded-lg shadow-lg border border-gray-200 p-4
+    md:p-6 lg:p-8;
+}
+
+.other-information__header {
+    @apply flex justify-between items-center w-full;
+}
+
+.other-information__header > h2 {
+    @apply text-2xl;
+}
+
+.other-information__header > a {
+    @apply flex items-baseline gap-1;
+}
+
+.other-information__header > a > span {
+    @apply text-secondary text-lg;
+}
+
+.other-information__header a svg {
+    @apply h-4 w-auto;
+}
+
+.other-information__list {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+}
+
+.other-information__item {
+    @apply flex items-start gap-4;
+}
+
+.other-information__icon {
+    @apply flex-shrink-0;
+}
+
+.other-information__icon > svg {
+    @apply h-[48px] w-auto text-white;
+}
+
+.other-information__content {
+    @apply
+    flex flex-col justify-between text-sm
+    basis-4/5 max-w-[calc(100%_-30px-1rem)] h-full
+}
+
+.other-information__content h3 {
+    @apply text-gray-500 truncate;
+}
+
+.other-information__content p {
+    @apply truncate;
+}

@@ -2,6 +2,7 @@ module.exports = {
     content: [
         './config/templates/**/*.html',
         './inventory/templates/**/*.html',
+        './restaurants/templates/**/*.html',
         './core/templates/**/*.html',
         './node_modules/flowbite/**/*.js'
     ],
@@ -11,10 +12,13 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                'primary': 'rgba(14, 34, 84, 1)',
-                'secondary': 'rgba(225, 93, 37, 1)',
+                'primary': '#020164',
+                'secondary': '#FE0C00',
                 'ash': 'rgba(30, 30, 30, 1)'
-            }
+            },
+            fontFamily: {
+                'poppins': ['Poppins'],
+            },
         }
     }
 }

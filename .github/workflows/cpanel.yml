@@ -3,8 +3,7 @@ on:
     branches:
       - main
       - uat
-      - omnio
-name: 🚀 Deploy website on push
+name: 🚀 Deploy
 jobs:
   web-deploy:
     name: 🎉 Deploy
