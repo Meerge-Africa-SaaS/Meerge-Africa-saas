@@ -125,7 +125,7 @@ class EmailVerification(models.Model):
     def __str__(self):
         return self.user.email
 
-     '''
+    '''
 class SmsVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
     phone_number = PhoneNumberField()
@@ -138,3 +138,4 @@ class SmsVerification(models.Model):
             return self.user.email or self.user.phone_number or None
         else:
             return phone_number or None
+    '''
