@@ -22,6 +22,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 # Application definition
 
+
 INSTALLED_APPS = [
                      "home",
                      "search",
@@ -67,6 +68,12 @@ AUTH_USER_MODEL = "core.User"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'core.CustomFiles.CustomBackend.PhoneAuthBackend',
+    'core.CustomFiles.CustomBackend.EmailAuthBackend',
+]
 
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -220,6 +227,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = ["core.backends.EmailBackend"]
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -284,7 +293,18 @@ WAGTAILADMIN_BASE_URL = "http://MeergeAfrica.com"
 # This can be omitted to allow all files, but note that this may present a security risk
 # if untrusted users are allowed to upload files -
 # see https://docs.wagtail.org/en/stable/advanced_topics/deploying.html#user-uploaded-files
-WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+WAGTAILDOCS_EXTENSIONS = [
+    "csv",
+    "docx",
+    "key",
+    "odt",
+    "pdf",
+    "pptx",
+    "rtf",
+    "txt",
+    "xlsx",
+    "zip",
+]
 
 
 def load_settings(setting):

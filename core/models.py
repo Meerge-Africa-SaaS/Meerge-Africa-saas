@@ -35,6 +35,7 @@ class UserManager(BaseUserManager):
 
         return user
 
+
     def create_superuser(self, email, username, phone_number, password=None):
         """
         Creates and saves a superuser with the given email, date of
@@ -114,7 +115,6 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     def get_htmx_delete_url(self):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
-''' 
 
 class EmailVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "email_verification_codes")
@@ -124,6 +124,7 @@ class EmailVerification(models.Model):
     
     def __str__(self):
         return self.user.email
+
      '''
 class SmsVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)

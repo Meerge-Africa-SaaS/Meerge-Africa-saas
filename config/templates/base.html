@@ -1,4 +1,5 @@
 {% load static wagtailcore_tags wagtailuserbar %}
+{% load compress %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,8 +24,25 @@
         <base target="_blank">
         {% endif %}
 
+        {# Tailwind CSS #}
+        {% compress css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/tailwind.out.css' %}">
+        {% endcompress %}
+
+        {# HTMX #}
+        {% compress javascript %}
+        <script type="text/javascript" src="{% static 'vendor/htmx.min.js' %}"></script>
+        {% endcompress %}
+
+        {# Flowbite #}
+        {% compress javascript %}
+        <script type="text/javascript" src="{% static 'vendor/flowbite.min.js' %}"></script>
+        {% endcompress %}
+
         {# Global stylesheets #}
+        {% compress css %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/config.css' %}">
+        {% endcompress %}
 
         {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
@@ -37,7 +55,9 @@
         {% block content %}{% endblock %}
 
         {# Global javascript #}
+        {% compress js %}
         <script type="text/javascript" src="{% static 'js/config.js' %}"></script>
+        {% endcompress %}
 
         {% block extra_js %}
         {# Override this in templates to add extra javascript #}
