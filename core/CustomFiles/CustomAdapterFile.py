@@ -25,13 +25,15 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             actor_type = "staff"
         elif isinstance(user, SupplyManager):
             actor_type = "supplymanager"
+        elif isinstance(user, DeliveryAgent):
+            actor_type = "deliveryagent"
         if not (isinstance(user, Staff)) and not (isinstance(user, SupplyManager)) and not (isinstance(user, DeliveryAgent)) and not (isinstance(user, Customer)):
             actor_type = "owner"
             
-        if isinstance(user, Customer) or isinstance(user, DeliveryAgent):
+        if actor_type == "customer" or actor_type == "deliveryagent":
             url = f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}/mobile/{key}"
         else:
-            f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}/mobile/{key}"
+            f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}/{key}"
         
         return url
     

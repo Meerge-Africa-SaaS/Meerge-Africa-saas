@@ -67,6 +67,13 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = "core.User"
 
 
+AUTHENTICATION_BACKENDS = [
+    "core.CustomFiles.CustomBackend.EmailAuthBackend",
+    "core.CustomFiles.CustomBackend.PhoneAuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+    "core.backends.EmailBackend"
+]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MIDDLEWARE = [
@@ -84,9 +91,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.openapi.AutoSchema',
-}
+
+AUTHENTICATION_BACKENDS = [
+    'core.CustomFiles.CustomBackend.EmailAuthBackend',
+    'core.CustomFiles.CustomBackend.PhoneAuthBackend',
+    "core.backends.EmailBackend"
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 ##### Django stuff continues from here.
 

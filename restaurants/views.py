@@ -212,6 +212,33 @@ class RestaurantDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("restaurant_Restaurant_list")
 
 
+class RestaurantStoreListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+class RestaurantStoreCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+class RestaurantStoreUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
+class RestaurantStoreListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+
+
 """ 
 class ChefListView(generic.ListView):
     model = models.Chef
