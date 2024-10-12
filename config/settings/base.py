@@ -91,6 +91,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
+
 AUTHENTICATION_BACKENDS = [
     'core.CustomFiles.CustomBackend.EmailAuthBackend',
     'core.CustomFiles.CustomBackend.PhoneAuthBackend',

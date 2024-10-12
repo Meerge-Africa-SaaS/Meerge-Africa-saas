@@ -23,7 +23,8 @@ urlpatterns = [
     path(
         "shema_api/", 
         get_schema_view(title="API Schema", 
-                        description="The api endpoints in the second drf link sent earlier has been converted to swagger for better use."), 
+                        description="The api endpoints in the second drf link sent earlier has been converted to swagger for better use.",
+                        version="1.0.0"), 
         name="schema_api"
         ),
     path(
