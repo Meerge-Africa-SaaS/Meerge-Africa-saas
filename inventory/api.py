@@ -3,6 +3,8 @@ from rest_framework import viewsets, permissions
 from . import serializers
 from . import models
 
+from core.__permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """ViewSet for the Category class"""
@@ -33,7 +35,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
 
     queryset = models.Supplier.objects.all()
     serializer_class = serializers.SupplierSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
 
 class SupplyManagerViewSet(viewsets.ModelViewSet):
@@ -41,4 +43,7 @@ class SupplyManagerViewSet(viewsets.ModelViewSet):
 
     queryset = models.SupplyManager.objects.all()
     serializer_class = serializers.SupplyManagerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsUserOrReadOnly]
+    
+    def perform_create(self, serializer):
+        serializer.save(owner = self.request.user)

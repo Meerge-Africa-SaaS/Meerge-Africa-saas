@@ -17,7 +17,6 @@
     /**@type {HTMLInputElement} */
     const currentPassword = currentPasswordInput.querySelector('input')
 
-
     /**@type {HTMLDivElement} */
     const newPasswordContainer = document.getElementById('new-password-container')
     /**@type {HTMLDivElement} */

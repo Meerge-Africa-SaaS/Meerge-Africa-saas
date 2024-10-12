@@ -1,6 +1,8 @@
 from django.urls import include, path
 from rest_framework import routers
 
+from restaurants import onboarding, registration
+
 from . import api, htmx, views
 
 router = routers.DefaultRouter()
@@ -12,11 +14,10 @@ router.register("Restaurant", api.RestaurantViewSet)
 router.register("Staff", api.StaffViewSet)
 
 urlpatterns = (
-    path("", include("restaurants.pages", namespace="pages")),
     path("api/v1/", include(router.urls)),
     path(
         "signup/",
-        views.SignupView.as_view(),
+        registration.SignupView.as_view(),
         name="restaurant_signup",
     ),
     path(
@@ -26,12 +27,12 @@ urlpatterns = (
     ),
     path(
         "onboarding/",
-        views.OnboardingView.as_view(),
+        onboarding.OnboardingView.as_view(),
         name="restaurant_onboarding",
     ),
     path(
         "onboarding/wizard",
-        views.OnboardingWizardView.as_view(),
+        onboarding.OnboardingWizardView.as_view(),
         name="restaurant_onboarding_wizard",
     ),
     path(
@@ -60,6 +61,31 @@ urlpatterns = (
         name="restaurant_Ingredient_delete",
     ),
     path(
+        "MenuCategory/",
+        views.MenuCategoryListView.as_view(),
+        name="restaurant_MenuCategory_list",
+    ),
+    path(
+        "MenuCategory/create/",
+        views.MenuCategoryCreateView.as_view(),
+        name="restaurant_MenuCategory_create",
+    ),
+    path(
+        "MenuCategory/detail/<int:pk>/",
+        views.MenuCategoryDetailView.as_view(),
+        name="restaurant_MenuCategory_detail",
+    ),
+    path(
+        "MenuCategory/update/<int:pk>/",
+        views.MenuCategoryUpdateView.as_view(),
+        name="restaurant_MenuCategory_update",
+    ),
+    path(
+        "MenuCategory/delete/<int:pk>/",
+        views.MenuCategoryDeleteView.as_view(),
+        name="restaurant_MenuCategory_delete",
+    ),
+    path(
         "Menu/",
         views.MenuListView.as_view(),
         name="restaurant_Menu_list",
@@ -83,6 +109,31 @@ urlpatterns = (
         "Menu/delete/<int:pk>/",
         views.MenuDeleteView.as_view(),
         name="restaurant_Menu_delete",
+    ),
+    path(
+        "AddOn/",
+        views.AddOnListView.as_view(),
+        name="restaurant_AddOn_list",
+    ),
+    path(
+        "AddOn/create/",
+        views.AddOnCreateView.as_view(),
+        name="restaurant_AddOn_create",
+    ),
+    path(
+        "AddOn/detail/<int:pk>/",
+        views.AddOnDetailView.as_view(),
+        name="restaurant_AddOn_detail",
+    ),
+    path(
+        "AddOn/update/<int:pk>/",
+        views.AddOnUpdateView.as_view(),
+        name="restaurant_AddOn_update",
+    ),
+    path(
+        "AddOn/delete/<int:pk>/",
+        views.AddOnDeleteView.as_view(),
+        name="restaurant_AddOn_delete",
     ),
     path(
         "MenuItem/",
@@ -245,6 +296,16 @@ urlpatterns = (
         htmx.HTMXRestaurantDeleteView.as_view(),
         name="restaurant_Restaurant_htmx_delete",
     ),
+    path(
+        "htmx/Restaurant/logo/<int:pk>/",
+        htmx.HTMXRestaurantLogoView.as_view(),
+        name="restaurant_Restaurant_htmx_logo",
+    ),
+    path(
+        "htmx/Restaurant/cover/<int:pk>/",
+        htmx.HTMXRestaurantCoverView.as_view(),
+        name="restaurant_Restaurant_htmx_cover",
+    ),
     # TODO: Add Chef views
     # path(
     #     "htmx/Chef/",
@@ -276,4 +337,5 @@ urlpatterns = (
     #     htmx.HTMXStaffDeleteView.as_view(),
     #     name="restaurant_Staff_htmx_delete",
     # ),
+    path("<slug:restaurant>/", include("restaurants.pages", namespace="pages")),
 )

@@ -9,9 +9,16 @@ User = get_user_model()
 
 
 class Order(models.Model):
+    # Relationships
+    customer = models.ForeignKey('customers.Customer', on_delete=models.DO_NOTHING)
+    restaurant = models.ForeignKey('restaurants.Restaurant', on_delete=models.DO_NOTHING)
+    menu_item = models.ForeignKey('restaurants.MenuItem', on_delete=models.DO_NOTHING)
+    add_on = models.ForeignKey('restaurants.AddOn', on_delete=models.DO_NOTHING, blank=True, null=True)
+    
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     delivery_address = models.CharField(max_length=130)
+    driver_note = models.CharField(max_length=256, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
@@ -69,3 +76,5 @@ class Customer(User):  # type: ignore
 
     def get_htmx_delete_url(self):
         return reverse("customers_Customer_htmx_delete", args=(self.pk,))
+
+
