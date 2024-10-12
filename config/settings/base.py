@@ -84,7 +84,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.openapi.AutoSchema',
+}
 
 ##### Django stuff continues from here.
 
