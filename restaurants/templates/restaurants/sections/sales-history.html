@@ -15,34 +15,34 @@
           <td colspan="4" class="!w-full !text-left">No Available Orders Data</td>
         </tr>
       {% else %}
-        <tr class="group/sales" data-status="pending">
+        <tr class="group/sales" data-status="failed">
           <td>RBP-0939</td>
           <td>Credit Card</td>
-          <td>Pending</td>
+          <td>Failed</td>
           <td>
             {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
           </td>
         </tr>
-        <tr class="group/sales" data-status="confirmed">
+        <tr class="group/sales" data-status="success">
           <td>RBP-0938</td>
           <td>Bank Transfer</td>
-          <td>Confirmed</td>
+          <td>Success</td>
           <td>
             {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
           </td>
         </tr>
-        <tr class="group/sales" data-status="completed">
+        <tr class="group/sales" data-status="success">
           <td>RBP-0937</td>
           <td>Bank Transfer</td>
-          <td>Completed</td>
+          <td>Success</td>
           <td>
             {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
           </td>
         </tr>
-        <tr class="group/sales" data-status="cancelled">
+        <tr class="group/sales" data-status="failed">
           <td>RBP-0936</td>
           <td>Cash</td>
-          <td>Cancelled</td>
+          <td>Failed</td>
           <td>
             {% include 'svg/ellipsis-v.html' with class='w-8 h-7' %}
           </td>

@@ -1,11 +1,12 @@
+import uuid
+
 from cities_light.models import City, Country
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
-
-import uuid
 
 User = get_user_model()
 
@@ -151,7 +152,7 @@ class MenuItem(models.Model):
     
     # Relationships
     menu = models.ForeignKey("restaurants.Menu", on_delete=models.CASCADE)
-    restaurant = models.ForeignKey('restaurants.Restaurant', models.CASCADE)
+    restaurant = models.ForeignKey('restaurants.Restaurant', models.CASCADE, related_name='menu_items')
     add_ons = models.ManyToManyField('restaurants.AddOn', related_name='menu_items', blank=True)
     ingredient_details = models.ManyToManyField('restaurants.Ingredient')
 
@@ -243,8 +244,9 @@ class Restaurant(models.Model):
     country = models.ForeignKey(
         Country, on_delete=models.SET_NULL, null=True, blank=True
     )
-    owner = models.ManyToManyField("core.User")
+    owner = models.ManyToManyField("core.User", related_name='restaurant_owner')
     business_category = models.ManyToManyField('restaurants.RestaurantCategory', related_name='restaurants')
+    add_ons = models.ManyToManyField('restaurants.AddOn', related_name='restaurant_add_ons', blank=True)
 
     # Fields
     address = models.CharField(max_length=130)
@@ -271,10 +273,10 @@ class Restaurant(models.Model):
 
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
-    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
+    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")   
     
     # Miscellanous
-    add_ons = models.ManyToManyField('restaurants.AddOn', related_name='restaurant_add_ons', blank=True)
+    custom_link = models.SlugField(max_length=24, unique=True, help_text="Custom link for your restaurant URL", blank=True, null=True) 
 
     
     class Meta:
@@ -282,6 +284,10 @@ class Restaurant(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+    def save(self, *args, **kwargs):
+        self.custom_link = self.custom_link or slugify(self.name)
+        super(Restaurant, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("restaurant_Restaurant_detail", args=(self.pk,))

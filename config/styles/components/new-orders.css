@@ -13,11 +13,11 @@ section#new-orders {
 }
 
 #btn_new-order {
-    @apply w-[169px] flex items-start gap-2 text-white mx-0 py-2.5 px-1.5;
+    @apply w-[169px] flex justify-center items-start gap-2 text-white mx-0 py-2 px-1;
 }
 
 #btn_new-order > span:first-child {
-    @apply text-sm;
+    @apply text-base;
 }
 
 #btn_new-order > .icon {

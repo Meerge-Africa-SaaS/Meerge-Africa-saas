@@ -4,11 +4,55 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from phonenumber_field.modelfields import PhoneNumberField
+from customers.models import Order
+import uuid
 
 User = get_user_model()
 
 
-class DeliveryAgent(User):  # type: ignore
+class DeliveryRequest(models.Model):
+    
+    # Choices
+    STATUS_CHOICE = [
+        ('pending', _('Pending')),
+        ('assigned', _('Assigned')),
+        ('processing', _('Processing')),
+        ('completed', _('Completed'))
+    ]
+    
+    # Relationships
+    order = models.ForeignKey('customers.Order', on_delete=models.DO_NOTHING)
+    deliveryagent = models.ForeignKey('orders.DeliveryAgent', on_delete=models.DO_NOTHING, null=True, blank=True)
+     
+    # Fields
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    status = models.CharField(max_length=12, choices=STATUS_CHOICE)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    
+    class Meta:
+        db_table = "deliveryrequest"
+
+    def __str__(self):
+        return f"Delivery Request for Order {order.id}"
+
+    def get_absolute_url(self):
+        return reverse("deliveryagentDeliveryRequest_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("deliveryagentDeliveryRequest_detail", args=(self.pk,))
+
+    @staticmethod
+    def get_htmx_create_url():
+        return reverse("deliveryagentDeliveryRequest_htmx_create")
+
+    def get_htmx_delete_url(self):
+        return reverse("deliveryagentDeliveryRequest_delete", args=(self.pk,))
+    
+    #def save(self):
+        
+
+class DeliveryAgent(User):
     # Choices
     VEHICLE_TYPE_CHOICE = [
         ('bicycle', _('Bicycle')),
@@ -75,3 +119,26 @@ class DeliveryAgent(User):  # type: ignore
 
     def get_htmx_delete_url(self):
         return reverse("orders_DeliveryAgent_htmx_delete", args=(self.pk,))
+
+''' 
+class DeliveryRequest(models.Model):
+    DELIVERY_REQUEST_STATUSES = [
+        ("pending", _("Pending")),
+        ("in_motion", _("On the way")),
+        ("delivered", _("Delivered"))
+    ]
+    
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    status = models.CharField(choices=DELIVERY_REQUEST_STATUSES, max_length=10)
+    created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Delivery Request for Order {order.id}"
+    
+    
+    def save(self):
+        super().__init__()
+        from .signals import delivery_request_created
+        delivery_request_created.send(sender = self.__class__, instance = instance, created = True)
+ '''

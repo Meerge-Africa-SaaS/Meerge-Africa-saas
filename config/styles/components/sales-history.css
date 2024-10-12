@@ -29,10 +29,7 @@ section#sales-history {
 
 td:nth-child(3) {
     @apply
-    font-medium group-data-[status="pending"]/sales:text-orange-500
-    group-data-[status="confirmed"]/sales:text-green-500
-    group-data-[status="completed"]/sales:text-green-500
-    group-data-[status="cancelled"]/sales:text-red-500
+    group-data-[status="success"]/sales:text-green-500
     group-data-[status="failed"]/sales:text-red-500
 
 }

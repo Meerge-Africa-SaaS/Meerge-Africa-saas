@@ -151,13 +151,23 @@ class ItemForm(forms.ModelForm):
         self.fields["category"].queryset = Category.objects.all()
         self.fields["supplier"].queryset = Supplier.objects.all()
 
-
 class StockForm(forms.ModelForm):
     class Meta:
         model = models.Stock
         fields = [
-            "quantity",
             "item",
+            "quantity",
+            "SKU_number",
+            "product_name",
+            "product_image",
+            "product_category",
+            "manufacture_name",
+            "price",
+            "unit_available",
+            "size",
+            "weight",
+            "discount_percentage",
+            "pickup_available",
         ]
 
     def __init__(self, *args, **kwargs):

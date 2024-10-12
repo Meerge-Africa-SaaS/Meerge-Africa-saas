@@ -62,15 +62,8 @@ class StockAdmin(admin.ModelAdmin):
     form = StockAdminForm
     list_display = [
         "quantity",
-        "last_updated",
-        "id",
-        "created",
-    ]
-    readonly_fields = [
-        "quantity",
-        "last_updated",
-        "id",
-        "created",
+        "product_name",
+      
     ]
 
 
