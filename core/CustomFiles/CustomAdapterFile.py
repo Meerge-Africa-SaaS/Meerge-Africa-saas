@@ -12,7 +12,7 @@ from orders.models import DeliveryAgent
 class CustomAccountAdapter(DefaultAccountAdapter):
     
     def get_from_email(self):
-        return "Meerge Africa"
+        return "account@meergeafrica.com"
     
     def get_email_confirmation_url(self, request, emailconfirmation):
         key = emailconfirmation.key
@@ -27,13 +27,14 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             actor_type = "supplymanager"
         elif isinstance(user, DeliveryAgent):
             actor_type = "deliveryagent"
-        if not (isinstance(user, Staff)) and not (isinstance(user, SupplyManager)) and not (isinstance(user, DeliveryAgent)) and not (isinstance(user, Customer)):
+        else:
             actor_type = "owner"
-            
+    
+
         if actor_type == "customer" or actor_type == "deliveryagent":
             url = f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}/mobile/{key}"
         else:
-            f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}/{key}"
+            url = f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}/{key}"
         
         return url
     
