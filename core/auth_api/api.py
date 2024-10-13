@@ -396,7 +396,7 @@ def verify_key(request, key_token: str):
         
         user.is_active = True
         user.save()
-        
+        login(request, user, backend="EmailAuthBackend")
         # Delete the email confirmation instance created
         allauthemail_address = allauthEmailAddress.objects.get(email=user.email)
         allauthEmailConfirmation.objects.get(email_address = allauthemail_address).delete()
@@ -422,6 +422,7 @@ def verify_email(request, data: EmailVerificationSchema):
             user.is_active = True
             user.save()
             login(request, user, backend="EmailAuthBackend")
+             # Delete the email verification instance created
             EmailVerification.objects.get(user = user).delete()
             
             token_expiry_period, access_token_period = 7, 120
