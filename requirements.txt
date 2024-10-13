@@ -19,3 +19,6 @@ pyOpenSSL
 django-browser-reload
 django-compressor
 django-formtools
+pyyaml
+uritemplate
+django-rest-swaggger

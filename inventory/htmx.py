@@ -219,7 +219,7 @@ class HTMXStockDeleteView(generic.DeleteView):
 
 class HTMXSupplierListView(generic.ListView):
     model = models.Supplier
-    form_class = forms.SupplierForm
+    form_class = forms.ViewSupplierForm
 
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)

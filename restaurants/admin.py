@@ -167,7 +167,56 @@ class RestaurantAdmin(admin.ModelAdmin):
         "last_updated",
         "profile_img",
         "cover_img",
+        "custom_link",
     ]
+   
+
+class RestaurantStoreAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.RestaurantStore
+        fields = "__all__" 
+        
+
+class RestaurantStoreAdmin(admin.ModelAdmin):
+    form = RestaurantStoreAdminForm
+    list_display = [
+        "name",
+        "restaurant"
+    ]
+    readonly_fields = [
+        "restaurant",
+        "name",
+        "description",
+        "image",
+        "section_name"
+    ]
+    
+
+class RestaurantStockAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.RestaurantStock
+        fields = "__all__"
+        
+
+class RestaurantStockAdmin(admin.ModelAdmin):
+    form = RestaurantStockAdminForm
+    list_display = [
+        "category",
+        "name",
+        "restaurant",
+    ]
+    readonly_fields = [
+        "category",
+        "name",
+        "image",
+        "stock_type",
+        "purchasing_price",
+        "quantity",
+        "measuring_unit",
+        "restaurant",
+    ]
+    
+    
 ''' 
 
 class ChefAdminForm(forms.ModelForm):
@@ -212,5 +261,7 @@ admin.site.register(models.AddOn, AddOnAdmin)
 admin.site.register(models.MenuItem, MenuItemAdmin)
 admin.site.register(models.MenuCategory, MenuCategoryAdmin)
 admin.site.register(models.Restaurant, RestaurantAdmin)
+admin.site.register(models.RestaurantStore, RestaurantStoreAdmin)
+admin.site.register(models.RestaurantStock, RestaurantStockAdmin)
 #admin.site.register(models.Chef, ChefAdmin)
 admin.site.register(models.Staff, StaffAdmin)

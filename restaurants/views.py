@@ -206,10 +206,64 @@ class RestaurantUpdateView(LoginRequiredMixin, generic.UpdateView):
         kwargs["user"] = self.request.user
         return kwargs
 
-
+ 
 class RestaurantDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Restaurant
     success_url = reverse_lazy("restaurant_Restaurant_list")
+
+
+class RestaurantStoreListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+class RestaurantStoreCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+class RestaurantStoreUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
+class RestaurantStoreListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+    
+class RestaurantStockListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
+    
+class RestaurantStockCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+class RestaurantStockUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
+class RestaurantStockListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
 
 
 """ 

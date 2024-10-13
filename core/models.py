@@ -136,8 +136,6 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
 
-""" 
-
 class EmailVerification(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="email_verification_codes"
@@ -151,6 +149,7 @@ class EmailVerification(models.Model):
  
 
 
+"""
 class SmsVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
     phone_number = PhoneNumberField()
@@ -163,4 +162,6 @@ class SmsVerification(models.Model):
             return self.user.email or self.user.phone_number or None
         else:
             return phone_number or None
+
 """
+

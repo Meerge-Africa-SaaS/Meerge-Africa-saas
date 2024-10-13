@@ -330,6 +330,33 @@ class GeneralViewRestaurantForm(forms.ModelForm):
         return custom_link
 
 
+class RestauarantStoreForm(forms.ModelForm):
+    class Meta:
+        model = models.RestaurantStore
+        fields = [
+            "restaurant",
+            "name",
+            "description",
+            "image",
+            "section_name"
+        ]
+        
+
+class RestauarantStockForm(forms.ModelForm):
+    class Meta:
+        model = models.RestaurantStock
+        fields = [
+            "category",
+            "name",
+            "image",
+            "stock_type",
+            "purchasing_price",
+            "quantity",
+            "measuring_unit",
+            "restaurant",
+        ]
+
+
 """ 
 
 class ChefForm(forms.ModelForm):
@@ -344,6 +371,7 @@ class ChefForm(forms.ModelForm):
         self.fields["restaurants"].queryset = Restaurant.objects.all()
 
  """
+
 
 
 class StaffForm(forms.ModelForm):

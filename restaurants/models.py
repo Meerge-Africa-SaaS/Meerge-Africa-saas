@@ -196,6 +196,47 @@ class MenuItem(models.Model):
     def get_htmx_delete_url(self):
         return reverse("restaurant_MenuItem_htmx_delete", args=(self.pk,))
 
+class RestaurantStock(models.Model):
+    # Relationships
+    category =  models.ForeignKey("inventory.Category", on_delete = models.DO_NOTHING)
+    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete = models.CASCADE)
+    
+    # Fields
+    name = models.CharField(max_length=128)
+    image = models.ImageField(upload_to='images/restaurant/Stock')
+    stock_type = models.CharField(max_length=128)
+    purchasing_price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField()
+    measuring_unit = models.IntegerField()
+    
+    # Time
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    
+    
+    def ready(self):
+        pass
+    
+    class Meta:
+        pass
+    
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("restaurant_RestaurantStock_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("restaurant_RestaurantStock_update", args=(self.pk,))
+
+    @staticmethod
+    def get_htmx_create_url():
+        return reverse("restaurant_RestaurantStock_htmx_create")
+
+    def get_htmx_delete_url(self):
+        return reverse("restaurant_RestaurantStock_htmx_delete", args=(self.pk,))
+    
+    
 
 class RestaurantCategory(models.Model):
     
@@ -302,6 +343,40 @@ class Restaurant(models.Model):
     def get_htmx_delete_url(self):
         return reverse("restaurant_Restaurant_htmx_delete", args=(self.pk,))
 
+
+class RestaurantStore(models.Model):
+    # Relationships
+    restaurant = models.ForeignKey('restaurants.Restaurant', on_delete = models.CASCADE)
+    
+    # Fields
+    name = models.CharField(max_length=128)
+    description = models.CharField(max_length = 256, blank=True, null=True)
+    image = models.ImageField(upload_to='images/restaurant/Store')
+    section_name = models.CharField(max_length=128, blank=True, null=True)
+    
+    # Time
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    
+    class Meta:
+        pass
+    
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("restaurant_RestaurantStore_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("restaurant_RestaurantStore_update", args=(self.pk,))
+
+    @staticmethod
+    def get_htmx_create_url():
+        return reverse("restaurant_RestaurantStore_htmx_create")
+
+    def get_htmx_delete_url(self):
+        return reverse("restaurant_RestaurantStore_htmx_delete", args=(self.pk,))
+    
 
 """ 
 class Chef(User):
