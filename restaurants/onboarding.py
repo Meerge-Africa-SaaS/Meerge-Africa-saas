@@ -127,9 +127,9 @@ class OnboardingWizardView(SessionWizardView):
         ("step2B", OnboardingForm2B),
     ]
     templates = {
-        "step1": "registration/restaurant/onboarding_step1.html",
-        "step2A": "registration/restaurant/onboarding_step2A.html",
-        "step2B": "registration/restaurant/onboarding_step2B.html",
+        "step1": "restaurants/onboarding/wizard/step-1.html",
+        "step2A": "restaurants/onboarding/wizard/step-2a.html",
+        "step2B": "restaurants/onboarding/wizard/step-2b.html",
     }
     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "temp"))
     condition_dict = {
@@ -179,4 +179,4 @@ class OnboardingWizardView(SessionWizardView):
 
 
 class OnboardingView(generic.TemplateView):
-    template_name = "registration/restaurant/onboarding.html"
+    template_name = "restaurants/onboarding/onboarding.html"
