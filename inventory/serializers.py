@@ -119,6 +119,8 @@ class SupplyManagerSerializer(serializers.ModelSerializer):
             "phone_number",
             "supply_business",
         ]
+
+
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Store

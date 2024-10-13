@@ -21,6 +21,8 @@ class DeliveryAgentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DeliveryAgent
         fields = [
-            "created",
-            "last_updated",
+            'phone_number', 
+            'alternative_phone_number', 
+            'email', 
+            'available_work_days_hours'
         ]
