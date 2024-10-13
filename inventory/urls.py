@@ -7,6 +7,8 @@ from .views import CreateStoreView
 from .views import StockViewApi
 from .views import CreateCategoryAndItemView
 from .views import StockDetailViewApi
+from .views import SupplierProfileView
+from .views import SupplierUpdateProfileViewApi
 
 
 
@@ -80,6 +82,7 @@ urlpatterns = (
      path('stock/admin/products/', AdminStockListView.as_view(), name='admin_product_list'),
      path('api/admin/products/', AdminStockListApi.as_view(), name='admin_api_product_list'),
        path('supplier/<uuid:supplier_id>/products/', SuplierStockListView, name='products_by_supplier'),
+       path('supplier/profile/', SupplierProfileView.as_view(), name='supplier-profile'),
 
     path(
         "Stock/detail/<int:pk>/",
@@ -97,6 +100,7 @@ urlpatterns = (
         name="inventory_Stock_delete",
     ),
     path("Supplier/", views.SupplierListView.as_view(), name="inventory_Supplier_list"),
+     path('supplier/profile/update/', SupplierUpdateProfileViewApi.as_view(), name='supplier-update-profile'),
     path(
         "Supplier/create/",
         views.SupplierCreateView.as_view(),

@@ -108,6 +108,12 @@ class DeliveryAgentSignupRequestSchema(Schema):
 class LoginResponseSchema(Schema):
     token: str
     
+class JWTLoginResponseSchema(Schema):
+    refresh: str
+    access: str
+    user_id: str
+    actor_type: str
+
 class EmailLoginRequestSchema(Schema):
     email: str
     password: str

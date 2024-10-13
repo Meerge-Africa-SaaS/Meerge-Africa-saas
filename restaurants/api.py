@@ -4,7 +4,7 @@ from . import serializers
 from . import models
 
 
-from core.__permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
+from core.CustomFiles.__permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
 
 class IngredientViewSet(viewsets.ModelViewSet):
     """ViewSet for the Ingredient class"""
