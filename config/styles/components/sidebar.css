@@ -1,0 +1,97 @@
+#sidebar {
+    @apply fixed z-40 lg:static h-screen transition-transform duration-300 ease-in-out
+}
+
+#sidebar-overlay {
+    @apply fixed lg:hidden -translate-x-full transition-transform duration-300 ease-in-out inset-0 bg-black/50 z-30 h-screen w-screen
+}
+
+#sidebar > div:first-child {
+    @apply w-20 overflow-y-auto py-5 h-full bg-primary border-slate-200 transition-all duration-300 ease-in-out
+}
+
+#sidebar:not(.active) {
+    @apply transform -translate-x-full lg:translate-x-0
+}
+
+#sidebar.active ~ #sidebar-overlay {
+    @apply translate-x-0
+}
+
+#sidebar.active > div:first-child {
+    @apply w-64
+}
+
+#sidebar-header {
+    @apply flex gap-2 justify-center items-center mb-16 bg-white w-[80%] px-1.5 py-4 rounded-lg mx-auto
+}
+
+#sidebar.active #sidebar-header {
+    @apply px-6 py-1.5
+}
+
+#sidebar-header > img {
+    @apply w-12 h-auto rounded
+}
+
+#sidebar.active #sidebar-header > img {
+    @apply w-28
+}
+
+#sidebar .brand-name {
+    @apply text-2xl font-bold
+}
+
+#sidebar:not(.active) .brand-name {
+    @apply hidden
+}
+
+.brand-name > span:first-child {
+    @apply text-primary
+}
+
+.brand-name > span:last-child {
+    @apply text-secondary
+}
+
+
+#sidebar-list {
+    @apply flex flex-col items-start justify-start w-full gap-5
+}
+
+.sidebar__item {
+    @apply w-full
+}
+
+.sidebar__item > a {
+    @apply w-full px-6 flex items-center p-2 text-sm font-normal text-white 
+    hover:bg-slate-200 no-underline hover:text-primary
+    
+}
+
+#sidebar:not(.active) .sidebar__item > a {
+    @apply justify-center px-0
+}
+
+@layer components {
+    .tab-active {
+        @apply bg-white/20 border-r-4 border-white text-white
+    }
+}
+
+.sidebar__item > a.active {
+    @apply tab-active
+}
+
+
+.sidebar__item > a > svg {
+    @apply flex-shrink-0 w-5 h-5 transition duration-75
+}
+
+.sidebar__item > a > span:not(.indicator):not(.number-indicator) {
+    @apply ml-5 text-sm font-medium
+}
+
+#sidebar:not(.active) .sidebar__item > a > span:not(.indicator):not(.number-indicator) {
+    @apply hidden ml-0
+}

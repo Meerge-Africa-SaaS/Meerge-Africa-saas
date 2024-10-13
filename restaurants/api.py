@@ -4,6 +4,8 @@ from . import serializers
 from . import models
 
 
+from core.CustomFiles.__permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
+
 class IngredientViewSet(viewsets.ModelViewSet):
     """ViewSet for the Ingredient class"""
 
@@ -33,9 +35,25 @@ class RestaurantViewSet(viewsets.ModelViewSet):
 
     queryset = models.Restaurant.objects.all()
     serializer_class = serializers.RestaurantSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    
+class RestaurantStoreViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Restaurant's Store class"""
+
+    queryset = models.RestaurantStore.objects.all()
+    serializer_class = serializers.RestaurantStoreSerializer
+    permission_classes = [IsOwnerOrReadOnly]
 
 
+class RestaurantStockViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Restaurant's Store class"""
+
+    queryset = models.RestaurantStock.objects.all()
+    serializer_class = serializers.RestaurantStockSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+
+''' 
 class ChefViewSet(viewsets.ModelViewSet):
     """ViewSet for the Chef class"""
 
@@ -43,10 +61,10 @@ class ChefViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ChefSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
+ '''
 class StaffViewSet(viewsets.ModelViewSet):
     """ViewSet for the Staff class"""
 
     queryset = models.Staff.objects.all()
     serializer_class = serializers.StaffSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsUserOrReadOnly]

@@ -1,21 +1,24 @@
+import secrets
 import uuid
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractUser, PermissionsMixin
-
-# External
 from phonenumber_field.modelfields import PhoneNumberField
-import secrets
 
-USERNAME_REGEX = '^[a-zA-Z0-9.@_]*$'
+USERNAME_REGEX = "^[a-zA-Z0-9.@_]*$"
+
+
+def get_default_email_code():
+    """Generates a 6-character alphanumeric code."""
+    return secrets.token_hex(3)
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, phone_number, password=None):
+    def create_user(self, email, username, phone_number=None, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -35,7 +38,7 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, username, phone_number, password=None):
+    def create_superuser(self, email, username, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -43,7 +46,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email,
             username=username,
-            phone_number=phone_number,
+            # phone_number=phone_number,
             password=password,
         )
         user.is_admin = True
@@ -52,7 +55,6 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
-
     # Fields
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -62,25 +64,44 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
         max_length=256,
         unique=True,
     )
+    # phone_number = PhoneNumberField(
+    #     verbose_name=_("phone number"),
+    #     region="NG",
+    #     unique=True,
+    #     blank=True,
+    # )
     username = models.CharField(
-        db_index=True, verbose_name=_('username'), max_length=50, unique=True, blank=True, null=True,
-        validators=[RegexValidator(regex=USERNAME_REGEX,
-                                   message=_("Username must be Alpha-Numeric and may also contain '.', '@' and '_'."),
-                                   code='Invalid Username.')],
+        db_index=True,
+        verbose_name=_("username"),
+        max_length=50,
+        unique=True,
+        blank=True,
+        null=True,
+        validators=[
+            RegexValidator(
+                regex=USERNAME_REGEX,
+                message=_(
+                    "Username must be Alpha-Numeric and may also contain '.', '@' and '_'."
+                ),
+                code="Invalid Username.",
+            )
+        ],
         error_messages={
             "unique": _("A user with that username already exists."),
-        },)
+        },
+    )
     phone_number = PhoneNumberField(
-        blank=True, null=True, unique=True,
+        blank=True,
+        null=True,
+        unique=True,
         verbose_name=_("phone number"),
         error_messages={
             "unique": _("A user with that phone number already exists."),
         },
-        )
-    
+    )
 
     class Meta:
-        db_table = 'users'
+        db_table = "users"
 
     objects = UserManager()
 
@@ -114,17 +135,21 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
     def get_htmx_delete_url(self):
         return reverse("core_User_htmx_delete", args=(self.pk,))
 
-''' 
 
 class EmailVerification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "email_verification_codes")
-    email_code = models.CharField(max_length=6, default=secrets.token_hex(3))
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="email_verification_codes"
+    )
+    email_code = models.CharField(max_length=6, default=get_default_email_code)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(blank=True, null=True)
-    
+
     def __str__(self):
         return self.user.email
-     '''
+ 
+
+
+"""
 class SmsVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
     phone_number = PhoneNumberField()
@@ -137,3 +162,6 @@ class SmsVerification(models.Model):
             return self.user.email or self.user.phone_number or None
         else:
             return phone_number or None
+
+"""
+

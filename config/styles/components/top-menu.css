@@ -1,0 +1,54 @@
+section#top-menu {
+    @apply max-w-full w-full overflow-x-hidden
+    gap-4 p-4 lg:p-6
+    bg-white rounded-lg shadow-sm;
+}
+
+#top-menu > #top-menu__list {
+    @apply flex items-stretch justify-start gap-4
+    max-w-full
+    overflow-x-auto py-6;
+}
+
+#top-menu > .section-title {
+    @apply text-xl font-bold text-gray-800 my-4;
+}
+
+.top-menu__item {
+    @apply relative w-[19%] min-w-56 flex
+    flex-col items-start justify-start
+}
+
+.top-menu__item > .item-image > img {
+    @apply w-full min-w-full h-auto rounded-lg;
+}
+
+.top-menu__item > .item-count {
+    @apply absolute -top-2 -right-2 bg-secondary
+    flex items-center justify-center
+    rounded-full w-7 h-7;
+}
+
+.top-menu__item > .item-count > span {
+    @apply text-xs font-medium text-white;
+}
+
+.top-menu__item:not(.placeholder) > .item-count > span::before {
+    @apply content-["+"] text-xs font-medium text-white;
+}
+
+.top-menu__item > .item-details {
+    @apply space-y-2 mt-2 grow flex flex-col items-start justify-between;
+}
+
+.top-menu__item .item-name {
+    @apply font-medium text-gray-800;
+}
+
+.top-menu__item.placeholder .item-name {
+    @apply font-normal;
+}
+
+.top-menu__item .item-price {
+    @apply text-sm font-normal text-green-500;
+}
