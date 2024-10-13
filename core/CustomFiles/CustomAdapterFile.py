@@ -5,8 +5,8 @@ from django.urls import reverse
 
 from restaurants.models import Staff
 from inventory.models import SupplyManager
-from customers.model import Customer
-from orders.model import DeliveryAgent
+from customers.models import Customer
+from orders.models import DeliveryAgent
 
 
 class CustomAccountAdapter(DefaultAccountAdapter):

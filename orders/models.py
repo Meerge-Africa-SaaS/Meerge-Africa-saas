@@ -34,7 +34,7 @@ class DeliveryRequest(models.Model):
         db_table = "deliveryrequest"
 
     def __str__(self):
-        return f"Delivery Request for Order {order.id}"
+        return f"Delivery Request for Order {self.order.id}"
 
     def get_absolute_url(self):
         return reverse("deliveryagentDeliveryRequest_detail", args=(self.pk,))
@@ -52,7 +52,7 @@ class DeliveryRequest(models.Model):
     #def save(self):
         
 
-class DeliveryAgent(User):
+class DeliveryAgent(User):  # type: ignore
     # Choices
     VEHICLE_TYPE_CHOICE = [
         ('bicycle', _('Bicycle')),
