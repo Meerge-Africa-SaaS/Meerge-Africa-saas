@@ -15,6 +15,8 @@ from .serializers import StoreSerializer
 from .serializers import CategorySerializer
 from .serializers import ItemSerializer
 from .serializers import ViewStockSerializer
+from rest_framework import permissions
+
 
 
 
@@ -182,6 +184,29 @@ class SupplierCreateView(generic.TemplateView):
 class SupplierDetailView(generic.DetailView):
     model = models.Supplier
     form_class = forms.ViewSupplierForm
+
+class SupplierProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            supplier = Supplier.objects.get(owner=request.user)
+        except Supplier.DoesNotExist:
+            return Response({"error": "Supplier profile not found."}, status=status.HTTP_404_NOT_FOUND)
+        profile_data = {
+            "business_logo": request.build_absolute_uri(supplier.profile_img.url) if supplier.profile_img else None,
+            "business_cover_image": request.build_absolute_uri(supplier.cover_img.url) if supplier.cover_img else None,
+            "business_category": supplier.category,
+            "food_business_license": request.build_absolute_uri(supplier.business_license.url) if supplier.business_license else None,
+            "email": supplier.email,
+            "phone_number": supplier.phone_number,
+            "business_email": supplier.email,
+            "business_phone_number": supplier.phone_number, 
+            "business_address": supplier.address,
+            "business_video_upload": None, 
+        }
+
+        return Response(profile_data, status=status.HTTP_200_OK)
 
 
 class SupplierUpdateView(generic.UpdateView):
