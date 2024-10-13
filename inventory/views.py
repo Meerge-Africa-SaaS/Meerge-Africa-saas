@@ -15,6 +15,7 @@ from .serializers import StoreSerializer
 from .serializers import CategorySerializer
 from .serializers import ItemSerializer
 from .serializers import ViewStockSerializer
+from .serializers import SupplierSerializer
 from rest_framework import permissions
 
 
@@ -208,6 +209,24 @@ class SupplierProfileView(APIView):
 
         return Response(profile_data, status=status.HTTP_200_OK)
 
+
+
+class SupplierUpdateProfileViewApi(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def put(self, request):
+        try:
+            supplier = Supplier.objects.get(owner=request.user)
+        except Supplier.DoesNotExist:
+            return Response({"error": "Supplier profile not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = SupplierSerializer(supplier, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SupplierUpdateView(generic.UpdateView):
     model = models.Supplier
