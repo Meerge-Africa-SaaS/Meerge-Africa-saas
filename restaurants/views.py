@@ -7,10 +7,6 @@ from django.views import generic
 from . import forms, models
 
 
-class EmailVerificationView(generic.TemplateView):
-    template_name = "registration/restaurant/email_verification.html"
-
-
 class IngredientListView(generic.ListView):
     model = models.Ingredient
     form_class = forms.IngredientForm

@@ -13,6 +13,7 @@ from formtools.wizard.views import SessionWizardView
 
 from config.form_fields import PhoneNumberField
 from restaurants.models import Restaurant
+from phonenumber_field.phonenumber import PhoneNumber
 
 # from world.models import City
 
@@ -87,6 +88,29 @@ class OnboardingForm1(forms.Form):
         for field in self.fields:
             add_placeholder(field, self)
 
+    def clean_business_phone_number(self) -> PhoneNumber:
+        phone_number: PhoneNumber = self.cleaned_data["business_phone_number"]
+        if Restaurant.objects.filter(
+            phone_number=phone_number.as_e164.replace(" ", "")
+        ).exists():
+            raise forms.ValidationError(
+                "Restaurant with this phone number already exists."
+            )
+        return phone_number
+
+    def clean_business_email(self):
+        email = self.cleaned_data["business_email"]
+        if Restaurant.objects.filter(email=email).exists():
+            raise forms.ValidationError("Restaurant with this email already exists.")
+        return email
+    
+    def clean_name(self):
+        name = self.cleaned_data["name"]
+        # do case-insensitive check
+        if Restaurant.objects.filter(name__iexact=name).exists():
+            raise forms.ValidationError("Restaurant with this name already exists.")
+        return name
+
 
 class OnboardingForm2A(forms.Form):
     """The second form for restaurant staff onboarding."""
@@ -130,6 +154,7 @@ class OnboardingWizardView(SessionWizardView):
         "step1": "restaurants/onboarding/wizard/step-1.html",
         "step2A": "restaurants/onboarding/wizard/step-2a.html",
         "step2B": "restaurants/onboarding/wizard/step-2b.html",
+        "done": "restaurants/onboarding/done.html",
     }
     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "temp"))
     condition_dict = {
@@ -170,12 +195,8 @@ class OnboardingWizardView(SessionWizardView):
         )
         restaurant.owner.add(user)
         restaurant.save()
-        # create a staff account
-        messages.success(
-            self.request,
-            "Your restaurant has been created successfully.",
-        )
-        return redirect(reverse("restaurants:dashboard", args=[restaurant.custom_link]))
+        context = super(generic.TemplateView, self).get_context_data(**kwargs)
+        return self.render_to_response(context)
 
 
 class OnboardingView(generic.TemplateView):

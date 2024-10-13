@@ -25,8 +25,13 @@ urlpatterns = (
     ),
     path(
         "email_verification/",
-        views.EmailVerificationView.as_view(),
-        name="restaurant_email_verification",
+        registration.EmailVerificationSentView.as_view(),
+        name="restaurant_email_verification_sent",
+    ),
+    path(
+        "email_verification/done/",
+        registration.EmailVerificationDoneView.as_view(),
+        name="restaurant_email_verification_done",
     ),
     path(
         "onboarding/",
