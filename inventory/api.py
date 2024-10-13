@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 from . import serializers
 from . import models
 
-from core.__permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
+from core.CustomFiles.__permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

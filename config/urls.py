@@ -21,7 +21,7 @@ urlpatterns = [
     path("", include("home.urls")),
     path("api/", include("core.urls")),
     path(
-        "shema_api/", 
+        "schema_api/", 
         get_schema_view(title="API Schema", 
                         description="The api endpoints in the second drf link sent earlier has been converted to swagger for better use.",
                         version="1.0.0"), 
@@ -65,8 +65,8 @@ urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
-    #path("", include(wagtail_urls)),
+    path("", include(wagtail_urls)),
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:
-    #    path("pages/", include(wagtail_urls)),
+    path("pages/", include(wagtail_urls)),
 ]

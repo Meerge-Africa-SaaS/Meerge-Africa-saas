@@ -46,6 +46,26 @@
       <label class="col-sm-2 col-form-label" for="city">city: </label>
       {{ form.city }}
   </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="password">password: </label>
+    <input class="form-control col-sm-10"
+       id="password" type="text"
+       name="password" value="{{ object.password }}">
+</div>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="email">email: </label>
+    <input class="form-control col-sm-10"
+       id="email" type="text"
+       name="email" value="{{ object.email }}">
+</div>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="username">username: </label>
+    <input class="form-control col-sm-10"
+       id="username" type="text"
+       name="first_name" value="{{ object.first_name }}">
+</div>
+  
   <input type="submit" value="Save" class="btn btn-primary">
 </form>
 
