@@ -101,3 +101,5 @@ terraform.tfstahzte.backup
 
 # IDE
 .vscode
+
+static
