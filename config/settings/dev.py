@@ -1,4 +1,4 @@
-# ruff: noqa: F405
+# ruff: noqa: F405,F403,E402
 from config.environ import getenv
 
 from .base import *  # noqa: F403
@@ -22,13 +22,13 @@ DATABASES = {
     }
 }
 
-load_settings("geo")
-load_settings("auth")
-load_settings("api")
-load_settings("restaurants")
-load_settings("customers")
-load_settings("inventory")
-load_settings("orders")
-load_settings("djext")
-load_settings("reload")
-load_settings("compressor")
+from .geo import *
+from .auth import *
+from .api import *
+from .restaurants import *
+from .customers import *
+from .inventory import *
+from .orders import *
+from .djext import *
+from .reload import *
+from .compressor import *
