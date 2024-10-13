@@ -14,12 +14,14 @@ class OrderAdmin(admin.ModelAdmin):
     form = OrderAdminForm
     list_display = [
         "id",
+        "customer",
         "delivery_address",
         "created",
         "last_updated",
     ]
     readonly_fields = [
         "id",
+        "customer",
         "delivery_address",
         "created",
         "last_updated",

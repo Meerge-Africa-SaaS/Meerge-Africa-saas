@@ -7,8 +7,17 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = models.Order
         fields = [
+            "customer",
+            "restaurant",
+            "menu_item",
+            "add_on",            
             "delivery_address",
+            "driver_note",
         ]
+    
+    def __init__(self, *args, **kwargs):
+        super(OrderForm, self).__init__(*args, **kwargs)
+        self.fields["customer"].queryset = Customer.objects.all()
 
 
 class CustomerForm(forms.ModelForm):

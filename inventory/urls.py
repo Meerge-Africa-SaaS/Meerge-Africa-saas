@@ -1,5 +1,16 @@
 from django.urls import include, path
 from rest_framework import routers
+from .views import AdminStockListView
+from .views import AdminStockListApi
+from .views import SupplierStockListView
+from .views import CreateStoreView
+from .views import StockViewApi
+from .views import CreateCategoryAndItemView
+from .views import StockDetailViewApi
+from .views import SupplierProfileView
+from .views import SupplierUpdateProfileViewApi
+
+
 
 from . import api, htmx, views
 
@@ -58,10 +69,21 @@ urlpatterns = (
         views.ItemDeleteView.as_view(),
         name="inventory_Item_delete",
     ),
+     path('create-category-item/<int:stock_id>/', CreateCategoryAndItemView.as_view(), name='create-category-item'),
+
+  path('stock-details/<int:item_id>/', StockDetailViewApi.as_view(), name='stock-details'),
+
+
     path("Stock/", views.StockListView.as_view(), name="inventory_Stock_list"),
     path(
         "Stock/create/", views.StockCreateView.as_view(), name="inventory_Stock_create"
     ),
+     path('api/stock-create',views.StockCreateAPIView.as_view(), name='stock-create'),
+     path('stock/admin/products/', AdminStockListView.as_view(), name='admin_product_list'),
+     path('api/admin/products/', AdminStockListApi.as_view(), name='admin_api_product_list'),
+       path('supplier/<int:supplier_id>/products/', SupplierStockListView.as_view(), name='products_by_supplier'),
+       path('supplier/profile/', SupplierProfileView.as_view(), name='supplier-profile'),
+
     path(
         "Stock/detail/<int:pk>/",
         views.StockDetailView.as_view(),
@@ -78,6 +100,7 @@ urlpatterns = (
         name="inventory_Stock_delete",
     ),
     path("Supplier/", views.SupplierListView.as_view(), name="inventory_Supplier_list"),
+     path('supplier/profile/update/', SupplierUpdateProfileViewApi.as_view(), name='supplier-update-profile'),
     path(
         "Supplier/create/",
         views.SupplierCreateView.as_view(),
@@ -198,4 +221,6 @@ urlpatterns = (
         htmx.HTMXSupplyManagerDeleteView.as_view(),
         name="inventory_SupplyManager_htmx_delete",
     ),
+       path('api/stores/create/', CreateStoreView.as_view(), name='create-store'),
+       path('api/stock-details/', StockViewApi.as_view(), name='product-stock'),
 )
