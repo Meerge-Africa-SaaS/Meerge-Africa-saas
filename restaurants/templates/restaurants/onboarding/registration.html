@@ -30,13 +30,27 @@
   <div class="form-group min-w-full">
     {% include 'components/password-field.html' with field=form.password %}
   </div>
+  {% comment %} privacy policy {% endcomment %}
+  <div class="form-group min-w-full">
+    <div class="flex items-start">
+      <input type="checkbox" class="form-checkbox !mb-0" id="privacy_policy" name="privacy_policy" required>
+      <label for="privacy_policy" class="ml-2 text-xs text-gray-700 font-medium">
+        By clicking, you accept our Primary Services Agreement, User Terms of Service, 
+        and Merge Africa Supplemental Terms. For more details, 
+        please review our  
+        <a href="#" class="text-secondary">Privacy Policy</a>
+        and 
+        <a href="#" class="text-secondary">Terms and Conditions</a>.
+      </label>
+    </div>
+  </div>
 {% endblock %}
 
 {% block form_btns %}
   <button type="submit" class="btn btn-primary">Create Account</button>
   <div class="text-left">
     <p class="text-sm text-gray-700 font-medium">
-      Already have an account? <a href="#" class="text-secondary">Login</a>
+      Already have an account? <a href="{% url 'account_login' %}?next={% url 'restaurant_redirect' %}" class="text-secondary">Login</a>
     </p>
   </div>
 {% endblock %}
