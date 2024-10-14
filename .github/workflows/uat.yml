@@ -17,3 +17,4 @@ jobs:
         server: ftp.meergeafrica.com
         username: osher@meergeafrica.com
         password: ${{ secrets.ftp_password }}
+        server-dir: /home/meergeaf/meergeafrica.com/osher/sandbox/
