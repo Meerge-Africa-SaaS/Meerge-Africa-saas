@@ -51,12 +51,15 @@ def password_reset(request, data: PasswordResetRequestSchema):
     try:
         user = User.objects.get(email = data.email)
         if user and user.is_active:
-            email_instance = EmailVerification.objects.filter(user).exists()
+            
+            print("EEE")
             token = generate_code()
-            if not email_instance:
+            print(0)
+            if EmailVerification.objects.filter(user).exists():
+                EmailVerification.objects.get(user).delete()
                 email_token = EmailVerification.objects.create(user = user, email_code=token)
             else:
-                EmailVerification.objects.get(user).delete()
+                
                 email_token = EmailVerification.objects.create(user = user, email_code=token)
             
             subject =  "Password Reset"
@@ -65,7 +68,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
                     """
             email_sender ="dev@kittchens.com"
             receiver = [data.email]
-            
+            print(1)
             try:
                 email_send = send_mail(subject, message, email_sender, receiver)
                 return 200, {
@@ -75,10 +78,12 @@ def password_reset(request, data: PasswordResetRequestSchema):
                 return 404, {
                     "message": "Error in sending password reset mail"
                 }
+                print(2)
         elif not user.is_active:
             return 404, {
                 "message": "Inactive profile, kindly proceed to verify your account."
             }
+            print(3)
                 
     except User.DoesNotExist:
         return 404, {
@@ -86,7 +91,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
         }
         
     except Exception as e:
-        print(e)
+        print("\n"*5,e, "\n"*5)
         return 404, {
             "message": "We ran into error while processing your request."
         }

@@ -132,6 +132,7 @@ def socialaccount_user_signup(request, user, **kwargs):
                  # Create a new Customer instance associated with this User
                 customer = Customer(user_ptr=user, address="abuja")
                 customer.set_password(user.password)
+                user.save()
                 user.delete()
                 customer.save()
             
