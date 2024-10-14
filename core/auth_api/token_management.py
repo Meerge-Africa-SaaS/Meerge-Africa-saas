@@ -2,7 +2,9 @@ from datetime import datetime, timedelta, timezone
 from django.conf import settings
 from ninja.security import HttpBearer
 from rest_framework_simplejwt.tokens import RefreshToken
+from core.models import EmailVerification
 import jwt
+from random import randint
 
 from django.contrib.auth import get_user_model
 
@@ -21,6 +23,15 @@ class CustomRefreshToken(RefreshToken):
         return token
     
 
+def generate_code():
+    token = ""
+    for i in range(0,6):
+        token += str(randint(0,9))
+        
+    return token
+            
+
+    
 def create_token(user_id, expiry_period):
     issued_day = datetime.now(tz=timezone.utc)
     expiry_day = datetime.now(tz=timezone.utc) + timedelta(days=int(expiry_period))
