@@ -15,7 +15,5 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:        
         server: ftp.meergeafrica.com
-        username: osher@meergeafrica.com
-        password: ${{ secrets.ftp_password }}
-        # server-dir: /home/meergeaf/meergeafrica.com/osher/sandbox/
-        server-dir: meergeafrica.com/osher/sandbox/
+        username: ${{ secrets.ftp_sandbox }}
+        password: ${{ secrets.sandbox_password }}
