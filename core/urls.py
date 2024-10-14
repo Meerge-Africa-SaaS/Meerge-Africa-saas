@@ -19,6 +19,7 @@ ninjaapi.add_router("password", p_router)
 urlpatterns = (
     path("authenticate/", ninjaapi.urls, name="n-api"),
     path("api/v1/", include(router.urls)),
+    path('token/refresh/', views.CustomTokenRefreshView.as_view(), name='token_refresh'),
     path("User/", views.UserListView.as_view(), name="core_User_list"),
     path("User/create/", views.UserCreateView.as_view(), name="core_User_create"),
     path(
