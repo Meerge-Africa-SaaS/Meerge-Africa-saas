@@ -21,5 +21,5 @@ django-compressor
 django-formtools
 pyyaml
 uritemplate
-django-rest-swaggger
+django-rest-swagger
 djangorestframework-simplejwt

@@ -11,26 +11,6 @@ class DeliveryRequestAdminForm(forms.ModelForm):
         fields = "__all__"
 
 
-class DeliveryAgentAdmin(admin.ModelAdmin):
-    form = DeliveryRequestAdminForm
-    
-    list_display = [
-        "id",
-        "status",
-        "deliveryagent",
-        "created",
-        "last_updated",
-    ]
-    readonly_fields = [
-        "id",
-        "order",
-        "status",
-        "deliveryagent",
-        "created",
-        "last_updated",
-    ]
-
-
 class DeliveryAgentAdminForm(forms.ModelForm):
 
     class Meta:

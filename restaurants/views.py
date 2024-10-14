@@ -7,10 +7,6 @@ from django.views import generic
 from . import forms, models
 
 
-class EmailVerificationView(generic.TemplateView):
-    template_name = "registration/restaurant/email_verification.html"
-
-
 class IngredientListView(generic.ListView):
     model = models.Ingredient
     form_class = forms.IngredientForm
@@ -211,10 +207,6 @@ class RestaurantDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Restaurant
     success_url = reverse_lazy("restaurant_Restaurant_list")
 
-
-class RestaurantStoreListView(LoginRequiredMixin, generic.ListView):
-    model = models.RestaurantStore
-    form_class = forms.RestauarantStoreForm
     
 class RestaurantStoreCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.RestaurantStore
@@ -238,7 +230,6 @@ class RestaurantStoreListView(LoginRequiredMixin, generic.ListView):
     model = models.RestaurantStore
     form_class = forms.RestauarantStoreForm
     
-    
 class RestaurantStockListView(LoginRequiredMixin, generic.ListView):
     model = models.RestaurantStock
     form_class = forms.RestauarantStockForm
@@ -260,10 +251,6 @@ class RestaurantStockUpdateView(LoginRequiredMixin, generic.UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
-    
-class RestaurantStockListView(LoginRequiredMixin, generic.ListView):
-    model = models.RestaurantStock
-    form_class = forms.RestauarantStockForm
 
 
 """ 

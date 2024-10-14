@@ -3,7 +3,7 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 from customers.models import Customer
 from orders.models import DeliveryAgent
-from restaurant.models import Chef, Staff
+from restaurants.models import Chef, Staff
 from inventory.models import SupplyManager
 
 class MyCustomSocialAccountAdapter(DefaultSocialAccountAdapter):

@@ -30,7 +30,6 @@ urlpatterns = (
     path(
         "User/delete/<int:pk>/", views.UserDeleteView.as_view(), name="core_User_delete"
     ),
-    path("User/signin/", views.UserSigninView.as_view(), name="core_User_signin"),
     path(
         "User/forgot-password/",
         views.PasswordResetView.as_view(),

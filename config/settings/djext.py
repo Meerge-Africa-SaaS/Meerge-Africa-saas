@@ -12,7 +12,7 @@ GRAPH_MODELS = {
     "app_labels": [
         "core",
         "geo",
-        "restaurant",
+        "restaurants",
         # "inventory",
         # "orders",
     ],

@@ -8,34 +8,15 @@ from django.contrib.auth.forms import (
 from django.contrib.auth.forms import (
     PasswordResetForm as _PasswordResetForm,
 )
+from allauth.account.forms import LoginForm
 
 from . import models
 
 
-class UserSigninForm(AuthenticationForm):
-    username = None
-    email = forms.EmailField(widget=forms.TextInput(attrs={"autofocus": True}))
-
-    def __init__(self, request: Any = ..., *args: Any, **kwargs: Any) -> None:
-        self.request = request
-        self.user_cache = None
-        super(AuthenticationForm, self).__init__(*args, **kwargs)
-        self.username_field = models.User._meta.get_field("email")
-
-    def clean(self):
-        email = self.cleaned_data.get("email")
-        password = self.cleaned_data.get("password")
-
-        if email is not None and password:
-            self.user_cache = authenticate(
-                self.request, username=email, password=password
-            )
-            if self.user_cache is None:
-                raise self.get_invalid_login_error()
-            else:
-                self.confirm_login_allowed(self.user_cache)
-
-        return self.cleaned_data
+class UserSigninForm(LoginForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["password"].help_text = ""
 
 
 class UserForm(forms.ModelForm):

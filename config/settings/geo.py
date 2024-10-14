@@ -8,7 +8,7 @@ INSTALLED_APPS.extend(
     ]
 )
 
-CITIES_LIGHT_APP_NAME = "geo"
+# CITIES_LIGHT_APP_NAME = "geo"
 CITIES_LIGHT_TRANSLATION_LANGUAGES = [
     "en",
 ]
