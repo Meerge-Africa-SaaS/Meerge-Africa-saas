@@ -20,9 +20,9 @@ db_upgrade:	## Upgrade the database.
 	poetry run python manage.py makemigrations
 	poetry run python manage.py migrate
 
-.PHONY: db_seed
-db_seed:	## Seed the database with initial data.
-	poetry run python manage.py seed
+.PHONY: db_flush
+db_flush:	## Flush the database.
+	poetry run python manage.py flush
 
 .PHONY: run
 run:		## Run the development server.

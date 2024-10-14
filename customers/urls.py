@@ -4,8 +4,8 @@ from rest_framework import routers
 from . import api, htmx, views
 
 router = routers.DefaultRouter()
-# router.register("Order", api.OrderViewSet)
-# router.register("Customer", api.CustomerViewSet)
+router.register("Order", api.OrderViewSet)
+router.register("Customer", api.CustomerViewSet)
 
 urlpatterns = (
     path("api/v1/", include(router.urls)),
@@ -45,17 +45,17 @@ urlpatterns = (
         name="customers_Customer_create",
     ),
     path(
-        "customers/Customer/detail/<int:pk>/",
+        "customers/Customer/detail/<uuid:pk>/",
         views.CustomerDetailView.as_view(),
         name="customers_Customer_detail",
     ),
     path(
-        "customers/Customer/update/<int:pk>/",
+        "customers/Customer/update/<uuid:pk>/",
         views.CustomerUpdateView.as_view(),
         name="customers_Customer_update",
     ),
     path(
-        "customers/Customer/delete/<int:pk>/",
+        "customers/Customer/delete/<uuid:pk>/",
         views.CustomerDeleteView.as_view(),
         name="customers_Customer_delete",
     ),

@@ -5,18 +5,19 @@ from django.urls import reverse
 
 from restaurants.models import Staff
 from inventory.models import SupplyManager
-from customers.model import Customer
-from orders.model import DeliveryAgent
+from customers.models import Customer
+from orders.models import DeliveryAgent
 
 
 class CustomAccountAdapter(DefaultAccountAdapter):
     
     def get_from_email(self):
-        return "Meerge Africa"
+        return "account@meergeafrica.com"
     
     def get_email_confirmation_url(self, request, emailconfirmation):
         key = emailconfirmation.key
         user = emailconfirmation.email_address.user
+
                 
         if isinstance(user, Customer):
             actor_type = "customer"
@@ -24,13 +25,16 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             actor_type = "staff"
         elif isinstance(user, SupplyManager):
             actor_type = "supplymanager"
-        if not (isinstance(user, Staff)) and not (isinstance(user, SupplyManager)) and not (isinstance(user, DeliveryAgent)) and not (isinstance(user, Customer)):
+        elif isinstance(user, DeliveryAgent):
+            actor_type = "deliveryagent"
+        else:
             actor_type = "owner"
-            
-        if isinstance(user, Customer) or isinstance(user, DeliveryAgent):
+    
+
+        if actor_type == "customer" or actor_type == "deliveryagent":
             url = f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}/mobile/{key}"
         else:
-            f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}/mobile/{key}"
+            url = f"{settings.ACCOUNT_EMAIL_CONFIRMATION_URL}/{key}"
         
         return url
     

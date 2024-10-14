@@ -48,8 +48,35 @@ class RestaurantSerializer(serializers.ModelSerializer):
             "last_updated",
             "city",
             "owner",
+            "custom_link"
         ]
 
+
+class RestaurantStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.RestaurantStore
+        fields = [
+            "restaurant",
+            "name",
+            "description",
+            "image",
+            "section_name"
+        ]
+        
+    
+class RestaurantStockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.RestaurantStock
+        fields = [
+            "category",
+            "name",
+            "image",
+            "stock_type",
+            "purchasing_price",
+            "quantity",
+            "measuring_unit",
+            "restaurant",
+        ]
 
 """ 
 class ChefSerializer(serializers.ModelSerializer):

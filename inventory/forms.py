@@ -8,6 +8,10 @@ from inventory.models import Category, Item, Supplier
 
 from . import models
 
+from django.contrib.auth import get_user_model
+
+USER = get_user_model()
+
 SUPPLIER_CATEGORIES = [
     ("Fruits & Nuts", "Fruits & Nuts"),
     ("Grain Products", "Grain Products"),
@@ -147,13 +151,23 @@ class ItemForm(forms.ModelForm):
         self.fields["category"].queryset = Category.objects.all()
         self.fields["supplier"].queryset = Supplier.objects.all()
 
-
 class StockForm(forms.ModelForm):
     class Meta:
         model = models.Stock
         fields = [
-            "quantity",
             "item",
+            "quantity",
+            "SKU_number",
+            "product_name",
+            "product_image",
+            "product_category",
+            "manufacture_name",
+            "price",
+            "unit_available",
+            "size",
+            "weight",
+            "discount_percentage",
+            "pickup_available",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -166,7 +180,38 @@ class SupplierForm(forms.ModelForm):
         model = models.Supplier
         fields = [
             "name",
+            "owner",
             "city",
+            "email",
+            "phone_number",
+            "cac_reg_number",
+            "cac_certificate",
+            "business_license",
+            "category",
+            "profile_img",
+            "cover_img",
+            "address",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(SupplierForm, self).__init__(*args, **kwargs)
+        self.fields["city"].queryset = City.objects.all()
+        self.fields["owner"].queryset = User.objects.all()
+        
+
+class ViewSupplierForm(forms.ModelForm):
+    class Meta:
+        model = models.Supplier
+        fields = [
+            "name",
+            "owner",
+            "city",
+            "email",
+            "phone_number",
+            "category",
+            "profile_img",
+            "cover_img",
+            "address"
         ]
 
     def __init__(self, *args, **kwargs):
@@ -174,13 +219,34 @@ class SupplierForm(forms.ModelForm):
         self.fields["city"].queryset = City.objects.all()
 
 
-class SupplyManagerForm(forms.ModelForm):
+class SupplyManagerSignupForm(forms.ModelForm):
     class Meta:
         model = models.SupplyManager
         fields = [
-            "supplier",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "password",
+            "supply_business",
         ]
 
     def __init__(self, *args, **kwargs):
         super(SupplyManagerForm, self).__init__(*args, **kwargs)
-        self.fields["supplier"].queryset = Supplier.objects.all()
+        self.fields["supply_business"].queryset = Supplier.objects.all()
+
+
+class SupplyManagerForm(forms.ModelForm):
+    class Meta:
+        model = models.SupplyManager
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "supply_business",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(SupplyManagerForm, self).__init__(*args, **kwargs)
+        self.fields["supply_business"].queryset = Supplier.objects.all()

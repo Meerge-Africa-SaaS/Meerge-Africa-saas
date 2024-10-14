@@ -1,0 +1,79 @@
+.last-section {
+  position: relative;
+  background-image: url("../assets/bar-man.png");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+}
+
+.last-section p {
+  color: #ffffff;
+  margin: 0;
+  font-size: 40px;
+}
+
+.last-section p:first-of-type {
+  font-weight: 600;
+  line-height: 60px;
+  text-align: left;
+  z-index: 2;
+}
+.last-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: rgba(0, 0, 128, 0.1);
+  z-index: 1;
+}
+
+.blue-card {
+  width: 633px;
+  background: #0e2254;
+  padding: 50px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.blue-card p {
+  width: 100%;
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 42px;
+  text-align: left;
+}
+
+.blue-card button {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+  color: #ffffff;
+  background: #ff4101;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.blue-card button:hover {
+  background: #e63900;
+}
+.background-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image:   url("../assets/bg-img.png");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100vw;
+}

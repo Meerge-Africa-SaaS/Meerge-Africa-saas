@@ -62,15 +62,8 @@ class StockAdmin(admin.ModelAdmin):
     form = StockAdminForm
     list_display = [
         "quantity",
-        "last_updated",
-        "id",
-        "created",
-    ]
-    readonly_fields = [
-        "quantity",
-        "last_updated",
-        "id",
-        "created",
+        "product_name",
+      
     ]
 
 
@@ -86,13 +79,26 @@ class SupplierAdmin(admin.ModelAdmin):
         "id",
         "created",
         "name",
+        "owner",
+        "email",
         "last_updated",
     ]
     readonly_fields = [
         "id",
         "created",
         "name",
+        "owner",
         "last_updated",
+        "email",
+        "phone_number",
+        "cac_reg_number",
+        "cac_certificate",
+        "business_license",
+        "category",
+        "profile_img",
+        "cover_img",
+        "address",
+        "city"
     ]
 
 

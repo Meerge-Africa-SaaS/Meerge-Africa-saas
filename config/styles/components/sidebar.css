@@ -1,9 +1,9 @@
 #sidebar {
-    @apply fixed z-40 lg:static h-screen transition-all duration-300 ease-in-out
+    @apply fixed z-40 lg:static h-screen transition-transform duration-300 ease-in-out
 }
 
 #sidebar-overlay {
-    @apply hidden inset-0 bg-black/50 z-30 h-screen w-screen
+    @apply fixed lg:hidden -translate-x-full transition-transform duration-300 ease-in-out inset-0 bg-black/50 z-30 h-screen w-screen
 }
 
 #sidebar > div:first-child {
@@ -11,11 +11,11 @@
 }
 
 #sidebar:not(.active) {
-    @apply hidden lg:block
+    @apply transform -translate-x-full lg:translate-x-0
 }
 
 #sidebar.active ~ #sidebar-overlay {
-    @apply fixed block lg:hidden
+    @apply translate-x-0
 }
 
 #sidebar.active > div:first-child {
@@ -23,7 +23,11 @@
 }
 
 #sidebar-header {
-    @apply flex gap-2 justify-center items-center mb-16 bg-white w-fit p-1.5 rounded-lg mx-auto
+    @apply flex gap-2 justify-center items-center mb-16 bg-white w-[80%] px-1.5 py-4 rounded-lg mx-auto
+}
+
+#sidebar.active #sidebar-header {
+    @apply px-6 py-1.5
 }
 
 #sidebar-header > img {
@@ -31,7 +35,7 @@
 }
 
 #sidebar.active #sidebar-header > img {
-    @apply w-10
+    @apply w-28
 }
 
 #sidebar .brand-name {

@@ -17,9 +17,10 @@ MOBILE_APP_SCHEME = "app://localhost:5000/"
 WEB_APP_SCHEME = "http://localhost:8000/"
 
 AUTHENTICATION_BACKENDS = [
+    "core.CustomFiles.CustomBackend.EmailAuthBackend",
+    "core.CustomFiles.CustomBackend.PhoneAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
-    "core.CustomFiles.CustomBackend.PhoneAuthBackend",
     "core.backends.EmailBackend"
 ]
 
@@ -36,6 +37,9 @@ ACCOUNT_EMAIL_CONFIRMATION_URL = (
 )
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 
+ACCOUNT_FORMS = {
+    "login": "core.forms.UserSigninForm",
+}
 
 ######### ALL-AUTH PROVIDERS   ########
 # Google provider details
@@ -85,4 +89,21 @@ SOCIALACCOUNT_PROVIDERS = {
         "VERSION": "v20.0",
         "GRAPH_API_URL": "https://graph.facebook.com/v20.0",
     },
+}
+
+
+######################################################
+############   REST-FRAMEWORK SETTINGS  ##############
+######################################################
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    # ... other settings ...
+    'AUTH_TOKEN_CLASSES': ('core.auth_api.token_management.CustomRefreshToken',),
 }
