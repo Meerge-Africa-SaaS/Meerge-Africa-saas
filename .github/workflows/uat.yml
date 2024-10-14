@@ -1,7 +1,7 @@
 on:
   push:    
     branches:
-      - main
+      - uat
 name: 🚀 Deploy
 jobs:
   web-deploy:
