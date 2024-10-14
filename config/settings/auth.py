@@ -34,6 +34,7 @@ ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 ACCOUNT_EMAIL_CONFIRMATION_URL = (
         WEB_APP_SCHEME + "api/authenticate/auth-api/confirm-email/"
 )
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 
 ######### ALL-AUTH PROVIDERS   ########

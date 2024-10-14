@@ -218,8 +218,8 @@ WAGTAILDOCS_EXTENSIONS = [
 ]
 
 
-def load_settings(setting):
-    try:
-        exec(f"from .{setting} import *")
-    except ImportError as e:
-        print(f"Could not import {setting}: {e}")
+
+try:
+    from .local import *
+except ImportError as e:
+    pass
