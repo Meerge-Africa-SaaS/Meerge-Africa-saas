@@ -1,15 +1,19 @@
 from ninja import Router
-from .schema import SuccessMessageSchema, PasswordChangeRequestSchema, PasswordResetRequestSchema, NotFoundSchema
+from .schema import SuccessMessageSchema, PasswordChangeRequestSchema, PasswordResetRequestSchema, PasswordResetRequestDoneSchema, NotFoundSchema, EmailLoginRequestSchema
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest, JsonResponse
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.utils import timezone as django_timezone
 from allauth.account.views import PasswordResetFromKeyView as allauthPasswordResetFromKeyView
 from allauth.account.forms import ResetPasswordForm as allauthResetPasswordForm
-
 from allauth.account.forms import ResetPasswordForm, ResetPasswordKeyForm
+
+from core.models import EmailVerification
+from .token_management import generate_code
 
 p_router = Router()
 User = get_user_model()
@@ -41,6 +45,100 @@ def password_change(request, data: PasswordChangeRequestSchema):
     else:
         return 404, NotFoundSchema(message = "User needs to login before being allowed to change password.")
     
+    
+@p_router.post("/reset", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
+def password_reset(request, data: PasswordResetRequestSchema):
+    try:
+        user = User.objects.get(email = data.email)
+        if user and user.is_active:
+            email_instance = EmailVerification.objects.filter(user).exists()
+            token = generate_code()
+            if not email_instance:
+                email_token = EmailVerification.objects.create(user = user, email_code=token)
+            else:
+                EmailVerification.objects.get(user).delete()
+                email_token = EmailVerification.objects.create(user = user, email_code=token)
+            
+            subject =  "Password Reset"
+            message = f"""
+                    Hello, here is your one time password reset email verification code {email_token.email_code}
+                    """
+            email_sender ="dev@kittchens.com"
+            receiver = [data.email]
+            
+            try:
+                email_send = send_mail(subject, message, email_sender, receiver)
+                return 200, {
+                    "message": "Password reset mail sent."
+                }
+            except Exception:
+                return 404, {
+                    "message": "Error in sending password reset mail"
+                }
+        elif not user.is_active:
+            return 404, {
+                "message": "Inactive profile, kindly proceed to verify your account."
+            }
+                
+    except User.DoesNotExist:
+        return 404, {
+            "message": "User does not exist"
+        }
+        
+    except Exception as e:
+        print(e)
+        return 404, {
+            "message": "We ran into error while processing your request."
+        }
+        
+
+@p_router("/reset-done", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password, management"])
+def password_reset_done(request, data: PasswordResetRequestDoneSchema):
+    try:
+        user_model = User.objects.get(email = data.email)
+        email_instance = EmailVerification.objects.get(user=user_model)
+        if email_instance.expires_at > django_timezone.now():
+            if email_instance.email_code == data.token:
+                email_instance.delete()
+                return 200, {
+                    "message": "Email verified. User can proceed to set new password"
+                }
+            else:
+                return 404, {
+                    "message": "Invalid token"
+                }
+        else:
+            return 404, {
+                "message": "Password reset token validity timeout, Kindly reset new password"
+            }
+    except User.DoesNotExist:
+        return 404, {
+            "message": "User does not exist"
+        }
+    
+    except Exception as e:
+        return 404, {
+            "message": "We ran into error while processing your request."
+        }
+    
+
+@p_router("/set-password", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password, management"])
+def set_password(request, data: EmailLoginRequestSchema):
+    try:
+        user = User.objects.get(email = data.email)
+        user.set_password(data.password)
+        user.save()
+        return 200, {
+            "message": "Password has been reset, proceed to login"
+        }
+        
+    except User.DoesNotExist:
+        return 404, {
+            "message": "User does not exist"
+        }
+    
+
+    
 ''' @p_router.post("/reset", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
 def password_reset(request, data: PasswordResetRequestSchema):
     request = HttpRequest()
@@ -48,7 +146,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
         "uidb36": uid
     } '''
     
-
+''' 
 @p_router.post("/reset", tags=["Password management"])
 def password_reset(request, email: str):
     try:
@@ -80,7 +178,8 @@ def password_reset_done(request, uid: str, token: str, new_password: str):
             form.save()
             return {"message": "Password reset successfully."}
     return {"message": "Invalid reset token."}
-    ''' new_request.POST = {
+ '''
+''' new_request.POST = {
         "uidb36": uid,
         "key": token}
     '' ,
