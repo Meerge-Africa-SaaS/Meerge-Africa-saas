@@ -90,3 +90,20 @@ SOCIALACCOUNT_PROVIDERS = {
         "GRAPH_API_URL": "https://graph.facebook.com/v20.0",
     },
 }
+
+
+######################################################
+############   REST-FRAMEWORK SETTINGS  ##############
+######################################################
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    # ... other settings ...
+    'AUTH_TOKEN_CLASSES': ('core.auth_api.token_management.CustomRefreshToken',),
+}

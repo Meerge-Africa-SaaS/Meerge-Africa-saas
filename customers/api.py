@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 from . import serializers
 from . import models
 
-from core.__permissions import IsUserOrReadOnly
+from core.CustomFiles.__permissions import IsUserOrReadOnly
 
 class OrderViewSet(viewsets.ModelViewSet):
     """ViewSet for the Order class"""

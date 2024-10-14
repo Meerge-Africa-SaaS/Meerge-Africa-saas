@@ -3,6 +3,7 @@ import secrets
 from random import randint
 
 import jwt
+from datetime import timedelta as datetime_timedelta
 from allauth.account import app_settings
 from allauth.account.adapter import get_adapter
 from allauth.account.decorators import verified_email_required
@@ -40,6 +41,7 @@ from customers.models import Customer
 from inventory.models import SupplyManager
 from orders.models import DeliveryAgent
 from restaurants.models import Restaurant, Staff
+from inventory.models import Supplier
 
 from .schema import (
     AcceptInvitation,
@@ -47,6 +49,7 @@ from .schema import (
     DeliveryAgentSignupRequestSchema,
     EmailLoginRequestSchema,
     EmailVerificationSchema,
+    JWTLoginResponseSchema,
     LoginResponseSchema,
     NotFoundSchema,
     PasswordChangeRequestDoneSchema,
@@ -63,7 +66,7 @@ from .schema import (
     StaffSignupResponseSchema,
     SuccessMessageSchema,
 )
-from .token_management import *  # noqa: F403
+from .token_management import create_token, CustomRefreshToken
 
 User = get_user_model()
 router = Router()
@@ -93,7 +96,10 @@ def create_email_token(sender, instance, created, **kwargs):
                     """
             business_email_sender ="dev@kittchens.com"
             receiver = [instance.email]
-            email_send = send_mail(subject, message, business_email_sender, receiver)
+            try:
+                email_send = send_mail(subject, message, business_email_sender, receiver)
+            except Exception:
+                email_send = False
             
             if email_send:
                 return JsonResponse({"message": "email sent", "status_code": 200})
@@ -216,7 +222,7 @@ def owner_signup(request, data: SignupRequestSchema):
     except Exception as e:
         return {"message": e}
 
-
+''' 
 
 @router.post("/supply-owner-signup", tags = ["Default Signup"])
 def supply_owner_signup(request, data: SignupRequestSchema):
@@ -245,7 +251,7 @@ def supply_owner_signup(request, data: SignupRequestSchema):
     # Return info.
     return {"message": registration_successful}
 
-
+ '''
 
 @router.post("/add-employee", tags=["Accept and Invite"])
 def add_employee(request, data: AddEmployeeSchema):
@@ -390,7 +396,7 @@ def verify_key(request, key_token: str):
         
         user.is_active = True
         user.save()
-        
+        login(request, user, backend="EmailAuthBackend")
         # Delete the email confirmation instance created
         allauthemail_address = allauthEmailAddress.objects.get(email=user.email)
         allauthEmailConfirmation.objects.get(email_address = allauthemail_address).delete()
@@ -415,9 +421,25 @@ def verify_email(request, data: EmailVerificationSchema):
             allauthEmailAddress.objects.get_or_create(user = user, email = data.email, defaults={"verified": True, "primary": True})
             user.is_active = True
             user.save()
-            
+            login(request, user, backend="EmailAuthBackend")
+             # Delete the email verification instance created
             EmailVerification.objects.get(user = user).delete()
-            return JsonResponse({"message": "Email verified"})
+            
+            token_expiry_period, access_token_period = 7, 120
+            token = CustomRefreshToken.for_user(str(user))
+            token.set_exp(lifetime=datetime_timedelta(days=token_expiry_period))
+            access_token = token.access_token
+            access_token.set_exp(lifetime=datetime_timedelta(minutes=access_token_period))
+            
+            user.last_login = django_timezone.now()
+            user.save(update_fields=['last_login'])
+            
+            return {
+                "refresh": str(token),
+                "access": str(access_token),
+                "user_id": str(user),
+                "actor_type": str(getActorType(user.email))
+            }
 
 
 # Phone Number verification
@@ -469,13 +491,36 @@ def logout(request):
         )
 
 
+def getActorType(email):
+    User = get_user_model()
+    try:
+        user = User.objects.get(email = email)
+        if isinstance(user, Customer):
+            return "customer"
+        elif isinstance(user, DeliveryAgent):
+            return 'deliveryagent'
+        elif isinstance(user, Staff):
+            return "staff"
+        elif isinstance(user, SupplyManager):
+            return "supplymanager"
+        elif Supplier.objects.filter(owner = user).exists():
+            return "supplyowner"
+        elif Restaurant.objects.filter(owner = user).exists():
+            return "restaurantowner"
+        else:
+            return "unknown_actortype"
+        
+    except User.DoesNotExist:
+        return None
+
+
 #### SIGN IN ENDPOINTS ##########
 # Sign in with email
 @router.post(
-    "/email-signin",
+    "/mobile-email-signin",
     auth=None,
     tags=["Manual SignIn"],
-    response={200: LoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema},
+    response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema},
 )
 def email_login(request, data: EmailLoginRequestSchema):
     email = data.email
@@ -487,25 +532,39 @@ def email_login(request, data: EmailLoginRequestSchema):
 
     try:
         user = authenticate(request, username=email, password=password)
-        print(email)
-        print(user)
-        print(password)
         if user is not None:
             token_expiry_period = 14 if remember_me is True else 1
+            access_token_period = 60 if remember_me is True else 5
             login(request, user, backend="EmailAuthBackend")
-            token = create_token( 
+            
+            token = CustomRefreshToken.for_user(str(user))
+            token.set_exp(lifetime=datetime_timedelta(days=token_expiry_period))
+            access_token = token.access_token
+            access_token.set_exp(lifetime=datetime_timedelta(minutes=access_token_period))
+            
+            user.last_login = django_timezone.now()
+            user.save(update_fields=['last_login'])
+            
+            ''' token = create_token( 
                 user_id=str(user.id), expiry_period=token_expiry_period
-            )
-
-            return 200, {"token": token}
+            ) '''
+            
+            
+            return 200, {
+                "refresh": str(token),
+                "access": str(access_token),
+                "user_id": str(user),
+                "actor_type": str(getActorType(user.email))
+            }
         else:
             return 404, {"message": "Not saved, User is none"}
 
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
 
-    except Exception:
-        return 404, {"message": "Error in processing requests."}
+    except Exception as e:
+        print("\n"*5,e,"\n"*5)
+        return 404, {"message": str(e)}
 
 
 # Sign in with phone_number

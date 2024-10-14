@@ -7,6 +7,8 @@ from .views import CreateStoreView
 from .views import StockViewApi
 from .views import CreateCategoryAndItemView
 from .views import StockDetailViewApi
+from .views import SupplierProfileView
+from .views import SupplierUpdateProfileViewApi
 
 
 from . import api, htmx, views
@@ -110,6 +112,7 @@ urlpatterns = (
         name="inventory_Stock_delete",
     ),
     path("Supplier/", views.SupplierListView.as_view(), name="inventory_Supplier_list"),
+     path('supplier/profile/update/', SupplierUpdateProfileViewApi.as_view(), name='supplier-update-profile'),
     path(
         "Supplier/create/",
         views.SupplierCreateView.as_view(),

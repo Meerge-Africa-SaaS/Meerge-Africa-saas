@@ -45,17 +45,17 @@ urlpatterns = (
         name="customers_Customer_create",
     ),
     path(
-        "customers/Customer/detail/<int:pk>/",
+        "customers/Customer/detail/<uuid:pk>/",
         views.CustomerDetailView.as_view(),
         name="customers_Customer_detail",
     ),
     path(
-        "customers/Customer/update/<int:pk>/",
+        "customers/Customer/update/<uuid:pk>/",
         views.CustomerUpdateView.as_view(),
         name="customers_Customer_update",
     ),
     path(
-        "customers/Customer/delete/<int:pk>/",
+        "customers/Customer/delete/<uuid:pk>/",
         views.CustomerDeleteView.as_view(),
         name="customers_Customer_delete",
     ),

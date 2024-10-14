@@ -22,3 +22,4 @@ django-formtools
 pyyaml
 uritemplate
 django-rest-swagger
+djangorestframework-simplejwt
