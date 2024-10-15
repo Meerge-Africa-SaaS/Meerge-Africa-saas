@@ -57,6 +57,7 @@ from .schema import (
     PasswordResetRequestDoneSchema,
     PasswordResetRequestSchema,
     PhoneNumberLoginRequestSchema,
+    PhoneNumberVerificationRequestSchema,
     ResendEmailCodeSchema,
     SignupRequestSchema,
     SignupResponseSchema,
@@ -76,6 +77,26 @@ router = Router()
     GLOBAL VARIABLES
 """
 registration_successful = "Registration successful"
+
+def phoneNumberExist(phone_number):
+    try:
+        if User.objects.filter(phone_number = phone_number).exists():
+            return {"status": True, "message": "User with phone number exists"}
+        else:
+            return {"status": False, "message": "Phone number is available for you"}
+        
+    except Exception as e:
+        return {"status": False, "message": e}
+    
+def emailAddressExist(email):
+    try:
+        if User.objects.filter(email = email).exists():
+            return {"status": True, "message": "User with email exists"}
+        else:
+            return {"status": False, "message": "Email is available for you"}
+        
+    except Exception as e:
+        return {"status": False, "message": e}
 
 
 #############      SIGNALS EMITTED        ############
@@ -329,10 +350,18 @@ def staff_signup(request, data: StaffSignupRequestSchema):
     return {"message": registration_successful}
 
 
-@router.post("/customer-signup", tags=["Default Signup"])
+@router.post("/customer-signup", tags=["Default Signup"], response={200: SuccessMessageSchema, 404: NotFoundSchema})
 def customer_signup(request, data: CustomerSignupRequestSchema):
     if data.actor_type != "customer":
-        return JsonResponse({"message": "Not a customer."})
+        return 404, {"message": "Not a customer."}
+    
+    phone_number_exist = phoneNumberExist(data.phone_number)
+    if phone_number_exist["status"] == True:
+        return 404, {"message": "User with this phone number already exists"}
+    
+    email_exist = emailAddressExist(data.email)
+    if email_exist["status"] == True:
+        return 404, {"message": "User with this email address already exists"}
 
     customer = Customer.objects.create(
         first_name=data.first_name,
@@ -347,9 +376,9 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
     allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
         user=customer,
         email=data.email,
-        defaults={"verified": True, "primary": True},
+        defaults={"verified": False, "primary": True},
     )
-    return JsonResponse({"message": "Saved"})
+    return 200, {"message": f"Customer {data.email} has been saved"}
 
 
 @router.post("/deliveryagent-signup", tags=["Default Signup"])
@@ -406,18 +435,17 @@ def verify_key(request, key_token: str):
         return {"message": "Error during email verification"}
 
 
-
 #### VERIFICATION BASICALLY FOR PEOPLE THAT DID NOT SIGN IN WITH GOOGLE ACCOUNT PROVIDER ####
 # Email verification
 
-@router.post("/verify-email")#, response = {404: NotFoundSchema}, tags=["Email Verification"])
+@router.post("/verify-email", response = {200: JWTResponseSchema, 404: NotFoundSchema}, tags=["Email Verification"])
 def verify_email(request, data: EmailVerificationSchema):
     email = data.email
     email_token = data.token
     user = User.objects.get(email = email)
     verify_model = EmailVerification.objects.get(user = user)#.last()
-    if verify_model.email_code == email_token:
-        if verify_model.expires_at > django_timezone.now():
+    if verify_model.expires_at > django_timezone.now():
+        if verify_model.email_code == email_token:
             allauthEmailAddress.objects.get_or_create(user = user, email = data.email, defaults={"verified": True, "primary": True})
             user.is_active = True
             user.save()
@@ -434,12 +462,16 @@ def verify_email(request, data: EmailVerificationSchema):
             user.last_login = django_timezone.now()
             user.save(update_fields=['last_login'])
             
-            return {
+            return 200, {
                 "refresh": str(token),
                 "access": str(access_token),
                 "user_id": str(user),
                 "actor_type": str(getActorType(user.email))
             }
+        else:
+            return 404, {"message": "Invalid verification code"}
+    else:
+        return 404, {"message": "User has exceeded token validity period of 10 minutes"}
 
 
 # Phone Number verification
@@ -448,6 +480,17 @@ def verify_phonenumber(request):
     pass
 
 
+@router.post("/check-phonenumber", response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def check_phonenumber(request, data: PhoneNumberVerificationRequestSchema):
+    try:
+        phone_number_exist = phoneNumberExist(data.phone_number)
+        if phone_number_exist["status"] == False:
+            return 200, {"message": "Phone number is available for use"}
+        else:
+            return 404, {"message": "User with this phone number already exists"}
+        
+    except Exception as e:
+        return 500, {"message": f"{e}"}
 
 #### RESEND-EMAIL VERIFICATION CODE ####
 

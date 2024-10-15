@@ -119,6 +119,10 @@ class EmailLoginRequestSchema(Schema):
     password: str
     remember_me: Optional[bool|None]
  
+class PhoneNumberVerificationRequestSchema(Schema):
+     phone_number: str = Field(pattern = phone_number_regex)
+     
+ 
 class PhoneNumberLoginRequestSchema(Schema):
     phone_number: str
     password: str
