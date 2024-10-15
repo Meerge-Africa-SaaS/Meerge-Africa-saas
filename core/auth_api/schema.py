@@ -101,6 +101,12 @@ class DeliveryAgentSignupRequestSchema(Schema):
     address: str
     password: str
     actor_type: str
+    
+
+class DeliveryAgentOnboardSchema(Schema):
+    vehicle_type: str
+    
+    
 
 ###########    LOGIN SCHEMA  #############
     
