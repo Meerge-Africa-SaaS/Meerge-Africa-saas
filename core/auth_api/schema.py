@@ -1,6 +1,8 @@
-from ninja import Schema, UploadedFile, Field, File
-from typing import Optional, List
+from ninja import Schema, Field, File, ModelSchema, Form, UploadedFile
+from typing import Optional, List, Any
 from pydantic import BaseModel, constr, validator
+from inventory.models import Supplier
+#from django.core.files.uploadedfile import UploadedFile
 
 
 email_regex = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
@@ -93,7 +95,6 @@ class StaffSignupResponseSchema(Schema):
     user_id: int  
     
 
-
 class WorkShiftSchema(Schema):
     morning: List[str]
     afternoon: List[str]
@@ -105,7 +106,6 @@ class WorkShiftSchema(Schema):
         if not set(v).issubset(valid_days):
             raise ValueError('Invalid day in work shift')
         return v
-    
 
 
 class DeliveryAgentSignupRequestSchema(Schema):
@@ -191,13 +191,14 @@ class SupplierOnboardSchema(Schema):
     business_phone_number: str
     business_address: str
     cac_registration_number: str
-    #cac_document: File[UploadedFile]
-    #a: str = Field[UploadedFile]
-    b: str= File(...)
+    cac_document: UploadedFile = File(..., description="CAC document file")
     business_premise_license: Optional[UploadedFile] = None
     category: str
-        
+     
     
+class AAB(Schema):
+    cac_document: UploadedFile
+
 ###########    LOGIN SCHEMA  #############
     
 ## Manual signup  ########

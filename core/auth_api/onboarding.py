@@ -11,9 +11,8 @@ from django.utils import timezone as django_timezone
 from django.utils.http import urlsafe_base64_decode
 from django.core.files.storage import default_storage
 
-from ninja import Router, File, UploadedFile
+from ninja import Router, File, UploadedFile, Form
 from ninja.security import HttpBearer
-from ninja import Form
 
 from core.auth_api.schema import CustomerSignupRequestSchema
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
@@ -48,7 +47,8 @@ from .schema import (
     StaffSignupRequestSchema,
     StaffSignupResponseSchema,
     SuccessMessageSchema,
-    SupplierOnboardSchema
+    SupplierOnboardSchema,
+    AAB
 )
 from .token_management import create_token, CustomRefreshToken
 
@@ -57,7 +57,7 @@ router = Router()
 
 
 @router.post("/deliveryagent-step1", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema = Form(...)):
+def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema ):
     try:
         DeliveryAgent.objects.get(email = data.email)
     except User.DoesNotExist:
@@ -72,7 +72,8 @@ def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema =
         return 404, {"message": f"We ran into an error {e}"}
 
 @router.post("/deliveryagent-step2", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema = Form(...)):
+def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema):
+    print(data.face_capture)
     try:
         deliveryagent = DeliveryAgent.objects.get(email = data.email)
     except User.DoesNotExist:
@@ -96,8 +97,8 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema =
         return 404, {"message": f"We ran into an error {e}"}
     
     
-@router.post("/supplier", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: File[UploadedFile]):
+@router.post("/supplier", tags=["Onboarding"], response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_supplier(request, data: SupplierOnboardSchema ):
     try:
         supply_owner = User.objects.get(email = data.email)
     except User.DoesNotExist:
@@ -117,14 +118,14 @@ def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: File[Up
         return 500, {"message": e}
     
     try:
-        cac_certificate_file = default_storage.save(cac_document.name, cac_document)
-        premise_license_file =default_storage.save(data.business_premise_license.name, data.business_premise_license)
+        #cac_certificate_file = default_storage.save(data.cac_document.name, data.cac_document)
+        #premise_license_file =default_storage.save(data.business_premise_license.name, data.business_premise_license)
         Supplier.objects.create(
             owner=supply_owner, name=data.business_name, email = data.business_email, phone_number = data.business_phone_number, 
-            cac_reg_number=data.cac_registration_number, cac_certificate=cac_certificate_file, business_license = premise_license_file, 
+            cac_reg_number=data.cac_registration_number, cac_certificate=cac_document, business_license = data.business_premise_license, 
             category=data.category)
         return 200, {"message": "Supplier has been saved."}
         
     except Exception as e:
-        return 400, {"message": "Error in saving supplier details"}
+        return 400, {"message": e}
         
