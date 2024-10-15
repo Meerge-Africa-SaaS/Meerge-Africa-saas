@@ -123,11 +123,11 @@ def create_email_token(sender, instance, created, **kwargs):
                 email_send = False
             
             if email_send:
-                return JsonResponse({"message": "email sent", "status_code": 200})
+                return {"message": "email sent", "status_code": 200}
                 
             else:
                 
-                return JsonResponse({"message": "email not sent", "status_code": 404})
+                return {"message": "email not sent", "status_code": 404}
 
 
 ### EMITTED ONLY WHEN USER SIGNED UP THROUGH PROVIDERS
@@ -172,11 +172,19 @@ def socialaccount_user_signup(request, user, **kwargs):
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
 
 
-@router.post("/owner-signup", tags=["Default Signup"], auth=None)
+@router.post("/owner-signup", tags=["Default Signup"], auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def owner_signup(request, data: SignupRequestSchema):
     # Model signup
     if data.actor_type != "owner":
         return JsonResponse({"message": "Not a business owner."})
+    
+    phone_number_exist = phoneNumberExist(data.phone_number)
+    if phone_number_exist["status"] == True:
+        return 404, {"message": "User with this phone number already exists"}
+    
+    email_exist = emailAddressExist(data.email)
+    if email_exist["status"] == True:
+        return 404, {"message": "User with this email address already exists"}
     
     try:
         if not (User.objects.filter(email = data.email).exists()):
@@ -185,22 +193,30 @@ def owner_signup(request, data: SignupRequestSchema):
                 last_name=data.last_name,
                 email=data.email,
                 phone_number=data.phone_number,
-                username=data.username,
             )
             owner.set_password(data.password)
             owner.is_active = False
             owner.save()
         else:
-            return {"message": "User already exists"}
+            return 404, {"message": "User already exists"}
         
         if (data.is_mobile == True):
             owner = User.objects.get(email = data.email)
-            #EmailVerification.objects.create(user = owner, expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
+            EmailVerification.objects.create(user = owner, expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
             
             #email_token = EmailVerification.objects.filter(user = owner).last()
             try:
+                allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
+                user=owner,
+                email=data.email,
+                defaults={"verified": False, "primary": True},
+            )
                 email_send_func = create_email_token(sender = None, instance = owner, created = True)
-                return email_send_func
+                print(email_send_func)
+                if email_send_func["status_code"] == 200:
+                    return 200, {"message": "Email verification code has been sent"}
+                else:
+                    return 404, {"message": "Email not sent"}
                 
             except Exception as e:
                 print(e)
@@ -238,10 +254,10 @@ def owner_signup(request, data: SignupRequestSchema):
             confirmation.save()
 
             # Return info.
-            return {"message": registration_successful}
+            return 200, {"message": registration_successful}
 
     except Exception as e:
-        return {"message": e}
+        return 500, {"message": e}
 
 ''' 
 
@@ -386,6 +402,14 @@ def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
         country = Country.objects.get(name=data.address)
     except Country.DoesNotExist:
         return 404, {"message": "Country not accepted for now"}
+    
+    phone_number_exist = phoneNumberExist(data.phone_number)
+    if phone_number_exist["status"] == True:
+        return 404, {"message": "User with this phone number already exists"}
+    
+    email_exist = emailAddressExist(data.email)
+    if email_exist["status"] == True:
+        return 404, {"message": "User with this email address already exists"}
 
     deliveryagent = DeliveryAgent.objects.create(
         first_name=data.first_name,
