@@ -1,6 +1,6 @@
-from ninja import Schema
-from typing import Optional
-from pydantic import constr, Field
+from ninja import Schema, UploadedFile, Field
+from typing import Optional, List
+from pydantic import BaseModel, constr, validator
 
 
 email_regex = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
@@ -93,6 +93,21 @@ class StaffSignupResponseSchema(Schema):
     user_id: int  
     
 
+
+class WorkShiftSchema(Schema):
+    morning: List[str]
+    afternoon: List[str]
+    evening: List[str]
+
+    @validator('morning', 'afternoon', 'evening')
+    def validate_shift(cls, v):
+        valid_days = set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+        if not set(v).issubset(valid_days):
+            raise ValueError('Invalid day in work shift')
+        return v
+    
+
+
 class DeliveryAgentSignupRequestSchema(Schema):
     first_name: str
     last_name: str
@@ -103,11 +118,71 @@ class DeliveryAgentSignupRequestSchema(Schema):
     actor_type: str
     
 
-class DeliveryAgentOnboardSchema(Schema):
+class DeliveryAgentOnboardStep1Schema(Schema):
+    email: str
     vehicle_type: str
+    vehicle_brand: str
+    plate_number: Optional[str] = None
+    drivers_license_doc: Optional[UploadedFile] = None
+    drivers_license_ID: Optional[str] = None
+    voters_card_doc: Optional[UploadedFile] = None
+    voters_card_ID: Optional[str] = None
+    NIN_doc: Optional[UploadedFile] = None
+    NIN_ID: str
     
+    @validator('vehicle_type')
+    def validate_vehicle_type(cls, vehicle):
+        if vehicle not in ["bicycle", "motorcycle", "truck"]:
+            raise ValueError("Vehicle type not accepted")
+        return vehicle
     
+    @validator("plate_number")
+    def validate_plate_number(cls, _plate_number, values):
+        if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _plate_number:
+            raise ValueError("Plate Number is required for motorcycles and trucks.")
 
+    @validator("drivers_license_doc")
+    def validate_drivers_license_doc(cls, _drivers_license_doc, values):
+        if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _drivers_license_doc:
+            raise ValueError("Drivers license document is required for motorcycles and trucks.")
+        
+    @validator("drivers_license_ID")
+    def validate_drivers_license_ID(cls, _drivers_license_ID, values):
+        if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _drivers_license_ID:
+            raise ValueError("Drivers License ID is required for motorcycles and trucks.")
+        
+    @validator("voters_card_doc")
+    def validate_voters_card_doc(cls, _voters_card_doc, values):
+        if (values.get("vehicle_type") == "bicycle") and not _voters_card_doc:
+            raise ValueError("Voters card document/image is required for bitorcycles.")
+        
+    @validator("voters_card_ID")
+    def validate_voters_card_ID(cls, _voters_card_ID, values):
+        if (values.get("vehicle_type") == "bicycle") and not _voters_card_ID:
+            raise ValueError("Voters card number is required for bicycles.")
+    
+    
+class DeliveryAgentOnboardStep2Schema(Schema):
+    email: str
+    NON_full_name: str
+    NON_phone_number: str
+    guarantor_first_name: str
+    guarantor_last_name: str
+    guarantor_occupation: str
+    guarantor_phone_number: str
+    Bank_name: str
+    Bank_account_number: str
+    Bank_account_name: str
+    work_shift: WorkShiftSchema
+    face_capture: Optional[UploadedFile] = None
+    
+    @validator('work_shift')
+    def validate_work_shift(cls, v):
+        total_shifts = len(v.morning) + len(v.afternoon) + len(v.evening)
+        if total_shifts < 6:
+            raise ValueError('Must select at least 3 days in 2 out of 3 time periods')
+        return v
+    
 ###########    LOGIN SCHEMA  #############
     
 ## Manual signup  ########

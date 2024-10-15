@@ -3,8 +3,11 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from ninja import Form
+
 from phonenumber_field.modelfields import PhoneNumberField
 from customers.models import Order
+from banking.models import AccountDetail
 import uuid
 
 User = get_user_model()
@@ -52,7 +55,11 @@ class DeliveryRequest(models.Model):
     #def save(self):
         
 
-class DeliveryAgent(User):  # type: ignore
+class DeliveryAgent(User):
+    # Relationships
+    account_details = models.ForeignKey(AccountDetail, related_name="owner", on_delete=models.DO_NOTHING, null=True, blank=True)
+    
+    # Fields
     # Choices
     VEHICLE_TYPE_CHOICE = [
         ('bicycle', _('Bicycle')),
@@ -63,9 +70,10 @@ class DeliveryAgent(User):  # type: ignore
     ]
     
     # Personal extended
-    address = models.ForeignKey("cities_light.Country", on_delete=models.SET_NULL)
+    address = models.ForeignKey("cities_light.Country", on_delete=models.DO_NOTHING)
     terms_and_condition = models.BooleanField()
     face_capture = models.ImageField(upload_to="images/profile_pic", null=True, blank=True)
+    work_shift = models.JSONField(null=True, blank=True)
     
     # Driving details
     vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPE_CHOICE, null=True, blank=True)

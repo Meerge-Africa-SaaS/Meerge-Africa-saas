@@ -275,20 +275,17 @@ def supply_owner_signup(request, data: SignupRequestSchema):
  '''
 
 @router.post("/add-employee", tags=["Accept and Invite"])
-def add_employee(request, data: AddEmployeeSchema):
+def add_employee(request, data: AddEmployeeSchema, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema}):
     if data.actor_type != "owner":
-        return JsonResponse(
-            {
-                "message": "Not a restaurant owner, only restaurant owners can add employee."
-            }
-        )
+        return 403, {"message": "Not a restaurant owner, only restaurant owners can add employee."}
+        
 
     # Get restaurant availability
     try:
         restaurant = Restaurant.objects.get(owner=request.user)
 
     except Restaurant.DoesNotExist:
-        return JsonResponse({"message": "Restaurant does not exist"})
+        return 404, {"message": "Restaurant does not exist"}
 
     staff = Staff.objects.create(
         email=data.email, role=data.role, restaurants=restaurant
@@ -308,10 +305,10 @@ def add_employee(request, data: AddEmployeeSchema):
     confirmation.save()
 
     # Return info.
-    return {"message": registration_successful}
+    return 200, {"message": registration_successful}
 
 
-@router.post("/accept-invite")
+@router.post("/accept-invite", response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
 def staff_signup(request, data: StaffSignupRequestSchema):
     # Get restaurant availability
     """
@@ -326,7 +323,7 @@ def staff_signup(request, data: StaffSignupRequestSchema):
     try:
         staff = Staff.objects.get(email=data.email)
     except Staff.DoesNotExist:
-        return JsonResponse({"message": "Staff doesn't exist!"})
+        return 404, {"message": "Staff doesn't exist!"}
 
     staff_update = staff.objects.update(
         first_name=data.first_name,
@@ -347,7 +344,7 @@ def staff_signup(request, data: StaffSignupRequestSchema):
     )
 
     # Return info.
-    return {"message": registration_successful}
+    return 200, {"message": registration_successful}
 
 
 @router.post("/customer-signup", tags=["Default Signup"], response={200: SuccessMessageSchema, 404: NotFoundSchema})
@@ -381,14 +378,14 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
     return 200, {"message": f"Customer {data.email} has been saved"}
 
 
-@router.post("/deliveryagent-signup", tags=["Default Signup"])
+@router.post("/deliveryagent-signup", tags=["Default Signup"], response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
 def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     if data.actor_type != "deliveryagent":
-        return JsonResponse({"message": "Not a deliveryagent."})
+        return 403, {"message": "Not a deliveryagent."}
     try:
         country = Country.objects.get(name=data.address)
     except Country.DoesNotExist:
-        return JsonResponse({"message": "Country does not exist"})
+        return 404, {"message": "Country not accepted for now"}
 
     deliveryagent = DeliveryAgent.objects.create(
         first_name=data.first_name,
@@ -400,10 +397,10 @@ def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     deliveryagent.set_password(data.password)
     deliveryagent.is_active = False
     deliveryagent.save()
-    return JsonResponse({"message": "Saved"})
+    return 200, {"message": "Delivery agent account registered, check your email for verification"}
 
 
-@router.get("confirm-email/{key_token}", url_name="verifybytoken", auth=None)
+@router.get("confirm-email/{key_token}", url_name="verifybytoken", auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
 def verify_key(request, key_token: str):
     try:
         # Try to use the key as-is first
@@ -416,7 +413,7 @@ def verify_key(request, key_token: str):
 
         except (TypeError, ValueError, OverflowError, allauthEmailConfirmation.DoesNotExist):
             print("Failed to find EmailConfirmation with provided key")
-            return {"message": "Invalid or expired token"}
+            return 403, {"message": "Invalid or expired token"}
     
     try:
         # Confirm the email here with all-auth
@@ -430,15 +427,15 @@ def verify_key(request, key_token: str):
         allauthemail_address = allauthEmailAddress.objects.get(email=user.email)
         allauthEmailConfirmation.objects.get(email_address = allauthemail_address).delete()
         
-        return {"message": "Email verified successfully"}
+        return 200, {"message": "Email verified successfully"}
     except Exception as e:
-        return {"message": "Error during email verification"}
+        return 404, {"message": "Error during email verification"}
 
 
 #### VERIFICATION BASICALLY FOR PEOPLE THAT DID NOT SIGN IN WITH GOOGLE ACCOUNT PROVIDER ####
 # Email verification
 
-@router.post("/verify-email", response = {200: JWTResponseSchema, 404: NotFoundSchema}, tags=["Email Verification"])
+@router.post("/verify-email", response = {200: JWTLoginResponseSchema, 404: NotFoundSchema}, tags=["Email Verification"])
 def verify_email(request, data: EmailVerificationSchema):
     email = data.email
     email_token = data.token
@@ -494,7 +491,7 @@ def check_phonenumber(request, data: PhoneNumberVerificationRequestSchema):
 
 #### RESEND-EMAIL VERIFICATION CODE ####
 
-@router.post("/resend-emailcode", auth=None)
+@router.post("/resend-emailcode", auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
 def resend_emailcode(request, data: ResendEmailCodeSchema):
     try:
         allauthemail_address = allauthEmailAddress.objects.get(email=data.email)
@@ -508,9 +505,10 @@ def resend_emailcode(request, data: ResendEmailCodeSchema):
         confirmation.send(request=request, signup=True)
         confirmation.sent = django_timezone.now()
         confirmation.save()
+        return 200, {"message": "Email verification resent"}
 
     except allauthEmailAddress.DoesNotExist:
-        return JsonResponse({"message": "User does not exist in the database"})
+        return 404, {"message": "User does not exist in the database"}
 
 
 @login_required
@@ -645,7 +643,7 @@ def phonenumber_login(request, data: PhoneNumberLoginRequestSchema):
         return 404, {"message": "Error in processing requests."}
 
 
-@router.get("/google/{actor_type}", tags=["Social Auth"], auth=None)
+@router.get("/google/{actor_type}", tags=["Social Auth"], auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
 def google_auth(request: HttpRequest, actor_type:str):
     try:
         request.session["actor_type"] = actor_type
@@ -654,4 +652,4 @@ def google_auth(request: HttpRequest, actor_type:str):
         return redirect("/accounts/google/login/")
     
     except Exception:
-        return JsonResponse({"error": "actor_type required"})
+        return 403, {"error": "actor_type required"}
