@@ -1,4 +1,4 @@
-from ninja import Schema, UploadedFile, Field
+from ninja import Schema, UploadedFile, Field, File
 from typing import Optional, List
 from pydantic import BaseModel, constr, validator
 
@@ -182,6 +182,21 @@ class DeliveryAgentOnboardStep2Schema(Schema):
         if total_shifts < 6:
             raise ValueError('Must select at least 3 days in 2 out of 3 time periods')
         return v
+    
+    
+class SupplierOnboardSchema(Schema):
+    email: str
+    business_name: str
+    business_email: str
+    business_phone_number: str
+    business_address: str
+    cac_registration_number: str
+    #cac_document: File[UploadedFile]
+    #a: str = Field[UploadedFile]
+    b: str= File(...)
+    business_premise_license: Optional[UploadedFile] = None
+    category: str
+        
     
 ###########    LOGIN SCHEMA  #############
     

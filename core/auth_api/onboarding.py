@@ -7,10 +7,11 @@ from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
-
 from django.utils import timezone as django_timezone
 from django.utils.http import urlsafe_base64_decode
-from ninja import Router
+from django.core.files.storage import default_storage
+
+from ninja import Router, File, UploadedFile
 from ninja.security import HttpBearer
 from ninja import Form
 
@@ -20,6 +21,7 @@ from core.models import EmailVerification
 from customers.models import Customer
 from orders.models import DeliveryAgent
 from banking.models import Bank, AccountDetail
+from inventory.models import Supplier
 
 from .schema import (
     AcceptInvitation,
@@ -46,6 +48,7 @@ from .schema import (
     StaffSignupRequestSchema,
     StaffSignupResponseSchema,
     SuccessMessageSchema,
+    SupplierOnboardSchema
 )
 from .token_management import create_token, CustomRefreshToken
 
@@ -91,3 +94,37 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema =
         return 200, {"Driving details done"}
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
+    
+    
+@router.post("/supplier", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: File[UploadedFile]):
+    try:
+        supply_owner = User.objects.get(email = data.email)
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+    except Exception as e:
+        return 500, {"message": "Error while querying user"}
+    
+    
+    
+    try:
+        if User.objects.filter(email = data.business_email).exists():
+            return 404, {"message"}
+        if Supplier.objects.filter(email = data.business_email).exists():
+            return 404, {"mesage": "Email already exists"}
+        
+    except Exception as e:
+        return 500, {"message": e}
+    
+    try:
+        cac_certificate_file = default_storage.save(cac_document.name, cac_document)
+        premise_license_file =default_storage.save(data.business_premise_license.name, data.business_premise_license)
+        Supplier.objects.create(
+            owner=supply_owner, name=data.business_name, email = data.business_email, phone_number = data.business_phone_number, 
+            cac_reg_number=data.cac_registration_number, cac_certificate=cac_certificate_file, business_license = premise_license_file, 
+            category=data.category)
+        return 200, {"message": "Supplier has been saved."}
+        
+    except Exception as e:
+        return 400, {"message": "Error in saving supplier details"}
+        
