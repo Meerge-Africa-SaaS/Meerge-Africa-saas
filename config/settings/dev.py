@@ -21,7 +21,7 @@ DATABASES = {
 
 from .geo import *
 from .auth import *
-# from .mail import *
+from .mail import *
 from .api import *
 from .restaurants import *
 from .customers import *
