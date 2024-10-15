@@ -274,8 +274,8 @@ def supply_owner_signup(request, data: SignupRequestSchema):
 
  '''
 
-@router.post("/add-employee", tags=["Accept and Invite"])
-def add_employee(request, data: AddEmployeeSchema, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema}):
+@router.post("/add-employee", tags=["Accept and Invite"], response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
+def add_employee(request, data: AddEmployeeSchema):
     if data.actor_type != "owner":
         return 403, {"message": "Not a restaurant owner, only restaurant owners can add employee."}
         

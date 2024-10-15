@@ -54,7 +54,7 @@ router = Router()
 
 
 @router.post("/deliveryagent-step1", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent(request, data: DeliveryAgentOnboardStep1Schema = Form(...)):
+def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema = Form(...)):
     try:
         DeliveryAgent.objects.get(email = data.email)
     except User.DoesNotExist:
@@ -69,7 +69,7 @@ def onboard_deliveryagent(request, data: DeliveryAgentOnboardStep1Schema = Form(
         return 404, {"message": f"We ran into an error {e}"}
 
 @router.post("/deliveryagent-step2", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent(request, data: DeliveryAgentOnboardStep2Schema = Form(...)):
+def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema = Form(...)):
     try:
         deliveryagent = DeliveryAgent.objects.get(email = data.email)
     except User.DoesNotExist:
