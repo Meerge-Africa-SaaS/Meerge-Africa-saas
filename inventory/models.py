@@ -203,8 +203,8 @@ class Supplier(models.Model):
     category = models.CharField(choices=SUPPLIER_CATEGORY, max_length = 21)
     
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
-    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
+    profile_img = models.ImageField(upload_to="images/restaurant/profile_images", blank=True, null=True)
+    cover_img = models.ImageField(upload_to="images/restaurant/cover_images", blank=True, null=True)
 
     address = models.CharField(max_length=130)
 
