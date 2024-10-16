@@ -41,6 +41,8 @@ ACCOUNT_FORMS = {
     "login": "core.forms.UserSigninForm",
 }
 
+ACCOUNT_SIGNUP_FORM_CLASS = "core.forms.UserSignupForm"
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ######### ALL-AUTH PROVIDERS   ########
 # Google provider details
 client_id = ""
