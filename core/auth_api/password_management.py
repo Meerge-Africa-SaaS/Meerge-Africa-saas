@@ -54,10 +54,10 @@ def password_reset(request, data: PasswordResetRequestSchema):
             email_instance = EmailVerification.objects.filter(user = user).exists()
             token = generate_code()
             if not email_instance:
-                email_token = EmailVerification.objects.create(user = user, email_code=token)
+                email_token = EmailVerification.objects.create(user = user, email_code=token, created_at=django_timezone.now(), expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
             else:
                 EmailVerification.objects.get(user).delete()
-                email_token = EmailVerification.objects.create(user = user, email_code=token)
+                email_token = EmailVerification.objects.create(user = user, email_code=token, created_at=django_timezone.now(), expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
             
             subject =  "Password Reset"
             message = f"""
@@ -96,6 +96,7 @@ def password_reset_done(request, data: PasswordResetRequestDoneSchema):
     try:
         user_model = User.objects.get(email = data.email)
         email_instance = EmailVerification.objects.get(user=user_model)
+        
         if email_instance.expires_at > django_timezone.now():
             if email_instance.email_code == data.token:
                 email_instance.delete()
@@ -116,6 +117,7 @@ def password_reset_done(request, data: PasswordResetRequestDoneSchema):
         }
     
     except Exception as e:
+        print(e)
         return 404, {
             "message": "We ran into error while processing your request."
         }
