@@ -50,12 +50,17 @@ def password_change(request, data: PasswordChangeRequestSchema):
 def password_reset(request, data: PasswordResetRequestSchema):
     try:
         user = User.objects.get(email = data.email)
+        print(1)
         if user and user.is_active:
+            print(2)
             email_instance = EmailVerification.objects.filter(user).exists()
             token = generate_code()
+            print(3)
             if not email_instance:
+                print(4)
                 email_token = EmailVerification.objects.create(user = user, email_code=token)
             else:
+                print(5)
                 EmailVerification.objects.get(user).delete()
                 email_token = EmailVerification.objects.create(user = user, email_code=token)
             
@@ -65,7 +70,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
                     """
             email_sender ="dev@kittchens.com"
             receiver = [data.email]
-            
+            print(6)
             try:
                 email_send = send_mail(subject, message, email_sender, receiver)
                 return 200, {
