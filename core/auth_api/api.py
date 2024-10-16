@@ -639,7 +639,7 @@ def email_login(request, data: EmailLoginRequestSchema):
     tags=["Manual SignIn"],
     response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema},
 )
-def email_login(request, data: PhoneNumberLoginRequestSchema):
+def phone_number_login(request, data: PhoneNumberLoginRequestSchema):
     phone_number = data.phone_number
     password = data.password
     remember_me = data.remember_me
