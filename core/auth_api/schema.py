@@ -123,12 +123,8 @@ class DeliveryAgentOnboardStep1Schema(Schema):
     vehicle_type: str
     vehicle_brand: str
     plate_number: Optional[str] = None
-    #drivers_license_doc: Optional[UploadedFile] = None
     drivers_license_ID: Optional[str] = None
-    #voters_card_doc: Optional[UploadedFile] = None
     voters_card_ID: Optional[str] = None
-    #
-    NIN_ID: str
     
     @validator('vehicle_type')
     def validate_vehicle_type(cls, vehicle):
@@ -140,22 +136,12 @@ class DeliveryAgentOnboardStep1Schema(Schema):
     def validate_plate_number(cls, _plate_number, values):
         if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _plate_number:
             raise ValueError("Plate Number is required for motorcycles and trucks.")
-    ''' 
-    @validator("drivers_license_doc")
-    def validate_drivers_license_doc(cls, _drivers_license_doc, values):
-        if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _drivers_license_doc:
-            raise ValueError("Drivers license document is required for motorcycles and trucks.")
-         '''
+    
     @validator("drivers_license_ID")
     def validate_drivers_license_ID(cls, _drivers_license_ID, values):
         if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _drivers_license_ID:
             raise ValueError("Drivers License ID is required for motorcycles and trucks.")
-        ''' 
-    @validator("voters_card_doc")
-    def validate_voters_card_doc(cls, _voters_card_doc, values):
-        if (values.get("vehicle_type") == "bicycle") and not _voters_card_doc:
-            raise ValueError("Voters card document/image is required for bitorcycles.")
-         '''
+    
     @validator("voters_card_ID")
     def validate_voters_card_ID(cls, _voters_card_ID, values):
         if (values.get("vehicle_type") == "bicycle") and not _voters_card_ID:
