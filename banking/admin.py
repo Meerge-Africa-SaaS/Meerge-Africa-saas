@@ -23,7 +23,7 @@ class AccountDetailAdminForm(forms.ModelForm):
         fields = "__all__"
         
         
-class AccountDetailsAdmin(admin.ModelAdmin):
+class AccountDetailAdmin(admin.ModelAdmin):
     form = AccountDetailAdminForm
     list_display = [
         "user",
@@ -32,8 +32,15 @@ class AccountDetailsAdmin(admin.ModelAdmin):
         "updated_at",
     ]
     
-    readonly_fields = "__all__"
+    readonly_fields = [
+        "user",
+        "bank",
+        "account_number",
+        "account_holder_name",
+        "iban",
+        "swift_code",
+    ]
     
     
 admin.site.register(models.Bank, BankAdmin)
-admin.site.register(models.AccountDetail, AccountDetailsAdmin)
+admin.site.register(models.AccountDetail, AccountDetailAdmin)
