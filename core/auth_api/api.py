@@ -622,7 +622,7 @@ def email_login(request, data: EmailLoginRequestSchema):
                 "actor_type": str(getActorType(user.email))
             }
         else:
-            return 404, {"message": "Not saved, User is none"}
+            return 404, {"message": "User does not exist"}
 
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
@@ -634,12 +634,12 @@ def email_login(request, data: EmailLoginRequestSchema):
 
 # Sign in with phone_number
 @router.post(
-    "/phonenumber-signin",
+    "/mobile-phone-signin",
     auth=None,
     tags=["Manual SignIn"],
-    response={200: LoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema},
+    response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema},
 )
-def phonenumber_login(request, data: PhoneNumberLoginRequestSchema):
+def phone_number_login(request, data: PhoneNumberLoginRequestSchema):
     phone_number = data.phone_number
     password = data.password
     remember_me = data.remember_me
@@ -651,20 +651,37 @@ def phonenumber_login(request, data: PhoneNumberLoginRequestSchema):
         user = authenticate(request, username=phone_number, password=password)
         if user is not None:
             token_expiry_period = 14 if remember_me is True else 1
+            access_token_period = 60 if remember_me is True else 5
             login(request, user, backend="PhoneAuthBackend")
-            token = create_token(  # noqa: F405
+            
+            token = CustomRefreshToken.for_user(str(user))
+            token.set_exp(lifetime=datetime_timedelta(days=token_expiry_period))
+            access_token = token.access_token
+            access_token.set_exp(lifetime=datetime_timedelta(minutes=access_token_period))
+            
+            user.last_login = django_timezone.now()
+            user.save(update_fields=['last_login'])
+            
+            ''' token = create_token( 
                 user_id=str(user.id), expiry_period=token_expiry_period
-            )
-
-            return 200, {"token": token}
+            ) '''
+            
+            
+            return 200, {
+                "refresh": str(token),
+                "access": str(access_token),
+                "user_id": str(user),
+                "actor_type": str(getActorType(user.email))
+            }
         else:
-            return 404, {"message": "Not saved, User is not none"}
+            return 404, {"message": "User does not exist"}
 
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
 
-    except Exception:
-        return 404, {"message": "Error in processing requests."}
+    except Exception as e:
+        print("\n"*5,e,"\n"*5)
+        return 404, {"message": str(e)}
 
 
 @router.get("/google/{actor_type}", tags=["Social Auth"], auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
