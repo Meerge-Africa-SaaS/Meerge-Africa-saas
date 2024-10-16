@@ -53,7 +53,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
         print(1)
         if user and user.is_active:
             print(2)
-            email_instance = EmailVerification.objects.filter(user).exists()
+            email_instance = EmailVerification.objects.filter(user = user).exists()
             token = generate_code()
             print(3)
             if not email_instance:
@@ -127,7 +127,7 @@ def password_reset_done(request, data: PasswordResetRequestDoneSchema):
         }
     
 
-@p_router.post("/set-password", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password, management"])
+@p_router.post("/set-password", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
 def set_password(request, data: EmailLoginRequestSchema):
     try:
         user = User.objects.get(email = data.email)
@@ -141,6 +141,7 @@ def set_password(request, data: EmailLoginRequestSchema):
         return 404, {
             "message": "User does not exist"
         }
+    
     
 
     
