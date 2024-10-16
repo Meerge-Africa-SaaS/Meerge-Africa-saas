@@ -11,6 +11,16 @@ class CategorySerializer(serializers.ModelSerializer):
             "name",
             "last_updated",
         ]
+        
+    
+class ItemCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ItemCategory
+        fields = [
+            "created",
+            "name",
+            "last_updated",
+        ]
 
 
 class ItemSerializer(serializers.ModelSerializer):
