@@ -92,7 +92,7 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, 
     except Exception as e:
         return 500, {"message": "Error while querying user"}
     try:
-        bank_model = Bank.objects.get_or_create(name = data.Bank_name, code = 1)
+        bank_model = Bank.objects.get_or_create(name = data.Bank_name, code = data.Bank_code)
         account_details = AccountDetail.objects.create(
             user = deliveryagent, bank = bank_model, account_number = data.Bank_account_number, 
             account_holder_name = data.Bank_account_name

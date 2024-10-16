@@ -132,6 +132,14 @@ class CategoryForm(forms.ModelForm):
         fields = [
             "name",
         ]
+        
+
+class ItemCategoryForm(forms.ModelForm):
+    class Meta:
+        model = models.ItemCategory
+        fields = [
+            "name",
+        ]
 
 
 class ItemForm(forms.ModelForm):
