@@ -57,7 +57,7 @@ class DeliveryRequest(models.Model):
 
 class DeliveryAgent(User):
     # Relationships
-    account_details = models.ForeignKey(AccountDetail, related_name="owner", on_delete=models.DO_NOTHING, null=True, blank=True)
+    account_details = models.ForeignKey(AccountDetail, related_name="deliveryagents", on_delete=models.DO_NOTHING, null=True, blank=True)
     
     # Fields
     # Choices

@@ -1,6 +1,7 @@
 import uuid
 
 from cities_light.models import City, Country
+from banking.models import AccountDetail
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
@@ -50,6 +51,7 @@ class Customer(User):  # type: ignore
     country = models.ForeignKey(
         Country, on_delete=models.SET_NULL, null=True, blank=True
     )
+    account_details = models.ForeignKey(AccountDetail, related_name="customers", on_delete=models.DO_NOTHING, null=True, blank=True)
 
     # Fields
     allergies = models.CharField(max_length=250, blank=True, null=True)
