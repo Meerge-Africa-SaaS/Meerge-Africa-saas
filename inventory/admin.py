@@ -19,7 +19,25 @@ class CategoryAdmin(admin.ModelAdmin):
     ]
     readonly_fields = [
         "created",
+        "last_updated",
+    ]
+    
+    
+class ItemCategoryAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.ItemCategory
+        fields = "__all__"
+
+
+class ItemCategoryAdmin(admin.ModelAdmin):
+    form = ItemCategoryAdminForm
+    list_display = [
+        "created",
         "name",
+        "last_updated",
+    ]
+    readonly_fields = [
+        "created",
         "last_updated",
     ]
 
@@ -121,6 +139,7 @@ class SupplyManagerAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Category, CategoryAdmin)
+admin.site.register(models.ItemCategory, ItemCategoryAdmin)
 admin.site.register(models.Item, ItemAdmin)
 admin.site.register(models.Stock, StockAdmin)
 admin.site.register(models.Supplier, SupplierAdmin)

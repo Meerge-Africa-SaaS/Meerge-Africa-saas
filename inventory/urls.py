@@ -47,6 +47,31 @@ urlpatterns = (
         views.CategoryDeleteView.as_view(),
         name="inventory_Category_delete",
     ),
+    path(
+        "ItemCategory/",
+        views.ItemCategoryListView.as_view(),
+        name="inventory_ItemCategory_list",
+    ),
+    path(
+        "ItemCategory/create/",
+        views.ItemCategoryCreateView.as_view(),
+        name="inventory_ItemCategory_create",
+    ),
+    path(
+        "ItemCategory/detail/<int:pk>/",
+        views.ItemCategoryDetailView.as_view(),
+        name="inventory_ItemCategory_detail",
+    ),
+    path(
+        "ItemCategory/update/<int:pk>/",
+        views.ItemCategoryUpdateView.as_view(),
+        name="inventory_ItemCategory_update",
+    ),
+    path(
+        "ItemCategory/delete/<int:pk>/",
+        views.ItemCategoryDeleteView.as_view(),
+        name="inventory_ItemCategory_delete",
+    ),
     path("Item/", views.ItemListView.as_view(), name="inventory_Item_list"),
     path(
         "Item/create/",

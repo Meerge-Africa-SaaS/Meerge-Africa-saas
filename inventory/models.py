@@ -1,6 +1,7 @@
 import uuid
 
 from cities_light.models import City
+from banking.models import AccountDetail
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -18,7 +19,7 @@ class Category(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
-        pass
+        verbose_name_plural = "Categories"
 
     def __str__(self):
         return str(self.name)
@@ -37,10 +38,36 @@ class Category(models.Model):
         return reverse("inventory_Category_htmx_delete", args=(self.pk,))
 
 
+class ItemCategory(models.Model):
+    # Fields
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    name = models.CharField(max_length=30)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        verbose_name_plural = "Item Categories"
+
+    def __str__(self):
+        return str(self.name)
+
+    def get_absolute_url(self):
+        return reverse("inventory_ItemCategory_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("inventory_ItemCategory_update", args=(self.pk,))
+
+    @staticmethod
+    def get_htmx_create_url():
+        return reverse("inventory_ItemCategory_htmx_create")
+
+    def get_htmx_delete_url(self):
+        return reverse("inventory_ItemCategory_htmx_delete", args=(self.pk,))
+    
+
 class Item(models.Model):
     # Relationships
     category = models.ForeignKey(
-        "inventory.Category", on_delete=models.DO_NOTHING
+        "inventory.ItemCategory", on_delete=models.DO_NOTHING
     )
     supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
 
@@ -157,7 +184,7 @@ class Stock(models.Model):
 
 class Supplier(models.Model):
     # Choices
-    SUPPLIER_CATEGORY = [
+    '''  SUPPLIER_CATEGORY = [
         ("sea_food", "Sea Food"),
         ("vegetables", "Vegetables"),
         ("meat_and_poultry", "Meat and Poultry"),
@@ -170,13 +197,15 @@ class Supplier(models.Model):
         ("diary_products", "Diary Products"),
         ("spread_and_sweeteners", "Spread and Sweeteners"),
         ("drinks_and_beverages", "Drinks and Beverages")
-    ]
+    ] 
+    '''
+    
     # Relationships
-    # city = models.ManyToManyField("world.City")
     city = models.ManyToManyField(
-        City
+        City, related_name = "suppliers"
     )  # , on_delete=models.SET_NULL, null=True, blank=True
     owner = models.ForeignKey('core.User', on_delete=models.CASCADE)
+    category = models.ManyToManyField('inventory.Category', related_name='suppliers')
 
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -196,15 +225,13 @@ class Supplier(models.Model):
             "unique": _("A restaurant with that phone number already exists."),
         },
     )
-    #business_category = model
     cac_reg_number = models.CharField(max_length = 20, null=True, blank=True)
     cac_certificate = models.FileField(upload_to="images/supplier/cac_certificates")
     business_license = models.FileField(upload_to="images/supplier/business_license", null=True, blank=True)
-    category = models.CharField(choices=SUPPLIER_CATEGORY, max_length = 21)
     
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
-    cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
+    profile_img = models.ImageField(upload_to="images/restaurant/profile_images", blank=True, null=True)
+    cover_img = models.ImageField(upload_to="images/restaurant/cover_images", blank=True, null=True)
 
     address = models.CharField(max_length=130)
 
@@ -231,6 +258,7 @@ class Supplier(models.Model):
 class SupplyManager(User):  # type: ignore
     # Relationships
     supply_business = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
+    account_details = models.ForeignKey(AccountDetail, related_name="supplymanagers", on_delete=models.DO_NOTHING, null=True, blank=True)
 
     # Fields
     # last_updated = models.DateTimeField(auto_now=True, editable=False)

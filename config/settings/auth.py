@@ -105,6 +105,10 @@ REST_FRAMEWORK = {
     ),
 }
 
+SPECTACULAR_SETTING = {
+    "TITLE": "Meerge Africa SwaggerUI"
+}
+
 SIMPLE_JWT = {
     # ... other settings ...
     'AUTH_TOKEN_CLASSES': ('core.auth_api.token_management.CustomRefreshToken',),

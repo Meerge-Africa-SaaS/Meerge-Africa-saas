@@ -11,6 +11,16 @@ class CategorySerializer(serializers.ModelSerializer):
             "name",
             "last_updated",
         ]
+        
+    
+class ItemCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ItemCategory
+        fields = [
+            "created",
+            "name",
+            "last_updated",
+        ]
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -19,14 +29,14 @@ class ItemSerializer(serializers.ModelSerializer):
     unit_of_measure = serializers.CharField(source='item.unit_of_measure')
 
     class Meta:
-        model = models.Stock
+        model = models.Item
         fields = [
             'item_name',          
-            'product_image',      
+            #'product_image',      
             'category',           
-            'availability_status',
+            #'availability_status',
             'price',            
-            'quantity',          
+            #'quantity',          
             'unit_of_measure',   
         ]
 class ViewStockSerializer(serializers.ModelSerializer):
@@ -111,7 +121,7 @@ class SupplyManagerSerializer(serializers.ModelSerializer):
         fields = [
             "last_updated",
             "created",
-            "supplier",
+            #"supplier",
             "id",
             "first_name",
             "last_name",

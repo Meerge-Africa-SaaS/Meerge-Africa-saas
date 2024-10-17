@@ -1,6 +1,8 @@
-from ninja import Schema
-from typing import Optional
-from pydantic import constr, Field
+from ninja import Schema, Field, File, ModelSchema, Form, UploadedFile
+from typing import Optional, List, Any
+from pydantic import BaseModel, constr, validator
+from inventory.models import Supplier
+#from django.core.files.uploadedfile import UploadedFile
 
 
 email_regex = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
@@ -93,6 +95,19 @@ class StaffSignupResponseSchema(Schema):
     user_id: int  
     
 
+class WorkShiftSchema(Schema):
+    morning: List[str]
+    afternoon: List[str]
+    evening: List[str]
+
+    @validator('morning', 'afternoon', 'evening')
+    def validate_shift(cls, v):
+        valid_days = set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+        if not set(v).issubset(valid_days):
+            raise ValueError('Invalid day in work shift')
+        return v
+
+
 class DeliveryAgentSignupRequestSchema(Schema):
     first_name: str
     last_name: str
@@ -101,6 +116,72 @@ class DeliveryAgentSignupRequestSchema(Schema):
     address: str
     password: str
     actor_type: str
+    
+
+class DeliveryAgentOnboardStep1Schema(Schema):
+    email: str
+    vehicle_type: str
+    vehicle_brand: str
+    plate_number: Optional[str] = None
+    drivers_license_ID: Optional[str] = None
+    voters_card_ID: Optional[str] = None
+    
+    @validator('vehicle_type')
+    def validate_vehicle_type(cls, vehicle):
+        if vehicle not in ["bicycle", "motorcycle", "truck"]:
+            raise ValueError("Vehicle type not accepted")
+        return vehicle
+    
+    @validator("plate_number")
+    def validate_plate_number(cls, _plate_number, values):
+        if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _plate_number:
+            raise ValueError("Plate Number is required for motorcycles and trucks.")
+    
+    @validator("drivers_license_ID")
+    def validate_drivers_license_ID(cls, _drivers_license_ID, values):
+        if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _drivers_license_ID:
+            raise ValueError("Drivers License ID is required for motorcycles and trucks.")
+    
+    @validator("voters_card_ID")
+    def validate_voters_card_ID(cls, _voters_card_ID, values):
+        if (values.get("vehicle_type") == "bicycle") and not _voters_card_ID:
+            raise ValueError("Voters card number is required for bicycles.")
+    
+    
+class DeliveryAgentOnboardStep2Schema(Schema):
+    email: str
+    NON_full_name: str
+    NON_phone_number: str
+    guarantor_first_name: str
+    guarantor_last_name: str
+    guarantor_occupation: str
+    guarantor_phone_number: str
+    Bank_name: str
+    Bank_code: str
+    Bank_account_number: str
+    Bank_account_name: str
+    work_shift: WorkShiftSchema
+    
+    @validator('work_shift')
+    def validate_work_shift(cls, v):
+        total_shifts = len(v.morning) + len(v.afternoon) + len(v.evening)
+        if total_shifts < 6:
+            raise ValueError('Must select at least 3 days in 2 out of 3 time periods')
+        return v
+    
+    
+class SupplierOnboardSchema(Schema):
+    email: str
+    business_name: str
+    business_email: str
+    business_phone_number: str
+    business_address: str
+    cac_registration_number: str
+    category: str
+     
+    
+class AAB(Schema):
+    cac_document: UploadedFile
 
 ###########    LOGIN SCHEMA  #############
     
@@ -118,6 +199,10 @@ class EmailLoginRequestSchema(Schema):
     email: str
     password: str
     remember_me: Optional[bool|None]
+ 
+class PhoneNumberVerificationRequestSchema(Schema):
+     phone_number: str = Field(pattern = phone_number_regex)
+     
  
 class PhoneNumberLoginRequestSchema(Schema):
     phone_number: str
