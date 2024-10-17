@@ -20,6 +20,14 @@ body {
     @apply text-xs text-gray-500
 }
 
+.help ul {
+    @apply list-disc list-inside
+}
+
+.help ol {
+    @apply list-decimal list-inside
+}
+
 label.required:after {
     content: "*";
     @apply text-secondary text-xs ml-0.5;

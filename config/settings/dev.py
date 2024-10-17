@@ -12,17 +12,6 @@ SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ["*"]
 
-#EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_USE_TLS = True
-EMAIL_HOST = "mail.kittchens.com"
-EMAIL_PORT = 587#getenv("EMAIL_PORT")
-EMAIL_HOST_USER = "dev@kittchens.com"
-EMAIL_HOST_PASSWORD = "8p([~su+2FgR"
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -32,6 +21,7 @@ DATABASES = {
 
 from .geo import *
 from .auth import *
+from .mail import *
 from .api import *
 from .banking import *
 from .restaurants import *

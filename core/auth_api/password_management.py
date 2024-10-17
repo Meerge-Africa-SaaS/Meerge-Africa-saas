@@ -66,7 +66,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
             email_sender ="dev@kittchens.com"
             receiver = [data.email]
             try:
-                email_send = send_mail(subject, message, email_sender, receiver)
+                send_mail(subject, message, email_sender, receiver)
                 return 200, {
                     "message": "Password reset mail sent."
                 }
@@ -91,7 +91,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
         }
         
 
-@p_router.post("/reset-done", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
+@p_router.post("/reset-done", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password, management"])
 def password_reset_done(request, data: PasswordResetRequestDoneSchema):
     try:
         user_model = User.objects.get(email = data.email)
@@ -115,7 +115,6 @@ def password_reset_done(request, data: PasswordResetRequestDoneSchema):
         return 404, {
             "message": "User does not exist"
         }
-    
     except Exception as e:
         print(e)
         return 404, {

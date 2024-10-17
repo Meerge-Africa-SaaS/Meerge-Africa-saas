@@ -11,7 +11,7 @@ from rest_framework.schemas import get_schema_view
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from config import api
-from core.views import PasswordResetDoneView, PasswordResetView
+from core.views import PasswordResetDoneView, PasswordResetView, EmailVerificationSentView, ActorRedirect
 from restaurants import views as restaurant_views
 from search import views as search_views
 
@@ -35,6 +35,16 @@ urlpatterns = [
         "accounts/password/reset/done/",
         PasswordResetDoneView.as_view(),
         name="account_reset_password_done",
+    ),
+    path(
+        "accounts/confirm-email/",
+        EmailVerificationSentView.as_view(),
+        name="account_email_verification_sent",
+    ),
+    path(
+        "redirect-actor/",
+        ActorRedirect.as_view(),
+        name="actor_redirect"
     ),
     path("accounts/", include("allauth.urls")),
     path("", include(api)),

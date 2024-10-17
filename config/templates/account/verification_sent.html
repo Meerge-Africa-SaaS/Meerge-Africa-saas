@@ -1,4 +1,4 @@
-{% extends 'restaurants/onboarding/base.html' %}
+{% extends 'auth-base.html' %}
 {% load static wagtailadmin_tags %}
 
 {% block header %}
@@ -19,13 +19,13 @@
   <p class="text-2xl font-bold">Email Verification Sent</p>
 {% endblock %}
 
-{% block form_action %}
-  {% url 'account_login' %}
-{% endblock %}
+{% block form_action %}{% url 'account_email' %}{% endblock %}
+
+{% block form_method %}post{% endblock %}
 
 {% block form_btns %}
   <p class="text-xs text-gray-700 font-medium mt-6 text-center">Didn't receive the email? Just click below</p>
-  <button type="submit" class="block btn btn-primary max-w-xs mx-auto">Resend Email</button>
+  <button type="submit" name="action_send" class="block btn btn-primary max-w-xs mx-auto">Resend Email</button>
 {% endblock %}
 
 {% block social_signin %}
