@@ -71,11 +71,6 @@ class OnboardingForm1(forms.Form):
         choices=BUSINESS_CATEGORY_CHOICES, label="Supplier Category"
     )
 
-    # business account details
-    bank_name = forms.CharField(max_length=100, label="Bank Name")
-    account_number = forms.CharField(max_length=100, label="Account Number")
-    account_name = forms.CharField(max_length=100, label="Account Name")
-
     business_registration_status = forms.ChoiceField(
         choices=[
             ("registered", "Registered"),
@@ -120,7 +115,7 @@ class OnboardingForm2A(forms.Form):
     business_registration_number = forms.CharField(
         max_length=100, label="CAC Registration Number"
     )
-    business_document = forms.FileField(label="Business Document")
+    business_document = forms.FileField(label="CAC Document", required=True)
     premises_license = forms.FileField(
         label="Food business premises license", required=False
     )
@@ -177,7 +172,6 @@ class OnboardingWizardView(SessionWizardView):
                     "business_phone_number": str(self.request.user.phone_number).lstrip(
                         "+234"
                     ),
-                    "account_name": self.request.user.get_full_name(),
                 }
             )
         return initial
