@@ -1,6 +1,7 @@
 import uuid
 
 from cities_light.models import City
+from banking.models import AccountDetail
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -257,6 +258,7 @@ class Supplier(models.Model):
 class SupplyManager(User):  # type: ignore
     # Relationships
     supply_business = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
+    account_details = models.ForeignKey(AccountDetail, related_name="supplymanagers", on_delete=models.DO_NOTHING, null=True, blank=True)
 
     # Fields
     # last_updated = models.DateTimeField(auto_now=True, editable=False)
