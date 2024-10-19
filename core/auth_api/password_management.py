@@ -91,7 +91,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
         }
         
 
-@p_router.post("/reset-done", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password, management"])
+@p_router.post("/reset-done", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
 def password_reset_done(request, data: PasswordResetRequestDoneSchema):
     try:
         user_model = User.objects.get(email = data.email)
@@ -122,7 +122,7 @@ def password_reset_done(request, data: PasswordResetRequestDoneSchema):
         }
     
 
-@p_router.post("/set-password", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
+@p_router.put("/set-password", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
 def set_password(request, data: EmailLoginRequestSchema):
     try:
         user = User.objects.get(email = data.email)

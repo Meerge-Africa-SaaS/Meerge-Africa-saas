@@ -58,7 +58,7 @@ User = get_user_model()
 router = Router()
 
 
-@router.post("/deliveryagent-step1", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+@router.put("/deliveryagent-step1", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema, driver_license_DOC: Optional[UploadedFile], 
                                 voters_card_DOC: Optional[UploadedFile], NIN_doc: UploadedFile = File(...),):
     if ((data.vehicle_type == "motorcycle") or (data.vehicle_type == "truck")) and not drivers_license_DOC:
@@ -82,7 +82,7 @@ def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema, 
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
 
-@router.post("/deliveryagent-step2", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+@router.put("/deliveryagent-step2", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, face_capture: Optional[UploadedFile] = None):
     print(data.face_capture)
     try:
@@ -108,7 +108,7 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, 
         return 404, {"message": f"We ran into an error {e}"}
     
     
-@router.post("/supplier", tags=["Onboarding"], response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+@router.put("/supplier", tags=["Onboarding"], response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def onboard_supplier(request, data: Form[SupplierOnboardSchema], cac_document: UploadedFile = File(...), business_premise_license: Optional[UploadedFile] = None):
     try:
         supply_owner = User.objects.get(email = data.email)

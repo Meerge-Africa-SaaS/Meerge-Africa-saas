@@ -2,7 +2,6 @@ from datetime import datetime, timedelta, timezone
 from django.conf import settings
 from ninja.security import HttpBearer
 from rest_framework_simplejwt.tokens import RefreshToken
-from core.models import EmailVerification
 import jwt
 from random import randint
 
@@ -23,9 +22,9 @@ class CustomRefreshToken(RefreshToken):
         return token
     
 
-def generate_code():
+def generate_code(length):
     token = ""
-    for i in range(0,6):
+    for i in range(0,length+1):
         token += str(randint(0,9))
         
     return token

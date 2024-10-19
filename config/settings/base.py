@@ -81,7 +81,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    #"django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -93,14 +93,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
-
-AUTHENTICATION_BACKENDS = [
-    'core.CustomFiles.CustomBackend.EmailAuthBackend',
-    'core.CustomFiles.CustomBackend.PhoneAuthBackend',
-    "core.backends.EmailBackend",
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
 
 ##### Django stuff continues from here.
 

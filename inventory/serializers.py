@@ -108,7 +108,7 @@ class SupplierSerializer(serializers.ModelSerializer):
             "cac_reg_number",
             "cac_certificate",
             "business_license",
-            "category",
+            #"category",
             "profile_img",
             "cover_img",
             "address",
