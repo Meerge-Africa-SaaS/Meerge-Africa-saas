@@ -157,6 +157,7 @@ class DeliveryAgentOnboardStep2Schema(Schema):
     guarantor_occupation: str
     guarantor_phone_number: str
     Bank_name: str
+    Bank_code: str
     Bank_account_number: str
     Bank_account_name: str
     work_shift: WorkShiftSchema

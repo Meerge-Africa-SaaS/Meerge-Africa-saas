@@ -8,8 +8,10 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from rest_framework.schemas import get_schema_view
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
 from config import api
-from core.views import PasswordResetDoneView, PasswordResetView
+from core.views import PasswordResetDoneView, PasswordResetView, EmailVerificationSentView, ActorRedirect
 from restaurants import views as restaurant_views
 from search import views as search_views
 
@@ -20,23 +22,10 @@ urlpatterns = [
     path("search/", search_views.search, name="search"),
     path("", include("home.urls")),
     path("api/", include("core.urls")),
-    path(
-        "shema_api/",
-        get_schema_view(
-            title="API Schema",
-            description="The api endpoints in the second drf link sent earlier has been converted to swagger for better use.",
-            version="1.0.0",
-        ),
-        name="schema_api",
-    ),
-    path(
-        "swagger-ui",
-        TemplateView.as_view(
-            template_name="api_docs.html",
-            extra_context={"schema_url": "schema_api"},
-        ),
-        name="swagger-ui",
-    ),
+    
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/swagger/docs", SpectacularSwaggerView.as_view(url_name="schema")),
+    
     path(
         "accounts/password/reset/",
         PasswordResetView.as_view(),
@@ -46,6 +35,16 @@ urlpatterns = [
         "accounts/password/reset/done/",
         PasswordResetDoneView.as_view(),
         name="account_reset_password_done",
+    ),
+    path(
+        "accounts/confirm-email/",
+        EmailVerificationSentView.as_view(),
+        name="account_email_verification_sent",
+    ),
+    path(
+        "redirect-actor/",
+        ActorRedirect.as_view(),
+        name="actor_redirect"
     ),
     path("accounts/", include("allauth.urls")),
     path("", include(api)),

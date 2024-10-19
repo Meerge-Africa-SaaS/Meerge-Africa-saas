@@ -5,6 +5,7 @@ from rest_framework import routers
 from core.auth_api.api import router as auth_router
 from core.auth_api.password_management import p_router
 from core.auth_api.onboarding import router as onboarding_router
+from banking.ninja_api import router as banking_router
 from core.auth_api.token_management import AuthBearer
 
 from . import api, htmx, views
@@ -13,10 +14,11 @@ router = routers.DefaultRouter()
 router.register("User", api.UserViewSet)
 
 ### NINJA API ROUTES
-ninjaapi = NinjaAPI()#auth=AuthBearer())
+ninjaapi = NinjaAPI()  # auth=AuthBearer())
 ninjaapi.add_router("auth-api", auth_router)
 ninjaapi.add_router("password", p_router)
 ninjaapi.add_router("onboarding", onboarding_router)
+ninjaapi.add_router("banking", banking_router)
 
 
 urlpatterns = (

@@ -51,13 +51,13 @@ def password_reset(request, data: PasswordResetRequestSchema):
     try:
         user = User.objects.get(email = data.email)
         if user and user.is_active:
-            email_instance = EmailVerification.objects.filter(user).exists()
+            email_instance = EmailVerification.objects.filter(user = user).exists()
             token = generate_code()
             if not email_instance:
-                email_token = EmailVerification.objects.create(user = user, email_code=token)
+                email_token = EmailVerification.objects.create(user = user, email_code=token, created_at=django_timezone.now(), expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
             else:
                 EmailVerification.objects.get(user).delete()
-                email_token = EmailVerification.objects.create(user = user, email_code=token)
+                email_token = EmailVerification.objects.create(user = user, email_code=token, created_at=django_timezone.now(), expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
             
             subject =  "Password Reset"
             message = f"""
@@ -65,9 +65,8 @@ def password_reset(request, data: PasswordResetRequestSchema):
                     """
             email_sender ="dev@kittchens.com"
             receiver = [data.email]
-            
             try:
-                email_send = send_mail(subject, message, email_sender, receiver)
+                send_mail(subject, message, email_sender, receiver)
                 return 200, {
                     "message": "Password reset mail sent."
                 }
@@ -92,11 +91,12 @@ def password_reset(request, data: PasswordResetRequestSchema):
         }
         
 
-@p_router.post("/reset-done", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
+@p_router.post("/reset-done", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password, management"])
 def password_reset_done(request, data: PasswordResetRequestDoneSchema):
     try:
         user_model = User.objects.get(email = data.email)
         email_instance = EmailVerification.objects.get(user=user_model)
+        
         if email_instance.expires_at > django_timezone.now():
             if email_instance.email_code == data.token:
                 email_instance.delete()
@@ -115,14 +115,14 @@ def password_reset_done(request, data: PasswordResetRequestDoneSchema):
         return 404, {
             "message": "User does not exist"
         }
-    
     except Exception as e:
+        print(e)
         return 404, {
             "message": "We ran into error while processing your request."
         }
     
 
-@p_router.post("/set-password", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password, management"])
+@p_router.post("/set-password", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
 def set_password(request, data: EmailLoginRequestSchema):
     try:
         user = User.objects.get(email = data.email)
@@ -136,6 +136,7 @@ def set_password(request, data: EmailLoginRequestSchema):
         return 404, {
             "message": "User does not exist"
         }
+    
     
 
     

@@ -14,6 +14,7 @@ from formtools.wizard.views import SessionWizardView
 from config.form_fields import PhoneNumberField
 from restaurants.models import Restaurant
 from phonenumber_field.phonenumber import PhoneNumber
+from django_htmx.http import HttpResponseClientRedirect
 
 # from world.models import City
 
@@ -70,11 +71,6 @@ class OnboardingForm1(forms.Form):
         choices=BUSINESS_CATEGORY_CHOICES, label="Supplier Category"
     )
 
-    # business account details
-    bank_name = forms.CharField(max_length=100, label="Bank Name")
-    account_number = forms.CharField(max_length=100, label="Account Number")
-    account_name = forms.CharField(max_length=100, label="Account Name")
-
     business_registration_status = forms.ChoiceField(
         choices=[
             ("registered", "Registered"),
@@ -103,7 +99,7 @@ class OnboardingForm1(forms.Form):
         if Restaurant.objects.filter(email=email).exists():
             raise forms.ValidationError("Restaurant with this email already exists.")
         return email
-    
+
     def clean_name(self):
         name = self.cleaned_data["name"]
         # do case-insensitive check
@@ -119,7 +115,7 @@ class OnboardingForm2A(forms.Form):
     business_registration_number = forms.CharField(
         max_length=100, label="CAC Registration Number"
     )
-    business_document = forms.FileField(label="Business Document")
+    business_document = forms.FileField(label="CAC Document", required=True)
     premises_license = forms.FileField(
         label="Food business premises license", required=False
     )
@@ -154,7 +150,6 @@ class OnboardingWizardView(SessionWizardView):
         "step1": "restaurants/onboarding/wizard/step-1.html",
         "step2A": "restaurants/onboarding/wizard/step-2a.html",
         "step2B": "restaurants/onboarding/wizard/step-2b.html",
-        "done": "restaurants/onboarding/done.html",
     }
     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "temp"))
     condition_dict = {
@@ -177,26 +172,34 @@ class OnboardingWizardView(SessionWizardView):
                     "business_phone_number": str(self.request.user.phone_number).lstrip(
                         "+234"
                     ),
-                    "account_name": self.request.user.get_full_name(),
                 }
             )
         return initial
 
     def done(self, form_list, **kwargs):
         user = self.request.user
+        form1, form2 = form_list
+        name = form1.cleaned_data["name"]
+        phone_number = form1.cleaned_data["business_phone_number"]
+        email = form1.cleaned_data["business_email"]
+        address = form1.cleaned_data["business_address"]
         # create a restaurant
         restaurant = Restaurant.objects.create(
-            name=form_list[0].cleaned_data["name"],
-            phone_number=form_list[0].cleaned_data["business_phone_number"],
-            email=form_list[0].cleaned_data["business_email"],
+            name=name,
+            phone_number=phone_number,
+            email=email,
             city=None,
             country=None,
-            address=form_list[0].cleaned_data["business_address"],
+            address=address,
         )
         restaurant.owner.add(user)
         restaurant.save()
-        context = super(generic.TemplateView, self).get_context_data(**kwargs)
-        return self.render_to_response(context)
+        messages.success(
+            self.request, f"Your restaurant {restaurant.name} has been created"
+        )
+        return HttpResponseClientRedirect(
+            reverse("restaurants:dashboard", args=(restaurant.custom_link,))
+        )
 
 
 class OnboardingView(generic.TemplateView):

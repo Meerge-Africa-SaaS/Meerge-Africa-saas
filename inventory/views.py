@@ -52,6 +52,33 @@ class CategoryDeleteView(generic.DeleteView):
     success_url = reverse_lazy("inventory_Category_list")
 
 
+class ItemCategoryListView(generic.ListView):
+    model = models.ItemCategory
+    form_class = forms.ItemCategoryForm
+
+
+class ItemCategoryCreateView(generic.CreateView):
+    model = models.ItemCategory
+    form_class = forms.ItemCategoryForm
+
+
+class ItemCategoryDetailView(generic.DetailView):
+    model = models.ItemCategory
+    form_class = forms.ItemCategoryForm
+
+
+class ItemCategoryUpdateView(generic.UpdateView):
+    model = models.ItemCategory
+    form_class = forms.ItemCategoryForm
+    pk_url_kwarg = "pk"
+
+
+class ItemCategoryDeleteView(generic.DeleteView):
+    model = models.ItemCategory
+    success_url = reverse_lazy("inventory_ItemCategory_list")
+
+
+
 class ItemListView(generic.ListView):
     model = models.Item
     form_class = forms.ItemForm

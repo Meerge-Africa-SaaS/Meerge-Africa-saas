@@ -41,6 +41,10 @@ ACCOUNT_FORMS = {
     "login": "core.forms.UserSigninForm",
 }
 
+ACCOUNT_SIGNUP_FORM_CLASS = "core.forms.UserSignupForm"
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ######### ALL-AUTH PROVIDERS   ########
 # Google provider details
 client_id = ""
@@ -101,6 +105,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+
+SPECTACULAR_SETTING = {
+    "TITLE": "Meerge Africa SwaggerUI"
 }
 
 SIMPLE_JWT = {

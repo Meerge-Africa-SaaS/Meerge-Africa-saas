@@ -12,6 +12,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Category.objects.all()
     serializer_class = serializers.CategorySerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+class ItemCategoryViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Item Category class"""
+
+    queryset = models.ItemCategory.objects.all()
+    serializer_class = serializers.ItemCategorySerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class ItemViewSet(viewsets.ModelViewSet):

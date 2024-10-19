@@ -596,6 +596,7 @@ def email_login(request, data: EmailLoginRequestSchema):
         return 404, "Incomplete details"
 
     try:
+        User.objects.get(email = email)
         user = authenticate(request, username=email, password=password)
         if user is not None:
             token_expiry_period = 14 if remember_me is True else 1
@@ -648,6 +649,7 @@ def phone_number_login(request, data: PhoneNumberLoginRequestSchema):
         return 404, "Incomplete details"
 
     try:
+        User.objects.get(phone_number = phone_number)
         user = authenticate(request, username=phone_number, password=password)
         if user is not None:
             token_expiry_period = 14 if remember_me is True else 1
@@ -682,8 +684,6 @@ def phone_number_login(request, data: PhoneNumberLoginRequestSchema):
     except Exception as e:
         print("\n"*5,e,"\n"*5)
         return 404, {"message": str(e)}
-
-
 
 
 @router.get("/google/{actor_type}", tags=["Social Auth"], auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
