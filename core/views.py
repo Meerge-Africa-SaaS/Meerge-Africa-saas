@@ -4,6 +4,15 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
+
+
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import InvalidToken
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+
+
 from allauth.account.views import (
     PasswordResetView as _PasswordResetView,
     PasswordResetDoneView as _PasswordResetDoneView,
@@ -16,7 +25,7 @@ from django.utils.decorators import method_decorator
 
 from restaurants.models import Restaurant, Staff
 
-from . import forms, models
+from . import forms, models, serializers
 
 
 @method_decorator(login_required, name="dispatch")
@@ -99,6 +108,19 @@ class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
             del request.session["reset_email"]
         return super().get(request, *args, **kwargs)
 
+
+class CustomTokenRefreshView(TokenRefreshView):
+    serializer_class = serializers.CustomTokenRefreshSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except InvalidToken as e:
+            return Response({"detail": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 class UserListView(generic.ListView):
     model = models.User
