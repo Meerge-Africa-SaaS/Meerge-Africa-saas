@@ -1,18 +1,20 @@
-from .base import *
+# ruff: noqa: F405
+from .base import *  # noqa: F403
 
 # Django Xtensions
-INSTALLED_APPS += [
-    # extensions
-    "django_extensions",
-]
+INSTALLED_APPS.extend(
+    [
+        # extensions
+        "django_extensions",
+    ]
+)
 GRAPH_MODELS = {
-    'app_labels': [
+    "app_labels": [
         "core",
-        # "restaurant",
-        # "world",
-        # "customers",
+        "geo",
+        "restaurants",
         # "inventory",
         # "orders",
     ],
-    'group_models': True,
+    "group_models": True,
 }

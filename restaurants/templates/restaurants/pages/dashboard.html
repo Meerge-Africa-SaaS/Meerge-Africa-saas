@@ -1,0 +1,36 @@
+{% extends 'restaurants/layout.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block sidebar %}
+  {% include 'restaurants/components/sidebar.html' with active_tab='dashboard' %}
+{% endblock %}
+
+{% block navbar %}
+  {% include 'restaurants/components/navbar.html' with page_name='Dashboard' show_searchbar=True %}
+{% endblock %}
+
+{% block extra_js %}
+{{block.super}}
+<script src="{% static 'js/dashboard.js' %}" defer></script>
+{% endblock %}
+
+{% block main_class %}
+  w-full space-y-6 bg-slate-200 overflow-y-auto p-4 lg:p-10
+{% endblock %}
+
+{% block main %}
+  <div class="header">
+    <h1 class="text-xl">
+      <span class="">Welcome,</span>
+      <span class="font-semibold">{{restaurant.name}}</span>
+    </h1>
+  </div>
+  {% include 'restaurants/sections/stats.html' %}
+  {% include 'restaurants/sections/top-menu.html' %}
+  <div class="flex items-stretch justify-between gap-4 w-full max-w-full flex-wrap max-md:flex-col">
+    {% include 'restaurants/sections/new-orders.html' %}
+    {% include 'restaurants/sections/sales-history.html' %}
+  </div>
+{% endblock %}

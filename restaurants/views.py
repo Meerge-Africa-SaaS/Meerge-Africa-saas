@@ -1,7 +1,10 @@
-from django.views import generic
+import os
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from . import models
-from . import forms
+from django.views import generic
+
+from . import forms, models
 
 
 class IngredientListView(generic.ListView):
@@ -30,56 +33,143 @@ class IngredientDeleteView(generic.DeleteView):
     success_url = reverse_lazy("restaurant_Ingredient_list")
 
 
-class MenuListView(generic.ListView):
+class MenuCategoryListView(LoginRequiredMixin, generic.ListView):
+    model = models.MenuCategory
+    form_class = forms.MenuCategoryForm
+
+
+class MenuCategoryCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.MenuCategory
+    form_class = forms.MenuCategoryForm
+
+
+class MenuCategoryDetailView(LoginRequiredMixin, generic.DetailView):
+    model = models.MenuCategory
+    form_class = forms.MenuCategoryForm
+
+
+class MenuCategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.MenuCategory
+    form_class = forms.MenuCategoryForm
+    pk_url_kwarg = "pk"
+
+
+class MenuCategoryDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = models.MenuCategory
+    success_url = reverse_lazy("restaurant_MenuCategory_list")
+
+
+class MenuListView(LoginRequiredMixin, generic.ListView):
+    model = models.Menu
+    form_class = forms.ViewMenuForm
+
+
+class MenuCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.Menu
     form_class = forms.MenuForm
 
 
-class MenuCreateView(generic.CreateView):
+class MenuDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.Menu
-    form_class = forms.MenuForm
+    form_class = forms.ViewMenuForm
 
 
-class MenuDetailView(generic.DetailView):
-    model = models.Menu
-    form_class = forms.MenuForm
-
-
-class MenuUpdateView(generic.UpdateView):
+class MenuUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Menu
     form_class = forms.MenuForm
     pk_url_kwarg = "pk"
 
 
-class MenuDeleteView(generic.DeleteView):
+class MenuDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Menu
     success_url = reverse_lazy("restaurant_Menu_list")
 
 
-class MenuItemListView(generic.ListView):
+class AddOnListView(LoginRequiredMixin, generic.ListView):
+    model = models.AddOn
+    form_class = forms.ViewAddOnForm
+
+
+class AddOnCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.AddOn
+    form_class = forms.AddOnForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+
+class AddOnDetailView(LoginRequiredMixin, generic.DetailView):
+    model = models.AddOn
+    form_class = forms.ViewAddOnForm
+
+
+class AddOnUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.AddOn
+    form_class = forms.AddOnForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+
+class AddOnDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = models.AddOn
+    success_url = reverse_lazy("MenuItem")
+
+
+class MenuItemListView(LoginRequiredMixin, generic.ListView):
+    model = models.MenuItem
+    form_class = forms.OwnerViewMenuItemForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+
+class MenuItemCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.MenuItem
     form_class = forms.MenuItemForm
+    template_name = "menuitem_create.html"
+    # success_url =
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
-class MenuItemCreateView(generic.CreateView):
+class MenuItemDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.MenuItem
-    form_class = forms.MenuItemForm
+    form_class = forms.GeneralViewMenuItemForm
 
 
-class MenuItemDetailView(generic.DetailView):
-    model = models.MenuItem
-    form_class = forms.MenuItemForm
-
-
-class MenuItemUpdateView(generic.UpdateView):
+class MenuItemUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.MenuItem
     form_class = forms.MenuItemForm
     pk_url_kwarg = "pk"
+    template_name = "menuitem_update.html"
+    # success_url =
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
-class MenuItemDeleteView(generic.DeleteView):
+class MenuItemDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.MenuItem
     success_url = reverse_lazy("restaurant_MenuItem_list")
+    template_name = "menuitem_delete.html"
+    # success_url =
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class RestaurantListView(generic.ListView):
@@ -87,9 +177,14 @@ class RestaurantListView(generic.ListView):
     form_class = forms.RestaurantForm
 
 
-class RestaurantCreateView(generic.CreateView):
+class RestaurantCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.Restaurant
     form_class = forms.RestaurantForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class RestaurantDetailView(generic.DetailView):
@@ -97,17 +192,68 @@ class RestaurantDetailView(generic.DetailView):
     form_class = forms.RestaurantForm
 
 
-class RestaurantUpdateView(generic.UpdateView):
+class RestaurantUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Restaurant
     form_class = forms.RestaurantForm
     pk_url_kwarg = "pk"
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
-class RestaurantDeleteView(generic.DeleteView):
+ 
+class RestaurantDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Restaurant
     success_url = reverse_lazy("restaurant_Restaurant_list")
 
+    
+class RestaurantStoreCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
+class RestaurantStoreUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
+class RestaurantStoreListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStore
+    form_class = forms.RestauarantStoreForm
+    
+class RestaurantStockListView(LoginRequiredMixin, generic.ListView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
+    
+class RestaurantStockCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+class RestaurantStockUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = models.RestaurantStock
+    form_class = forms.RestauarantStockForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+
+""" 
 class ChefListView(generic.ListView):
     model = models.Chef
     form_class = forms.ChefForm
@@ -132,6 +278,7 @@ class ChefUpdateView(generic.UpdateView):
 class ChefDeleteView(generic.DeleteView):
     model = models.Chef
     success_url = reverse_lazy("restaurant_Chef_list")
+ """
 
 
 class StaffListView(generic.ListView):

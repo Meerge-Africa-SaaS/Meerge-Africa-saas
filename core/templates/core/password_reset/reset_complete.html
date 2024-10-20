@@ -1,0 +1,38 @@
+{% extends 'core/password_reset/base.html' %}
+{% load static wagtailadmin_tags %}
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block form_fields %}
+  <div class="flex w-full items-center justify-center mb-4">
+    <svg width="100" height="100" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M60 0C75.913 0 91.1742 6.32141 102.426 17.5736C113.679 28.8258 120 44.087 120 60C120 75.913 113.679 91.1742 102.426 102.426C91.1742 113.679 75.913 120 60 120C44.087 120 28.8258 113.679 17.5736 102.426C6.32141 91.1742 0 75.913 0 60C0 44.087 6.32141 28.8258 17.5736 17.5736C28.8258 6.32141 44.087 0 60 0ZM52.5257 71.8371L39.1971 58.5C38.7193 58.0222 38.1521 57.6431 37.5278 57.3845C36.9034 57.1259 36.2343 56.9929 35.5586 56.9929C34.8828 56.9929 34.2137 57.1259 33.5894 57.3845C32.9651 57.6431 32.3978 58.0222 31.92 58.5C30.955 59.465 30.4129 60.7738 30.4129 62.1386C30.4129 63.5033 30.955 64.8121 31.92 65.7771L48.8914 82.7486C49.3679 83.2288 49.9347 83.6099 50.5592 83.87C51.1837 84.1301 51.8535 84.2641 52.53 84.2641C53.2065 84.2641 53.8763 84.1301 54.5008 83.87C55.1253 83.6099 55.6921 83.2288 56.1686 82.7486L91.3114 47.5971C91.7956 47.1213 92.1808 46.5543 92.4448 45.9288C92.7088 45.3034 92.8463 44.6318 92.8495 43.953C92.8527 43.2741 92.7214 42.6013 92.4632 41.9734C92.2051 41.3455 91.8251 40.775 91.3454 40.2946C90.8656 39.8143 90.2955 39.4337 89.6679 39.1748C89.0404 38.9159 88.3677 38.7839 87.6888 38.7862C87.01 38.7886 86.3383 38.9253 85.7125 39.1886C85.0867 39.4518 84.5193 39.8364 84.0429 40.32L52.5257 71.8371Z" fill="#0D9F00" />
+    </svg>
+  </div>
+{% endblock %}
+
+{% block form_title %}
+  <p class="text-2xl font-bold">Password Reset Successful</p>
+{% endblock %}
+
+{% block form_subtitle %}
+
+{% endblock %}
+
+{% block form_action %}
+
+{% endblock %}
+{% block form_buttons %}
+  <div class="w-full text-center mb-2">
+    <p class="text-lg text-gray-700">Now you can sign in to your account.</p>
+  </div>
+  <a href="{% url 'account_login' %}" class="btn btn-primary w-full mt-4 mx-0 flex items-center justify-center gap-2">
+    <svg class="animate-spin htmx-indicator" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle">
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+    <span>Sign in</span>
+  </a>
+  {% block form_footer %}
+  {% endblock %}
+{% endblock %}
