@@ -33,17 +33,20 @@ def password_change(request, data: PasswordChangeRequestSchema):
     old_password = data.old_password
     new_password = data.new_password
     
-    user = User.objects.get(email = email)
-    if user and user.is_authenticated:
-        if user.check_password(old_password):
-            user.set_password(new_password)
-            user.save()
-            return 200, SuccessMessageSchema(message = "Password changed")
-        
+    try:
+        user = User.objects.get(email = email)
+        if user and user.is_authenticated:
+            if user.check_password(old_password):
+                user.set_password(new_password)
+                user.save()
+                return 200, SuccessMessageSchema(message = "Password changed")
+            
+            else:
+                return 404, NotFoundSchema(message = "Incorrect password")
         else:
-            return 404, NotFoundSchema(message = "Incorrect password")
-    else:
-        return 404, NotFoundSchema(message = "User needs to login before being allowed to change password.")
+            return 404, NotFoundSchema(message = "User needs to login before being allowed to change password.")
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist in our records"}
     
     
 @p_router.post("/reset", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
