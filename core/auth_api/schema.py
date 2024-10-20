@@ -2,7 +2,6 @@ from ninja import Schema, Field, File, ModelSchema, Form, UploadedFile
 from typing import Optional, List, Any
 from pydantic import BaseModel, constr, validator
 from inventory.models import Supplier
-#from django.core.files.uploadedfile import UploadedFile
 
 
 email_regex = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
@@ -12,7 +11,7 @@ phone_number_regex = r'^\+?[1-9]\d{1,14}$'
 class UserSchema(Schema):
     first_name: str
     last_name: str
-    email: str
+    email: str = Field(pattern = email_regex)
     phone_number: str = Field(pattern = phone_number_regex)
     
 
@@ -24,17 +23,17 @@ class SubmitPhoneNumberVerificationSchema(Schema):
     token: str
 
 class EmailVerificationSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     token: str
 
 class ResendEmailCodeSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
 
 ##  SIGNUP SCHEMA #############
 class SignupRequestSchema(Schema):
     first_name: str
     last_name: str
-    email: str
+    email: str = Field(pattern = email_regex)
     phone_number: str = Field(pattern = phone_number_regex)
     password: str
     username: Optional[str] = None
@@ -44,7 +43,7 @@ class SignupRequestSchema(Schema):
 class StaffSignupRequestSchema(Schema):
     first_name: str
     last_name: str
-    email: str
+    email: str = Field(pattern = email_regex)
     phone_number: str = Field(pattern = phone_number_regex)
     password: str
     username: Optional[str] = None
@@ -57,7 +56,7 @@ class StaffSignupRequestSchema(Schema):
 class CustomerSignupRequestSchema(Schema):
     first_name: str
     last_name: str
-    email: str
+    email: str = Field(pattern = email_regex)
     phone_number: str = Field(pattern = phone_number_regex)
     password: str
     actor_type: str
@@ -66,13 +65,13 @@ class CustomerSignupResponseSchema(Schema):
     user_id: int
 
 class AddEmployeeSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     role: str
     restaurant_name: str
     actor_type: str
 
 class SocialAccountSignupSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     password: str
     first_name: str
     last_name: str
@@ -81,7 +80,7 @@ class SignupResponseSchema(Schema):
     user_id: int
 
 class AcceptInvitation(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     works_at: str
     first_name: str
     last_name: str
@@ -112,14 +111,14 @@ class DeliveryAgentSignupRequestSchema(Schema):
     first_name: str
     last_name: str
     phone_number: str
-    email: str
+    email: str = Field(pattern = email_regex)
     address: str
     password: str
     actor_type: str
     
 
 class DeliveryAgentOnboardStep1Schema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     vehicle_type: str
     vehicle_brand: str
     plate_number: Optional[str] = None
@@ -149,7 +148,7 @@ class DeliveryAgentOnboardStep1Schema(Schema):
     
     
 class DeliveryAgentOnboardStep2Schema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     NON_full_name: str
     NON_phone_number: str
     guarantor_first_name: str
@@ -171,9 +170,9 @@ class DeliveryAgentOnboardStep2Schema(Schema):
     
     
 class SupplierOnboardSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     business_name: str
-    business_email: str
+    business_email: str = Field(pattern = email_regex)
     business_phone_number: str
     business_address: str
     cac_registration_number: str
@@ -196,7 +195,7 @@ class JWTLoginResponseSchema(Schema):
     actor_type: str
 
 class EmailLoginRequestSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     password: str
     remember_me: Optional[bool|None]
  
@@ -223,18 +222,18 @@ class NotFoundSchema(Schema):
     message: str
     
 class PasswordChangeRequestSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     old_password: str
     new_password: str
     
 class PasswordChangeRequestDoneSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     token: str
     
 class PasswordResetRequestSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     
 class PasswordResetRequestDoneSchema(Schema):
-    email: str
+    email: str = Field(pattern = email_regex)
     token: str 
   
