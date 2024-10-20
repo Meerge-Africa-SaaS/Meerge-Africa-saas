@@ -36,7 +36,6 @@ class SignupRequestSchema(Schema):
     email: str = Field(pattern = email_regex)
     phone_number: str = Field(pattern = phone_number_regex)
     password: str
-    username: Optional[str] = None
     actor_type: str
     is_mobile: bool
     
@@ -46,7 +45,6 @@ class StaffSignupRequestSchema(Schema):
     email: str = Field(pattern = email_regex)
     phone_number: str = Field(pattern = phone_number_regex)
     password: str
-    username: Optional[str] = None
     actor_type: str
     is_mobile: bool
     role: str
@@ -84,7 +82,6 @@ class AcceptInvitation(Schema):
     works_at: str
     first_name: str
     last_name: str
-    username: str
     phone_number: str
     password: str
     address: str
