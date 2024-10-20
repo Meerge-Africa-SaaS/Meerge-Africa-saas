@@ -11,11 +11,20 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 USERNAME_REGEX = "^[a-zA-Z0-9.@_]*$"
 
-
+''' 
 def get_default_email_code():
-    """Generates a 6-character alphanumeric code."""
+    #Generates a 6-character alphanumeric code.
     return secrets.token_hex(3)
+ '''
 
+
+def generate_code(length):
+    token = ""
+    for i in range(0,length+1):
+        token += str(randint(0,9))
+        
+    return token
+            
 
 class UserManager(BaseUserManager):
     def create_user(self, email, username, phone_number=None, password=None):
@@ -137,10 +146,8 @@ class User(AbstractUser, AbstractBaseUser, PermissionsMixin):
 
 
 class EmailVerification(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="email_verification_codes"
-    )
-    email_code = models.CharField(max_length=6, default=get_default_email_code)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="email_verification_codes")
+    email_code = models.CharField(max_length=6, default=generate_code(6))
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(blank=True, null=True)
 
@@ -153,7 +160,7 @@ class EmailVerification(models.Model):
 class SmsVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "sms_verification_codes", blank=True, null=True)
     phone_number = PhoneNumberField()
-    sms_code = models.CharField(max_length=6, default=secrets.token_hex(3))
+    sms_code = models.CharField(max_length=6, default=generate_code(6))
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(blank=True, null=True)
     
