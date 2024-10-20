@@ -119,8 +119,11 @@ class DeliveryAgentOnboardStep1Schema(Schema):
     vehicle_type: str
     vehicle_brand: str
     plate_number: Optional[str] = None
+    driver_license_DOC: Optional[str] = None
     drivers_license_ID: Optional[str] = None
+    voters_card_DOC: Optional[str] = None 
     voters_card_ID: Optional[str] = None
+    NIN_doc: str
     
     @validator('vehicle_type')
     def validate_vehicle_type(cls, vehicle):
@@ -132,16 +135,31 @@ class DeliveryAgentOnboardStep1Schema(Schema):
     def validate_plate_number(cls, _plate_number, values):
         if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _plate_number:
             raise ValueError("Plate Number is required for motorcycles and trucks.")
+        return _plate_number
+    
+    @validator("driver_license_DOC")
+    def validate_driver_license_DOC(cls, license_DOC, values):
+        if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not license_DOC:
+            raise ValueError("Drivers license document is required for motorcycles and trucks.")
+        return license_DOC
     
     @validator("drivers_license_ID")
     def validate_drivers_license_ID(cls, _drivers_license_ID, values):
         if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _drivers_license_ID:
             raise ValueError("Drivers License ID is required for motorcycles and trucks.")
+        return _drivers_license_ID
+        
+    @validator("voters_card_DOC")
+    def validate_voters_card_DOC(cls, voters_DOC, values):
+        if (values.get("vehicle_type") == "bicycle") and not voters_DOC:
+            raise ValueError("Voters card document/image is required for motorcycles.")
+        return voters_DOC
     
     @validator("voters_card_ID")
     def validate_voters_card_ID(cls, _voters_card_ID, values):
         if (values.get("vehicle_type") == "bicycle") and not _voters_card_ID:
             raise ValueError("Voters card number is required for bicycles.")
+        return _voters_card_ID
     
     
 class DeliveryAgentOnboardStep2Schema(Schema):
@@ -157,8 +175,9 @@ class DeliveryAgentOnboardStep2Schema(Schema):
     Bank_account_number: str
     Bank_account_name: str
     work_shift: WorkShiftSchema
+    face_capture: str
     
-    @validator('work_shift')
+    @validator("work_shift")
     def validate_work_shift(cls, v):
         total_shifts = len(v.morning) + len(v.afternoon) + len(v.evening)
         if total_shifts < 6:
@@ -174,6 +193,8 @@ class SupplierOnboardSchema(Schema):
     business_address: str
     cac_registration_number: str
     category: str
+    cac_document: str
+    business_premise_license: Optional[str] = None
      
     
 class AAB(Schema):

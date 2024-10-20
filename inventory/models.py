@@ -116,9 +116,8 @@ class Stock(models.Model):
     )
     SKU_number = models.CharField(max_length=60, blank=True, null=True)
     product_name = models.CharField(max_length=60, blank=True, null=True)
-    product_image = models.ImageField(
-        upload_to="images/restaurant/cover_images", default="path/to/default/image.jpg"
-    )
+    product_image = models.URLField(blank=True, null=True)
+    #product_image = models.ImageField(upload_to="images/restaurant/cover_images", default="path/to/default/image.jpg")
     product_category = models.CharField(max_length=60, blank=True, null=True)
     manufacture_name = models.CharField(max_length=60, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -226,12 +225,16 @@ class Supplier(models.Model):
         },
     )
     cac_reg_number = models.CharField(max_length = 20, null=True, blank=True)
-    cac_certificate = models.FileField(upload_to="images/supplier/cac_certificates")
-    business_license = models.FileField(upload_to="images/supplier/business_license", null=True, blank=True)
+    cac_certificate = models.URLField(blank=True, null=True)
+    business_license = models.URLField(blank=True, null=True)
+    #cac_certificate = models.FileField(upload_to="images/supplier/cac_certificates")
+    #business_license = models.FileField(upload_to="images/supplier/business_license", null=True, blank=True)
     
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    profile_img = models.ImageField(upload_to="images/restaurant/profile_images", blank=True, null=True)
-    cover_img = models.ImageField(upload_to="images/restaurant/cover_images", blank=True, null=True)
+    profile_img = models.URLField(blank=True, null=True)
+    cover_img = models.URLField(blank=True, null=True)
+    #profile_img = models.ImageField(upload_to="images/restaurant/profile_images", blank=True, null=True)
+    #cover_img = models.ImageField(upload_to="images/restaurant/cover_images", blank=True, null=True)
 
     address = models.CharField(max_length=130)
 

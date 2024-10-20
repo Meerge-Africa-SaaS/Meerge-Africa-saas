@@ -72,18 +72,22 @@ class DeliveryAgent(User):
     # Personal extended
     address = models.ForeignKey("cities_light.Country", on_delete=models.DO_NOTHING)
     terms_and_condition = models.BooleanField()
-    face_capture = models.ImageField(upload_to="images/profile_pic", null=True, blank=True)
+    face_capture = models.URLField(blank=True, null=True)
+    #face_capture = models.ImageField(upload_to="images/profile_pic", null=True, blank=True)
     work_shift = models.JSONField(null=True, blank=True)
     
     # Driving details
     vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPE_CHOICE, null=True, blank=True)
     vehicle_brand = models.CharField(max_length=256, null=True, blank=True)
     plate_number = models.CharField(max_length=10, blank=True, null=True)
-    drivers_license = models.FileField(upload_to="images/drivers_license", null=True, blank=True)
+    drivers_license = models.URLField(blank=True, null=True)
+    #drivers_license = models.FileField(upload_to="images/drivers_license", null=True, blank=True)
     drivers_license_id = models.CharField(max_length=20, null=True, blank=True)
-    voters_card = models.FileField(upload_to="images/voters_card", null=True, blank=True)
+    voters_card = models.URLField(blank=True, null=True)
+    #voters_card = models.FileField(upload_to="images/voters_card", null=True, blank=True)
     voters_number = models.CharField(max_length=12, null=True, blank=True)
-    nin_doc = models.FileField(upload_to="images/NIN_doc", null=True, blank=True)
+    nin_doc = models.URLField(blank=True, null=True)
+    #nin_doc = models.FileField(upload_to="images/NIN_doc", null=True, blank=True)
     nin_number = models.CharField(max_length=11, null=True, blank=True)
     
     # Next of kin details
