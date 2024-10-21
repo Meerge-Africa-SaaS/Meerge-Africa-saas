@@ -211,7 +211,7 @@ class LogoutResponseSchema(Schema):
     refresh_token: str
     
 class DeactivateAccountRequestSchema(Schema):
-    email: str
+    password: str
     refresh_token: str
     
 class JWTLoginResponseSchema(Schema):

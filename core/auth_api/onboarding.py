@@ -136,16 +136,16 @@ def onboard_supplier(request, data: SupplierOnboardSchema, ):
 def deactivate_personal_account(request, data: DeactivateAccountRequestSchema):
     try:
         token = CustomRefreshToken(data.refresh_token)
-        if request.auth["email"] == token["email"]:
-            user = User.objects.get(id = token["user_id"])
-            if user.is_authenticated:
+        user = User.objects.get(id = token["user_id"])
+        if user.is_authenticated:
+            if user.check_password(data.password):
                 token.blacklist()
                 django_logout(request)
                 user.is_active = False
                 user.save()
                 return 200, {"message": "User's account has been deactivated."}
-            else:
-                return 404, {"message": "User need to be logged in before performing this action"}
-        return 403, {"message": "Error in user's details"}
+            return 404, {"message": "Invalid Password"}
+        return 404, {"message": "User need to be logged in before performing this action"}
+        
     except Exception as e:
         return 404, {"message": "Invalid Token"}
