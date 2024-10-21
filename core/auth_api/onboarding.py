@@ -110,8 +110,6 @@ def onboard_supplier(request, data: SupplierOnboardSchema, ):
     except Exception as e:
         return 500, {"message": "Error while querying user"}
     
-    
-    
     try:
         if User.objects.filter(email = data.business_email).exists():
             return 404, {"message"}
