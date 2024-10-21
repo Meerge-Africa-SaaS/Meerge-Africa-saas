@@ -1,5 +1,5 @@
-import secrets
 import uuid
+from random import randint
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
@@ -20,7 +20,7 @@ def get_default_email_code():
 
 def generate_code(length):
     token = ""
-    for i in range(0,length+1):
+    for i in range(0,length):
         token += str(randint(0,9))
         
     return token

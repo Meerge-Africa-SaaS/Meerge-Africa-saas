@@ -240,6 +240,7 @@ class SupplierProfileView(APIView):
 
 class SupplierUpdateProfileViewApi(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = SupplierSerializer
 
     def put(self, request):
         try:
