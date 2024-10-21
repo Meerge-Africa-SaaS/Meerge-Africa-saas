@@ -33,8 +33,10 @@ from django.utils import timezone as django_timezone
 from django.utils.http import urlsafe_base64_decode
 from ninja import Router
 from ninja.security import HttpBearer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.auth_api.schema import CustomerSignupRequestSchema
+from core.auth_api.token_management import AuthBearer
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
 from core.models import EmailVerification
 from customers.models import Customer
@@ -51,6 +53,7 @@ from .schema import (
     EmailVerificationSchema,
     JWTLoginResponseSchema,
     LoginResponseSchema,
+    LogoutResponseSchema,
     NotFoundSchema,
     PasswordChangeRequestDoneSchema,
     PasswordChangeRequestSchema,
@@ -67,7 +70,7 @@ from .schema import (
     StaffSignupResponseSchema,
     SuccessMessageSchema,
 )
-from .token_management import create_token, CustomRefreshToken
+from .token_management import create_token, CustomRefreshToken, generate_code
 
 User = get_user_model()
 router = Router()
@@ -110,6 +113,12 @@ def create_email_token(sender, instance, created, **kwargs):
                 EmailVerification.objects.create(user = instance, expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
                 instance.is_active = False
                 instance.save()
+            else:
+                email_instance = EmailVerification.objects.get(user = instance)
+                email_instance.email_code = generate_code(6)
+                email_instance.expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10)
+                email_instance.save()
+                
             email_token = EmailVerification.objects.filter(user = instance).last()
             subject =  "Email Verification"
             message = f"""
@@ -212,7 +221,6 @@ def owner_signup(request, data: SignupRequestSchema):
                 defaults={"verified": False, "primary": True},
             )
                 email_send_func = create_email_token(sender = None, instance = owner, created = True)
-                print(email_send_func)
                 if email_send_func["status_code"] == 200:
                     return 200, {"message": "Email verification code has been sent"}
                 else:
@@ -467,7 +475,8 @@ def verify_email(request, data: EmailVerificationSchema):
     verify_model = EmailVerification.objects.get(user = user)#.last()
     if verify_model.expires_at > django_timezone.now():
         if verify_model.email_code == email_token:
-            allauthEmailAddress.objects.get_or_create(user = user, email = data.email, defaults={"verified": True, "primary": True})
+            allauthuser = allauthEmailAddress.objects.get_or_create(user = user, email = data.email, defaults={"verified": True, "primary": True})
+            #allauthuser.save()
             user.is_active = True
             user.save()
             login(request, user, backend="EmailAuthBackend")
@@ -518,43 +527,57 @@ def check_phonenumber(request, data: PhoneNumberVerificationRequestSchema):
 @router.post("/resend-emailcode", auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
 def resend_emailcode(request, data: ResendEmailCodeSchema):
     try:
-        allauthemail_address = allauthEmailAddress.objects.get(email=data.email)
-        allauthEmailConfirmation.objects.get(
-            email_address=allauthemail_address
-        ).delete()
+        if data.is_mobile == True:
+            try:
+                user = User.objects.get(email = data.email)
+            except User.DoesNotExist:
+                return 404, {"message": "User does not exist"}
+            email_send_func = create_email_token(sender = None, instance = user, created = True)
+            if email_send_func["status_code"] == 200:
+                return 200, {"message": "Email verification code has been sent"}
+            else:
+                return 404, {"message": "Email not sent"}
+            
+        else:
+            try:
+                allauthemail_address = allauthEmailAddress.objects.get(email=data.email)
+            except Exception as e:
+                return 404, {"message": "Error fetching user"}
+            allauthEmailConfirmation.objects.get(
+                email_address=allauthemail_address
+            ).delete()
 
-        confirmation = allauthEmailConfirmation.create(
-            email_address=allauthemail_address
-        )
-        confirmation.send(request=request, signup=True)
-        confirmation.sent = django_timezone.now()
-        confirmation.save()
-        return 200, {"message": "Email verification resent"}
+            confirmation = allauthEmailConfirmation.create(
+                email_address=allauthemail_address
+            )
+            confirmation.send(request=request, signup=True)
+            confirmation.sent = django_timezone.now()
+            confirmation.save()
+            return 200, {"message": "Email verification resent"}
 
     except allauthEmailAddress.DoesNotExist:
         return 404, {"message": "User does not exist in the database"}
 
 
 @login_required
-@router.post("/logout")
-def logout(request):
-    print(request.auth)
+@router.post("/logout", auth=AuthBearer(), response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def logout(request, data: LogoutResponseSchema):
+    print("Printing from api.py",request.auth)
     try:
-        if request.auth is not None:
-            user = User.objects.get(id=str(request.auth))
-            django_logout(request, user)
-            return JsonResponse({"message": "User has been logged out."})
-        else:
-            return JsonResponse({"message": "User has been logged out."})
-
-    except User.DoesNotExist:
-        return JsonResponse({"message": "User does not exist in our database"})
-
+        token = CustomRefreshToken(data.refresh_token)
+        if request.auth["email"] == token["email"]:
+            user = User.objects.get(id = token["user_id"])
+            if user.is_authenticated:
+                token.blacklist()
+                django_logout(request)
+                return 200, {"message": "User has been logged out."}
+            else:
+                return 404, {"message": "User need to be logged in before performing this action"}
+        return 403, {"message": "Error in user's details"}
     except Exception as e:
-        return JsonResponse(
-            {"message": f"An error occurred while processing your exist.\n{e}\n"}
-        )
-
+        return 404, {"message": "Invalid Token"}
+            
+   
 
 def getActorType(email):
     User = get_user_model()

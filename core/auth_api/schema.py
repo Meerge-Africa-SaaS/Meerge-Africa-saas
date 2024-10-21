@@ -28,6 +28,7 @@ class EmailVerificationSchema(Schema):
 
 class ResendEmailCodeSchema(Schema):
     email: str = Field(pattern = email_regex)
+    is_mobile: Optional[bool|None]
 
 ##  SIGNUP SCHEMA #############
 class SignupRequestSchema(Schema):
@@ -206,6 +207,13 @@ class AAB(Schema):
 class LoginResponseSchema(Schema):
     token: str
     
+class LogoutResponseSchema(Schema):
+    refresh_token: str
+    
+class DeactivateAccountRequestSchema(Schema):
+    email: str
+    refresh_token: str
+    
 class JWTLoginResponseSchema(Schema):
     refresh: str
     access: str
@@ -240,7 +248,6 @@ class NotFoundSchema(Schema):
     message: str
     
 class PasswordChangeRequestSchema(Schema):
-    email: str = Field(pattern = email_regex)
     old_password: str
     new_password: str
     
@@ -255,3 +262,7 @@ class PasswordResetRequestDoneSchema(Schema):
     email: str = Field(pattern = email_regex)
     token: str 
   
+  
+class RefreshTokenResponseSchema(Schema):
+    refresh: str
+    access: str

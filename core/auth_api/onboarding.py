@@ -17,6 +17,7 @@ from ninja.security import HttpBearer
 from typing import Optional
 
 from core.auth_api.schema import CustomerSignupRequestSchema
+from core.auth_api.token_management import AuthBearer
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
 from core.models import EmailVerification
 from customers.models import Customer
@@ -25,8 +26,7 @@ from banking.models import Bank, AccountDetail
 from inventory.models import Supplier
 
 from .schema import (
-    AcceptInvitation,
-    AddEmployeeSchema,
+    DeactivateAccountRequestSchema,
     DeliveryAgentSignupRequestSchema,
     DeliveryAgentOnboardStep1Schema,
     DeliveryAgentOnboardStep2Schema,
@@ -35,7 +35,6 @@ from .schema import (
     JWTLoginResponseSchema,
     LoginResponseSchema,
     NotFoundSchema,
-    PasswordChangeRequestDoneSchema,
     PasswordChangeRequestSchema,
     PasswordResetRequestDoneSchema,
     PasswordResetRequestSchema,
@@ -132,3 +131,21 @@ def onboard_supplier(request, data: SupplierOnboardSchema, ):
     except Exception as e:
         return 400, {"message": e}
         
+
+@router.put("deactivate-my-account", auth=AuthBearer(), tags=["Deactivate Account"], response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def deactivate_personal_account(request, data: DeactivateAccountRequestSchema):
+    try:
+        token = CustomRefreshToken(data.refresh_token)
+        if request.auth["email"] == token["email"]:
+            user = User.objects.get(id = token["user_id"])
+            if user.is_authenticated:
+                token.blacklist()
+                django_logout(request)
+                user.is_active = False
+                user.save()
+                return 200, {"message": "User's account has been deactivated."}
+            else:
+                return 404, {"message": "User need to be logged in before performing this action"}
+        return 403, {"message": "Error in user's details"}
+    except Exception as e:
+        return 404, {"message": "Invalid Token"}
