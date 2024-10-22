@@ -2,7 +2,7 @@ on:
   push:    
     branches:
       - uat
-name: 🚀 Deploy
+name: 🚀 Deploy SandBox
 jobs:
   web-deploy:
     name: 🎉 Deploy
