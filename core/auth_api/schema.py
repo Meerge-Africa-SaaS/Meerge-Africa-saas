@@ -171,10 +171,10 @@ class DeliveryAgentOnboardStep2Schema(Schema):
     guarantor_last_name: str
     guarantor_occupation: str
     guarantor_phone_number: str = Field(pattern = phone_number_regex)
-    Bank_name: str
-    Bank_code: str
-    Bank_account_number: str
-    Bank_account_name: str
+    #Bank_name: str
+    #Bank_code: str
+    #Bank_account_number: str
+    #Bank_account_name: str
     work_shift: WorkShiftSchema
     #face_capture: str
     
@@ -187,15 +187,12 @@ class DeliveryAgentOnboardStep2Schema(Schema):
     
     
 class SupplierOnboardSchema(Schema):
-    #email: str = Field(pattern = email_regex)
     business_name: str
     business_email: str = Field(pattern = email_regex)
     business_phone_number: str = Field(pattern = phone_number_regex)
     business_address: str
     cac_registration_number: str
     category: str
-    #cac_document: str
-    #business_premise_license: Optional[str] = None
      
 
 ###########    LOGIN SCHEMA  #############
