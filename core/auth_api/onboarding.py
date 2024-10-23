@@ -49,7 +49,6 @@ from .schema import (
     StaffSignupResponseSchema,
     SuccessMessageSchema,
     SupplierOnboardSchema,
-    AAB
 )
 from .token_management import create_token, CustomRefreshToken
 
@@ -57,29 +56,35 @@ User = get_user_model()
 router = Router()
 
 
-@router.put("/deliveryagent-step1", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema):
+@router.put("/deliveryagent-step1", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema = Form(...), NIN_doc: UploadedFile = File(...), drivers_license_DOC: Optional[UploadedFile] = File(None), voters_card_DOC: Optional[UploadedFile] = File(None)):
     
     try:
-        DeliveryAgent.objects.get(email = data.email)
+        DeliveryAgent.objects.get(email = request.auth["email"])
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
+    
+    if ((data.vehicle_type == "motorcycle") or (data.vehicle_type == "truck")) and not driver_license_DOC:
+        return 404, {"message": "Drivers license document is required for motorcycles and trucks."}
+    
+    elif (data.vehicle_type == "bicycle") and not voters_DOC:
+        return 404, {"message": "Voters card document/image is required for motorcycles."}
     
     try:
         DeliveryAgent.objects.get(email = data.email).update(
             vehicle_type = data.vehicle_type, vehicle_brand = data.vehicle_brand, 
-            plate_number = data.plate_number, drivers_license = data.drivers_license_DOC, 
-            drivers_license_id = data.drivers_license_ID, voters_card = data.voters_card_DOC, 
-            voters_number = data.voters_card_ID, nin_doc = data.NIN_doc, nin_number = data.NIN_ID
+            plate_number = data.plate_number, drivers_license = drivers_license_DOC, 
+            drivers_license_id = data.drivers_license_ID, voters_card = voters_card_DOC, 
+            voters_number = data.voters_card_ID, nin_doc = NIN_doc, nin_number = data.NIN_ID
             )
-        return 200, {"Driving details done"}
+        return 200, {"message": "Driving details done"}
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
 
-@router.put("/deliveryagent-step2", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema):
+@router.put("/deliveryagent-step2", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, face_capture: File[UploadedFile]):
     try:
-        deliveryagent = DeliveryAgent.objects.get(email = data.email)
+        deliveryagent = DeliveryAgent.objects.get(email = request.auth["email"])
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
     except Exception as e:
@@ -94,17 +99,17 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema):
             N_O_N_full_name = data.NON_full_name, N_O_N_phone_number = data.NON_phone_number, 
             guarantor_first_name = data.guarantor_first_name, guarantor_last_name = data.guarantor_last_name, 
             guarantor_occupation = data.guarantor_occupation, guarantor_phone_number = data.guarantor.phone_number,
-            work_shift = data.work_shift.dict(), face_capture = data.face_capture
+            work_shift = data.work_shift.dict(), face_capture = face_capture
             )
-        return 200, {"Driving details done"}
+        return 200, {"message": "Driving details done"}
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
     
-    
-@router.put("/supplier", tags=["Onboarding"], response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_supplier(request, data: SupplierOnboardSchema, ):
+# Supplier onboarding endpoint/function
+@router.put("/supplier", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: File[UploadedFile], business_premise_license: Optional[UploadedFile] = None):
     try:
-        supply_owner = User.objects.get(email = data.email)
+        supply_owner = User.objects.get(email = request.auth["email"])
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
     except Exception as e:
@@ -122,7 +127,7 @@ def onboard_supplier(request, data: SupplierOnboardSchema, ):
     try:
         Supplier.objects.create(
             owner=supply_owner, name=data.business_name, email = data.business_email, phone_number = data.business_phone_number, 
-            cac_reg_number=data.cac_registration_number, cac_certificate=data.cac_document, business_license = data.business_premise_license, 
+            cac_reg_number=data.cac_registration_number, cac_certificate=cac_document, business_license = business_premise_license, 
             category=data.category)
         return 200, {"message": "Supplier has been saved."}
         

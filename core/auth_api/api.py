@@ -180,7 +180,7 @@ def socialaccount_user_signup(request, user, **kwargs):
 
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
 
-
+# Both restaurant owners and supplier owners signup endpoint/function.
 @router.post("/owner-signup", tags=["Default Signup"], auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def owner_signup(request, data: SignupRequestSchema):
     # Model signup
@@ -522,6 +522,18 @@ def check_phonenumber(request, data: PhoneNumberVerificationRequestSchema):
     except Exception as e:
         return 500, {"message": f"{e}"}
 
+@router.post("/verify-password", auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def verify_password(request, data: LoginResponseSchema):
+    try:
+        user_id = request.auth["user_id"]
+        user = User.objects.get(id = user_id)
+        user.check_password(data.token)
+        return 200, {"message": "Password verified."}
+        
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+        
+    
 #### RESEND-EMAIL VERIFICATION CODE ####
 
 @router.post("/resend-emailcode", auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})

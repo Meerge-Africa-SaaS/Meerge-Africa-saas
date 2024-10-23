@@ -83,7 +83,7 @@ class AcceptInvitation(Schema):
     works_at: str
     first_name: str
     last_name: str
-    phone_number: str
+    phone_number: str = Field(pattern = phone_number_regex)
     password: str
     address: str
 
@@ -108,7 +108,7 @@ class WorkShiftSchema(Schema):
 class DeliveryAgentSignupRequestSchema(Schema):
     first_name: str
     last_name: str
-    phone_number: str
+    phone_number: str = Field(pattern = phone_number_regex)
     email: str = Field(pattern = email_regex)
     address: str
     password: str
@@ -116,15 +116,15 @@ class DeliveryAgentSignupRequestSchema(Schema):
     
 
 class DeliveryAgentOnboardStep1Schema(Schema):
-    email: str = Field(pattern = email_regex)
+    #email: str = Field(pattern = email_regex)
     vehicle_type: str
     vehicle_brand: str
     plate_number: Optional[str] = None
-    driver_license_DOC: Optional[str] = None
+    #driver_license_DOC: Optional[str] = None
     drivers_license_ID: Optional[str] = None
-    voters_card_DOC: Optional[str] = None 
+    #voters_card_DOC: Optional[str] = None 
     voters_card_ID: Optional[str] = None
-    NIN_doc: str
+    #NIN_doc: str
     
     @validator('vehicle_type')
     def validate_vehicle_type(cls, vehicle):
@@ -137,25 +137,25 @@ class DeliveryAgentOnboardStep1Schema(Schema):
         if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _plate_number:
             raise ValueError("Plate Number is required for motorcycles and trucks.")
         return _plate_number
-    
+    ''' 
     @validator("driver_license_DOC")
     def validate_driver_license_DOC(cls, license_DOC, values):
         if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not license_DOC:
             raise ValueError("Drivers license document is required for motorcycles and trucks.")
         return license_DOC
-    
+     '''
     @validator("drivers_license_ID")
     def validate_drivers_license_ID(cls, _drivers_license_ID, values):
         if ((values.get("vehicle_type") == "motorcycle") or (values.get("vehicle_type") == "truck")) and not _drivers_license_ID:
             raise ValueError("Drivers License ID is required for motorcycles and trucks.")
         return _drivers_license_ID
-        
+    '''     
     @validator("voters_card_DOC")
     def validate_voters_card_DOC(cls, voters_DOC, values):
         if (values.get("vehicle_type") == "bicycle") and not voters_DOC:
             raise ValueError("Voters card document/image is required for motorcycles.")
         return voters_DOC
-    
+     '''
     @validator("voters_card_ID")
     def validate_voters_card_ID(cls, _voters_card_ID, values):
         if (values.get("vehicle_type") == "bicycle") and not _voters_card_ID:
@@ -164,19 +164,19 @@ class DeliveryAgentOnboardStep1Schema(Schema):
     
     
 class DeliveryAgentOnboardStep2Schema(Schema):
-    email: str = Field(pattern = email_regex)
+    #email: str = Field(pattern = email_regex)
     NON_full_name: str
-    NON_phone_number: str
+    NON_phone_number: str = Field(pattern = phone_number_regex)
     guarantor_first_name: str
     guarantor_last_name: str
     guarantor_occupation: str
-    guarantor_phone_number: str
+    guarantor_phone_number: str = Field(pattern = phone_number_regex)
     Bank_name: str
     Bank_code: str
     Bank_account_number: str
     Bank_account_name: str
     work_shift: WorkShiftSchema
-    face_capture: str
+    #face_capture: str
     
     @validator("work_shift")
     def validate_work_shift(cls, v):
@@ -187,19 +187,16 @@ class DeliveryAgentOnboardStep2Schema(Schema):
     
     
 class SupplierOnboardSchema(Schema):
-    email: str = Field(pattern = email_regex)
+    #email: str = Field(pattern = email_regex)
     business_name: str
     business_email: str = Field(pattern = email_regex)
-    business_phone_number: str
+    business_phone_number: str = Field(pattern = phone_number_regex)
     business_address: str
     cac_registration_number: str
     category: str
-    cac_document: str
-    business_premise_license: Optional[str] = None
+    #cac_document: str
+    #business_premise_license: Optional[str] = None
      
-    
-class AAB(Schema):
-    cac_document: UploadedFile
 
 ###########    LOGIN SCHEMA  #############
     
@@ -226,11 +223,11 @@ class EmailLoginRequestSchema(Schema):
     remember_me: Optional[bool|None]
  
 class PhoneNumberVerificationRequestSchema(Schema):
-     phone_number: str = Field(pattern = phone_number_regex)
+    phone_number: str = Field(pattern = phone_number_regex)
      
  
 class PhoneNumberLoginRequestSchema(Schema):
-    phone_number: str
+    phone_number: str = Field(pattern = phone_number_regex)
     password: str
     remember_me: Optional[bool|None]
     
