@@ -24,7 +24,7 @@ from core.models import EmailVerification
 from customers.models import Customer
 from orders.models import DeliveryAgent
 from banking.models import Bank, AccountDetail
-from inventory.models import Supplier
+from inventory.models import Supplier, Category
 
 from .schema import (
     DeactivateAccountRequestSchema,
@@ -123,10 +123,17 @@ def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: Uploade
         return 500, {"message": e}
     
     try:
-        Supplier.objects.create(
+        supplier = Supplier.objects.create(
             owner=supply_owner, name=data.business_name, email = data.business_email, phone_number = data.business_phone_number, 
             cac_reg_number=data.cac_registration_number, cac_certificate=cac_document, business_license = business_premise_license, 
-            category=data.category)
+            )
+        try:
+            category_instances = Category.objects.filter(name__in = data.category)
+            supplier.category.set(category_instances)
+            supplier.save()
+               
+        except Exception as e: 
+            return 404, {"message": "Category not captured correctly."}
         return 200, {"message": "Supplier has been saved."}
         
     except Exception as e:
