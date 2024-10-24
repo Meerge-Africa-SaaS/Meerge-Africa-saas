@@ -49,7 +49,6 @@ from .schema import (
     StaffSignupResponseSchema,
     SuccessMessageSchema,
     SupplierOnboardSchema,
-    AAB
 )
 from .token_management import create_token, CustomRefreshToken
 

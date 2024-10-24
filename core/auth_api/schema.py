@@ -193,7 +193,7 @@ class SupplierOnboardSchema(Schema):
     business_phone_number: str
     business_address: str
     cac_registration_number: str
-    category: str
+    category: List[str]
     cac_document: str
     business_premise_license: Optional[str] = None
      
@@ -266,3 +266,7 @@ class PasswordResetRequestDoneSchema(Schema):
 class RefreshTokenResponseSchema(Schema):
     refresh: str
     access: str
+    
+    
+class CategorySchema(Schema):
+    name: str
