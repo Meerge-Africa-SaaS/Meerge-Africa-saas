@@ -11,7 +11,8 @@ from django.utils import timezone as django_timezone
 from django.utils.http import urlsafe_base64_decode
 from django.core.files.storage import default_storage
 
-from ninja import Router, File, UploadedFile, Form, Field
+from ninja import Router, File, Form, Field
+from ninja.files import UploadedFile
 from ninja.security import HttpBearer
 
 from typing import Optional
@@ -56,54 +57,57 @@ User = get_user_model()
 router = Router()
 
 
-@router.put("/deliveryagent-step1", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema):
-    
+@router.post("/deliveryagent-step1", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema = Form(...), NIN_doc: UploadedFile = File(...), drivers_license_DOC: Optional[UploadedFile] = File(None), voters_card_DOC: Optional[UploadedFile] = File(None)):
+    print("\n"*20, "I am here", "\n"*20)
     try:
-        DeliveryAgent.objects.get(email = data.email)
-    except User.DoesNotExist:
+        deliveryagent = DeliveryAgent.objects.get(id = request.auth["user_id"])
+    except DeliveryAgent.DoesNotExist:
         return 404, {"message": "User does not exist"}
     
+    if ((data.vehicle_type == "motorcycle") or (data.vehicle_type == "truck")) and not driver_license_DOC:
+        return 404, {"message": "Drivers license document is required for motorcycles and trucks."}
+    
+    elif (data.vehicle_type == "bicycle") and not voters_DOC:
+        return 404, {"message": "Voters card document/image is required for motorcycles."}
+    
     try:
-        DeliveryAgent.objects.get(email = data.email).update(
+        deliveryagent.update(
             vehicle_type = data.vehicle_type, vehicle_brand = data.vehicle_brand, 
-            plate_number = data.plate_number, drivers_license = data.drivers_license_DOC, 
-            drivers_license_id = data.drivers_license_ID, voters_card = data.voters_card_DOC, 
-            voters_number = data.voters_card_ID, nin_doc = data.NIN_doc, nin_number = data.NIN_ID
+            plate_number = data.plate_number, drivers_license = drivers_license_DOC, 
+            drivers_license_id = data.drivers_license_ID, voters_card = voters_card_DOC, 
+            voters_number = data.voters_card_ID, nin_doc = NIN_doc, nin_number = data.NIN_ID
             )
-        return 200, {"Driving details done"}
+        return 200, {"message": "Driving details done"}
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
 
-@router.put("/deliveryagent-step2", tags=["Onboarding"], response={200: JWTLoginResponseSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema):
+@router.post("/deliveryagent-step2", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, face_capture: File[UploadedFile]):
     try:
-        deliveryagent = DeliveryAgent.objects.get(email = data.email)
-    except User.DoesNotExist:
+        deliveryagent = DeliveryAgent.objects.get(id = request.auth["user_id"])
+    except DeliveryAgent.DoesNotExist:
         return 404, {"message": "User does not exist"}
     except Exception as e:
         return 500, {"message": "Error while querying user"}
     try:
-        bank_model = Bank.objects.get_or_create(name = data.Bank_name, code = data.Bank_code)
-        account_details = AccountDetail.objects.create(
-            user = deliveryagent, bank = bank_model, account_number = data.Bank_account_number, 
-            account_holder_name = data.Bank_account_name
-            )
-        DeliveryAgent.objects.get(email = data.email).update(
+        
+        deliveryagent.update(
             N_O_N_full_name = data.NON_full_name, N_O_N_phone_number = data.NON_phone_number, 
             guarantor_first_name = data.guarantor_first_name, guarantor_last_name = data.guarantor_last_name, 
             guarantor_occupation = data.guarantor_occupation, guarantor_phone_number = data.guarantor.phone_number,
-            work_shift = data.work_shift.dict(), face_capture = data.face_capture
+            work_shift = data.work_shift.dict(), face_capture = face_capture
             )
-        return 200, {"Driving details done"}
+        return 200, {"message": "Driving details done"}
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
     
-    
-@router.put("/supplier", tags=["Onboarding"], response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_supplier(request, data: SupplierOnboardSchema, ):
+# Supplier onboarding endpoint/function
+@router.post("/supplier", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: UploadedFile = File(...), business_premise_license: Optional[UploadedFile] = File(None)):
+    print(request.auth["user_id"])
     try:
-        supply_owner = User.objects.get(email = data.email)
+        supply_owner = User.objects.get(id = request.auth["user_id"])
     except User.DoesNotExist:
         return 404, {"message": "User does not exist"}
     except Exception as e:
@@ -111,7 +115,7 @@ def onboard_supplier(request, data: SupplierOnboardSchema, ):
     
     try:
         if User.objects.filter(email = data.business_email).exists():
-            return 404, {"message"}
+            return 404, {"message": "Email has been used for personal account."}
         if Supplier.objects.filter(email = data.business_email).exists():
             return 404, {"mesage": "Email already exists"}
         
@@ -121,7 +125,7 @@ def onboard_supplier(request, data: SupplierOnboardSchema, ):
     try:
         Supplier.objects.create(
             owner=supply_owner, name=data.business_name, email = data.business_email, phone_number = data.business_phone_number, 
-            cac_reg_number=data.cac_registration_number, cac_certificate=data.cac_document, business_license = data.business_premise_license, 
+            cac_reg_number=data.cac_registration_number, cac_certificate=cac_document, business_license = business_premise_license, 
             category=data.category)
         return 200, {"message": "Supplier has been saved."}
         
