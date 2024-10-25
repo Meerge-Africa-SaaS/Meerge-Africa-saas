@@ -193,7 +193,6 @@ class SupplierOnboardSchema(Schema):
     business_address: str
     cac_registration_number: str
     category: List[str]
-    cac_document: str
     business_premise_license: Optional[str] = None
      
 

@@ -105,7 +105,6 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, 
 # Supplier onboarding endpoint/function
 @router.post("/supplier", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: UploadedFile = File(...), business_premise_license: Optional[UploadedFile] = File(None)):
-    print(request.auth["user_id"])
     try:
         supply_owner = User.objects.get(id = request.auth["user_id"])
     except User.DoesNotExist:

@@ -81,10 +81,12 @@ def password_reset(request, data: PasswordResetRequestSchema):
                 return 404, {
                     "message": "Error in sending password reset mail"
                 }
+                print(2)
         elif not user.is_active:
             return 404, {
                 "message": "Inactive profile, kindly proceed to verify your account."
             }
+            print(3)
                 
     except User.DoesNotExist:
         return 404, {
@@ -92,7 +94,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
         }
         
     except Exception as e:
-        print(e)
+        print("\n"*5,e, "\n"*5)
         return 404, {
             "message": "We ran into error while processing your request."
         }
