@@ -108,7 +108,7 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, 
         return 404, {"message": f"We ran into an error {e}"}
     
     
-@router.post("/supplier", tags=["Onboarding"], response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+@router.post("/supplier", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def onboard_supplier(request, data: Form[SupplierOnboardSchema], cac_document: UploadedFile = File(...), business_premise_license: Optional[UploadedFile] = None):
     try:
         supply_owner = User.objects.get(email = data.email)
