@@ -1,393 +1,552 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-{% block title %}
-  Meerge Africa
-{% endblock %}
 
-{% block body_class %}
-  w-screen max-w-[100vw] overflow-x-hidden
-{% endblock %}
+    <link href="{% static 'css/heroSection.css' %}" rel="stylesheet">
+    <link href="{% static 'css/secondSection.css' %}" rel="stylesheet">
+    <link href="{% static 'css/featuresCard.css' %}" rel="stylesheet">
+    <link href="{% static 'css/footer.css' %}" rel="stylesheet">
+    <link href="{% static 'css/lastSection.css' %}" rel="stylesheet">
+    <link href="{% static 'css/productCard.css' %}" rel="stylesheet">
 
-{% block extra_js %}
-  <script src="{% static 'landingPage.js' %}"></script>
-{% endblock %}
 
-{% block extra_css %}
-  <link href="{% static 'css/heroSection.css' %}" rel="stylesheet" />
-  <link href="{% static 'css/secondSection.css' %}" rel="stylesheet" />
-  <link href="{% static 'css/featuresCard.css' %}" rel="stylesheet" />
-  <link href="{% static 'css/footer.css' %}" rel="stylesheet" />
-  <link href="{% static 'css/lastSection.css' %}" rel="stylesheet" />
-  <link href="{% static 'css/productCard.css' %}" rel="stylesheet" />
-  {% include 'home/hero-bg.html' %}
-{% endblock %}
-
-{% block content %}
-  <nav class="bg-transparent p-6 md:flex md:justify-between md:items-center w-full z-20">
-    <div class="flex justify-between items-center">
-      <div class="logo">
-        <img src="{% static 'assets/Meerge-logo.svg' %}" style="width: 80px; height: auto" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <title>MeergeAfrica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <nav
+      class="bg-transparent p-4 md:flex md:justify-between md:items-center w-full z-20"
+    >
+      <div class="flex justify-between items-center">
+        <div class="logo" style="position: absolute; left: 0; margin-left: 10px; top: 10px;">
+          <img src="{% static 'assets/Meerge-logo.svg' %}" style="width: 80px; height: auto; margin-left: 16px;" />
       </div>
 
-      <div class="md:hidden">
-        <button id="menu-btn" class="text-black focus:outline-none p-2 rounded-full bg-white">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M3 12.75C3 12.5511 3.07902 12.3603 3.21967 12.2197C3.36032 12.079 3.55109 12 3.75 12H20.712C20.9109 12 21.1017 12.079 21.2423 12.2197C21.383 12.3603 21.462 12.5511 21.462 12.75C21.462 12.9489 21.383 13.1397 21.2423 13.2803C21.1017 13.421 20.9109 13.5 20.712 13.5H3.75C3.55109 13.5 3.36032 13.421 3.21967 13.2803C3.07902 13.1397 3 12.9489 3 12.75ZM3 6.75C3 6.55109 3.07902 6.36032 3.21967 6.21967C3.36032 6.07902 3.55109 6 3.75 6H26.25C26.4489 6 26.6397 6.07902 26.7803 6.21967C26.921 6.36032 27 6.55109 27 6.75C27 6.94891 26.921 7.13968 26.7803 7.28033C26.6397 7.42098 26.4489 7.5 26.25 7.5H3.75C3.55109 7.5 3.36032 7.42098 3.21967 7.28033C3.07902 7.13968 3 6.94891 3 6.75ZM3 18.75C3 18.5511 3.07902 18.3603 3.21967 18.2197C3.36032 18.079 3.55109 18 3.75 18H26.25C26.4489 18 26.6397 18.079 26.7803 18.2197C26.921 18.3603 27 18.5511 27 18.75C27 18.9489 26.921 19.1397 26.7803 19.2803C26.6397 19.421 26.4489 19.5 26.25 19.5H3.75C3.55109 19.5 3.36032 19.421 3.21967 19.2803C3.07902 19.1397 3 18.9489 3 18.75ZM3 24.75C3 24.5511 3.07902 24.3603 3.21967 24.2197C3.36032 24.079 3.55109 24 3.75 24H20.712C20.9109 24 21.1017 24.079 21.2423 24.2197C21.383 24.3603 21.462 24.5511 21.462 24.75C21.462 24.9489 21.383 25.1397 21.2423 25.2803C21.1017 25.421 20.9109 25.5 20.712 25.5H3.75C3.55109 25.5 3.36032 25.421 3.21967 25.2803C3.07902 25.1397 3 24.9489 3 24.75Z" fill="#0E2254" />
-          </svg>
+        <div class="md:hidden">
+          <button id="menu-btn" class="text-white focus:outline-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              class="w-8 h-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="menu"
+        class="hidden md:flex flex-col md:flex-row md:gap-x-8 items-center mt-4 md:mt-0"
+      >
+        <ul class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-8">
+          <li><a href="#" class="text-white">Features</a></li>
+          <li><a href="#" class="text-white">Products</a></li>
+          <li><a href="#" class="text-white">Pricing</a></li>
+          <li><a href="#" class="text-white">Partners</a></li>
+        </ul>
+        <button
+          class="nav-btn w-[161px] text-base font-medium leading-6 text-center text-white rounded-md bg-[#ff4101] p-2 mr-10 ml-0 md:ml-10 mt-4 md:mt-0"
+        >
+          Request Demo
         </button>
       </div>
-    </div>
+    </nav>
 
-    <div id="menu" class="hidden md:flex flex-col md:flex-row md:gap-x-8 items-center mt-4 md:mt-0">
-      <ul class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-8 bg-white">
-        <li>
-          <a href="#">Features</a>
-        </li>
-        <li>
-          <a href="#">Products</a>
-        </li>
-        <li>
-          <a href="#">Pricing</a>
-        </li>
-        <li>
-          <a href="#">Partners</a>
-        </li>
-      </ul>
-      <button class="nav-btn w-[161px] text-base font-medium leading-6 text-center text-white rounded-lg bg-[#ff4101] p-2 mr-10 ml-0 md:ml-10 mt-4 md:mt-0">Request Demo</button>
-    </div>
-  </nav>
+    <section class="hero-section relative">
+      <div class="overlay absolute inset-0 bg-black opacity-50"></div>
 
-  <section class="hero-section relative pt-40 pb-10">
-    <div>
-      <div class="px-6 w-[70%] text-white">
-        <p class="text-[32px] font-bold">
-          We are
-          <span class="text-secondary">simplifying</span>
-          food business operations across Africa
+      <div class="content relative z-10">
+        <div class="flex flex-col items-start justify-center">
+          <h1>We are <span style="color: #ff4101">simplifying</span></h1>
+          <h1>food business operations</h1>
+          <h1>across Africa</h1>
+          <p class="mt-10">
+            Our solution streamlines and enables seamless business operations
+            for Restaurant owners around the continent.
+          </p>
+        </div>
+        <div class="btn flex mt-8">
+          <button
+            class="w-[162px] h-[40px] text-center text-white bg-[#0E2254] text-[16px] font-medium leading-[24px] rounded-[10px] mr-4"
+          >
+            Request Demo
+          </button>
+          <button
+            class="w-[100px] h-[40px] text-white bg-[#ff4101] text-[16px] font-medium leading-[24px] rounded-[10px]"
+          >
+            Start here
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="second-section h2 flex flex-col items-center justify-center pt-12 w-full bg-[#f3f5f7]"
+    >
+      <h2>
+        Food business is  <strong>as serious as fun!</strong> <br>  Ease the
+        stress<strong> by 0.1%</strong>
+      </h2>
+
+      <div class="card mt-20">
+        <img src="{% static 'assets/tab-and-phone-img.png' %}" alt="tab and phone" />
+        <h3 class="head-txt mt-10">End2End Channel</h3>
+        <p class="paragraph mt-5">
+          Connect with new and existing customers, link your food business with
+          reliable logistics and gain access to suppliers for quality goods at
+          competitive prices.
         </p>
-        <p class="mt-2 text-sm">Our solution streamlines and enables seamless business operations for Restaurant owners around the continent.</p>
       </div>
-      <div class="flex items-center gap-x-4 mt-8 px-6">
-        <button class="btn btn-primary">Request Demo</button>
-        <button class="btn btn-secondary">Start here</button>
-      </div>
-    </div>
-  </section>
+      <br>
+      <br>
+      <br>
 
-  <section class="space-y-8 flex flex-col items-center justify-center py-12 px-6 w-full bg-slate-100 text-[30px]">
-    <p class="text-center">
-      Food business is
-      <br />
-      <span class="font-bold">as serious as fun!</span>
-      <br />
-      Ease the stress
-      <span class="font-bold">by 0.1%</span>
-    </p>
-
-    <div class="rounded-lg mt-20 bg-white space-y-4 py-8">
-      <img src="{% static 'assets/tab-and-phone-img.png' %}" alt="tab and phone" />
-      <div class="flex items-center justify-center gap-x-1">
-        <div class="h-2 w-2 rounded-full bg-secondary"></div>
-        <div class="h-2 w-2 rounded-full bg-gray-700"></div>
-        <div class="h-2 w-2 rounded-full bg-gray-700"></div>
-      </div>
-      <p class="text-[24px] font-bold text-center">End2End Channel</p>
-      <p class="text-[15px] text-center px-1">Connect with new and existing customers, link your food business with reliable logistics and gain access to suppliers for quality goods at competitive prices.</p>
-    </div>
-
-    <section class="rounded-lg" id="parent-wrapper-overlay" style="
+      <section class="parent-wrapper" id="parent-wrapper-overlay" style="
       background-image: url('{% static 'assets/chef-chopping-tomatoes.png' %}');
       background-size: cover; /* Ensures the image covers the entire section */
       background-repeat: no-repeat; /* Prevents the image from repeating */
       background-position: center; /* Centers the image */
-    ">
-      <div class="overlay"></div>
-      <section class="features-card p-6 flex-col relative z-10" id="features-card">
-        <div class="space-y-4">
-          <button class="btn btn-secondary !font-medium !p-1">Features</button>
-          <p class="text-sm font-medium text-white mt-2 mb-6">Enhance Your Restaurant's Profitability with Strategic Solutions</p>
+      ">
+        <div class="overlay"></div>
+        <section class="features-card" id="features-card">
+          <div>
+            <button class="btn my-5">Features</button>
+            <p>
+              Maximize your resturant's <span>revenue</span> with our
+              streamlined operations
+            </p>
 
-          <div class="grid grid-cols-1 gap-x-5 gap-y-5">
-            <div class="p-4 rounded-lg bg-[#86cdeb] space-y-3">
-              <img src="{% static 'assets/archers-icon.svg' %}" alt="point of sale" />
-              <header class="text-[20px] font-medium">Point of sale</header>
-              <p class="text-sm">Enable card and mobile transactions by processing payments with our POS system that helps you track sales at the restaurants and over the checkout counter.</p>
+            <div class="card-first-row my-8">
+              <div class="point-of-sale bg-[#86cdeb] p-7 mx-5">
+                <img
+                src="{% static 'assets/archers-icon.svg' %}" 
+                  alt="point of sale"
+                  class=""
+                />
+                <header class="my-5">Point of sale</header>
+                <p class="paragraph">
+                  Enable card and mobile transactions by processing payments
+                  with our POS system that helps you track sales at the
+                  restaurants and over the checkout counter.
+                </p>
+              </div>
+
+              <div class="custom-site bg-[#EBDED6]">
+                <img
+                src="{% static 'assets/desktop-icon.svg' %}" 
+                  alt="custom-site"
+                  class=""
+                />
+                <header class="my-5">Custom site</header>
+                <p class="paragraph">
+                  Create a unique link where information about your restaurant,
+                  such as menu variety, and cuisine types can be seen when they
+                  visit you.
+                </p>
+              </div>
             </div>
 
-            <div class="p-4 rounded-lg bg-[#EBDED6] space-y-3">
-              <img src="{% static 'assets/desktop-icon.svg' %}" alt="custom-site" class="" />
-              <header class="text-[20px] font-medium">Custom site</header>
-              <p class="text-sm">Create a unique link where information about your restaurant, such as menu variety, and cuisine types can be seen when they visit you.</p>
+            <div class="card-second-row">
+              <div class="ops-control bg-[#E3F3FF] my-10 mx-5">
+                <img
+                src="{% static 'assets/ops-control-icon.svg' %}" 
+                  alt="custom-site"
+                  class=""
+                />
+                <header class="my-5">Ops-Control</header>
+                <p class="paragraph">
+                  Manage all in-person and online orders procurements and
+                  inventory, and staff itinerary all in one place, making your
+                  restaurant operations smoother and more organized for you.
+                </p>
+              </div>
+              <div class="mobile-app bg-[#d1a753] my-10">
+                <img
+                src="{% static 'assets/mobile-app-icon.svg' %}" 
+                  alt="custom-site"
+                  class=""
+                />
+                <header class="my-5">Mobile app</header>
+                <p class="paragraph">
+                  Plug in to our mobile app channel that allows customers to
+                  place orders online, make reservations, and access your
+                  restaurant offerings conveniently from their smartphones
+                  anywhere.
+                </p>
+              </div>
             </div>
           </div>
+          <div class="demo-btn">
+            <button class="first-btn mx-5">Request Demo</button>
+            <button class="second-btn">Start here</button>
+          </div>
+        </section>
+      </section>
 
-          <div class="grid grid-cols-1 gap-x-5 gap-y-5">
-            <div class="p-4 rounded-lg bg-[#E3F3FF] space-y-3">
-              <img src="{% static 'assets/ops-control-icon.svg' %}" alt="custom-site" class="" />
-              <header class="text-[20px] font-medium">Ops-Control</header>
-              <p class="text-sm">Manage all in-person and online orders procurements and inventory, and staff itinerary all in one place, making your restaurant operations smoother and more organized for you.</p>
+      <section class="parent-wrapper">
+        <section class="features-card" id="growth-card">
+          <div>
+            <button class="btn my-5">Growth</button>
+            <p>
+              Enhance Your Restaurant's Profitability with Strategic Solutions
+            </p>
+
+            <div class="card-first-row my-8">
+              <div class="point-of-sale bg-[#D1A753] p-7 mx-5">
+                <header class="my-5">Stock Manager</header>
+                <p class="paragraph">
+                  Set up your inventory, and monitor stock levels, get warnings
+                  when supplies are running low, and streamline restocking with
+                  supplier integration.
+                </p>
+                <img
+                src="{% static 'assets/truck-icon.svg' %}" 
+                  alt="stock manager"
+                  class=""
+                />
+              </div>
+
+              <div class="custom-site bg-[#EBDED6]">
+                <header class="my-5">InsightPro</header>
+                <p class="paragraph">
+                  Dive into past and present details with insights into sales
+                  trends, customer preferences, and performance data, helping
+                  you make informed decisions to grow your business.
+                </p>
+                <img
+                src="{% static 'assets/insight-pro.svg' %}" 
+                  alt="Insight pro"
+                  class=""
+                />
+              </div>
             </div>
-            <div class="p-4 rounded-lg bg-[#d1a753] space-y-3">
-              <img src="{% static 'assets/mobile-app-icon.svg' %}" alt="custom-site" class="" />
-              <header class="text-[20px] font-medium">Mobile app</header>
-              <p class="text-sm">Plug in to our mobile app channel that allows customers to place orders online, make reservations, and access your restaurant offerings conveniently from their smartphones anywhere.</p>
+
+            <div class="card-second-row">
+              <div class="ops-control bg-[#AD92E3] my-10 mx-5">
+                <header class="my-5">SyncBudget</header>
+                <p class="paragraph">
+                  Looking for ways to control costs on expenses? Our budgeting
+                  tool helps you set and track budgets for expenses, making
+                  financial planning and resource management easier.
+                </p>
+                <img
+                src="{% static 'assets/syncbudget-icon.svg' %}" 
+                  alt="custom-site"
+                  class=""
+                />
+              </div>
+              <div class="mobile-app bg-[#AD92E3] my-10">
+                <header class="my-5">CreditPlus</header>
+                <p class="paragraph">
+                  Scale your food business to serve more customers with our
+                  flexible financing options for growth and expansion, access
+                  food grants and support capital when you need it.
+                </p>
+                <img
+                src="{% static 'assets/cash-img.svg' %}" 
+                  alt="credit plus"
+                  class=""
+                />
+              </div>
+            </div>
+
+            <div class="card-second-row" id="gray-card">
+              <div class="ops-control bg-[#505050] my-10 mx-5">
+                <header class="my-5">Buy now/ pay after</header>
+                <p class="paragraph">
+                  Enjoy the flexibility to source for ingredients now and pay at
+                  a later date, increasing your purchasing power and keeping
+                  your restaurant adequately stocked for customer requests.
+                </p>
+                <img
+                src="{% static 'assets/wallet-img.svg' %}" 
+                  alt="Buy now pay later"
+                  class=""
+                />
+              </div>
+              <div class="mobile-app bg-[#505050] my-10">
+                <header class="my-5">Auto re-order</header>
+                <p class="paragraph">
+                  Based on your recent procurements, you can automatically
+                  generate new purchase orders or restocking requests with
+                  predefined criteria.
+                </p>
+                <img
+                src="{% static 'assets/auto-reoder-img.svg' %}" 
+                  alt="Auto reoder"
+                  class=""
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </section>
       </section>
     </section>
 
-    {% comment %} {% endcomment %}
-
-    <section class="rounded-lg">
-      <section class="features-card" id="growth-card">
-        <div class="space-y-4">
-          <button class="btn btn-secondary !font-medium">Growth</button>
-          <p class="text-sm font-medium text-white mt-2 mb-6">Enhance Your Restaurant's Profitability with Strategic Solutions</p>
-          <div class="grid grid-cols-1 gap-x-5 gap-y-5">
-            <div class="p-4 rounded-lg space-y-3 bg-[#D1A753]">
-              <header class="text-[20px] font-medium">Stock Manager</header>
-              <p class="text-sm">Set up your inventory, and monitor stock levels, get warnings when supplies are running low, and streamline restocking with supplier integration.</p>
-              <img src="{% static 'assets/truck-icon.svg' %}" alt="stock manager" class="" />
-            </div>
-
-            <div class="p-4 rounded-lg space-y-3 bg-[#EBDED6]">
-              <header class="text-[20px] font-medium">InsightPro</header>
-              <p class="text-sm">Dive into past and present details with insights into sales trends, customer preferences, and performance data, helping you make informed decisions to grow your business.</p>
-              <img src="{% static 'assets/insight-pro.svg' %}" alt="Insight pro" class="" />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 gap-x-5 gap-y-5">
-            <div class="p-4 rounded-lg space-y-3 bg-[#AD92E3]">
-              <header class="text-[20px] font-medium">SyncBudget</header>
-              <p class="text-sm">Looking for ways to control costs on expenses? Our budgeting tool helps you set and track budgets for expenses, making financial planning and resource management easier.</p>
-              <img src="{% static 'assets/syncbudget-icon.svg' %}" alt="custom-site" class="" />
-            </div>
-            <div class="p-4 rounded-lg space-y-3 bg-[#AD92E3]">
-              <header class="text-[20px] font-medium">CreditPlus</header>
-              <p class="text-sm">Scale your food business to serve more customers with our flexible financing options for growth and expansion, access food grants and support capital when you need it.</p>
-              <img src="{% static 'assets/cash-img.svg' %}" alt="credit plus" class="" />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 gap-x-5 gap-y-5" id="gray-card">
-            <div class="p-4 rounded-lg space-y-3 bg-[#505050]">
-              <header class="text-[20px] font-medium">Buy now/ pay after</header>
-              <p class="text-sm">Enjoy the flexibility to source for ingredients now and pay at a later date, increasing your purchasing power and keeping your restaurant adequately stocked for customer requests.</p>
-              <img src="{% static 'assets/wallet-img.svg' %}" alt="Buy now pay later" class="" />
-            </div>
-            <div class="p-4 rounded-lg space-y-3 bg-[#505050]">
-              <header class="text-[20px] font-medium">Auto re-order</header>
-              <p class="text-sm">Based on your recent procurements, you can automatically generate new purchase orders or restocking requests with predefined criteria.</p>
-              <img src="{% static 'assets/auto-reoder-img.svg' %}" alt="Auto reoder" class="" />
-            </div>
-          </div>
+    <section class="product-card">
+      <h2>Our Products/Channels</h2>
+      <div class="flex justify-around">
+        <div class="card">
+          <img src="{% static 'assets/tomato-img.png' %}"  />
+          <p>Quick Market</p>
+          <p class="paragraph">
+            Connect to our pool of suppliers to get access to quality
+            ingredients for all your kitchen resources at a fair and competitive
+            market price.
+          </p>
+          <button>Learn More</button>
         </div>
-      </section>
+        <div class="card">
+          <img src="{% static 'assets/kitchen-mobile-app.png' %}"  />
+          <p>Kittchen’s Mobile</p>
+          <p class="paragraph">
+            Our customer facing mobile application allows chefs and restaurants
+            to connect with a wide range of customers who place orders at their
+            convenience.
+          </p>
+          <button>Learn More</button>
+        </div>
+        <div class="card">
+          <img src="{% static 'assets/delivery-guy.png' %}" />
+          <p>KIttchen’s Go</p>
+          <p class="paragraph">
+            Get your meals delivered anywhere in your city. Our delivery agents
+            are on standby to help you move stuff from favorite food outlets to
+            your doorstep.
+          </p>
+          <button>Learn More</button>
+        </div>
+      </div>
+      <div class="row-2 flex justify-around mt-8">
+        <div class="card">
+          <img src="{% static 'assets/chef.png' %}" />
+          <p>Cloud Kittchens</p>
+          <p class="paragraph">
+            Seasoned chefs use our state of the art on-site Kittchen’s to run
+            their business. Take advantage of our exquisite locations on a plan
+            that works for you.
+          </p>
+          <button>Learn More</button>
+        </div>
+        <div class="card">
+          <img src="{% static 'assets/pasteries.png' %}" />
+          <p>Kittchen’s Pastries</p>
+          <p class="paragraph">
+            Delight your taste with the variety of our pastry offerings. Visit
+            our roadside tuck shops and grab a healthy bite on your way anywhere
+            in your city.
+          </p>
+          <button>Learn More</button>
+        </div>
+
+        <div class="card">
+          <img src="{% static 'assets/farmer-img.png' %}" />
+          <p>Megadel Farms</p>
+          <p class="paragraph">
+            Restaurants plug in immediate and future procurements for price
+            friendly, quality supplies from our farms, so they can give their
+            customers good meals at fair prices.
+          </p>
+          <button>Learn More</button>
+        </div>
+      </div>
     </section>
-  </section>
 
-  <section class="product-card space-y-6 bg-primary p-6">
-    <h2 class="text-2xl font-semibold text-center text-white">Our Products/Channels</h2>
-    <div class="flex flex-col items-center space-y-6">
-      <div class="card">
-        <img src="{% static 'assets/tomato-img.png' %}" />
-        <p>Quick Market</p>
-        <p class="paragraph">Connect to our pool of suppliers to get access to quality ingredients for all your kitchen resources at a fair and competitive market price.</p>
-        <button class="btn btn-secondary !w-fit mx-auto">Learn More</button>
-      </div>
-      <div class="card">
-        <img src="{% static 'assets/kitchen-mobile-app.png' %}" />
-        <p>Kittchen’s Mobile</p>
-        <p class="paragraph">Our customer facing mobile application allows chefs and restaurants to connect with a wide range of customers who place orders at their convenience.</p>
-        <button class="btn btn-secondary !w-fit mx-auto">Learn More</button>
-      </div>
-      <div class="card">
-        <img src="{% static 'assets/delivery-guy.png' %}" />
-        <p>KIttchen’s Go</p>
-        <p class="paragraph">Get your meals delivered anywhere in your city. Our delivery agents are on standby to help you move stuff from favorite food outlets to your doorstep.</p>
-        <button class="btn btn-secondary !w-fit mx-auto">Learn More</button>
-      </div>
-    </div>
-    <div class="flex flex-col items-center space-y-6">
-      <div class="card">
-        <img src="{% static 'assets/chef.png' %}" />
-        <p>Cloud Kittchens</p>
-        <p class="paragraph">Seasoned chefs use our state of the art on-site Kittchen’s to run their business. Take advantage of our exquisite locations on a plan that works for you.</p>
-        <button class="btn btn-secondary !w-fit mx-auto">Learn More</button>
-      </div>
-      <div class="card">
-        <img src="{% static 'assets/pasteries.png' %}" />
-        <p>Kittchen’s Pastries</p>
-        <p class="paragraph">Delight your taste with the variety of our pastry offerings. Visit our roadside tuck shops and grab a healthy bite on your way anywhere in your city.</p>
-        <button class="btn btn-secondary !w-fit mx-auto">Learn More</button>
-      </div>
+    <section class="partners-block p-6 bg-[#f3f5f7]">
+      <header
+        class="head-txt text-center text-3xl font-semibold mb-16 w-full mt-20"
+      >
+        Here's what <strong>our trusted partners</strong> <br> say about us
+      </header>
 
-      <div class="card">
-        <img src="{% static 'assets/farmer-img.png' %}" />
-        <p>Megadel Farms</p>
-        <p class="paragraph">Restaurants plug in immediate and future procurements for price friendly, quality supplies from our farms, so they can give their customers good meals at fair prices.</p>
-        <button class="btn btn-secondary !w-fit mx-auto">Learn More</button>
-      </div>
-    </div>
-  </section>
-  <section class="partners-block p-6 bg-[#f3f5f7]">
-    <header class="head-txt text-center text-3xl font-semibold mb-16 w-full mt-20">
-      Here's what <strong>our trusted partners</strong> <br /> say about us
-    </header>
+      <div class="flex justify-center items-center space-x-16 mt-16">
+        <div
+          class="comment-card w-[374px] h-auto bg-white p-20 px-10 rounded-lg"
+        >
+          <p class="w-[302px] text-center italic">
+            I can say my business have found an easy to use product with Meerge
+            solution. The process of getting my staff to learn how it works was
+            pretty simple.
+          </p>
+          <p class="font-semibold text-lg mt-4 text-center">Akani</p>
+          <p class="font-semibold text-lg mt-4 text-center">Business Owner</p>
+        </div>
 
-    <div class="flex flex-col justify-center items-center px-4 gap-y-8 mt-16">
-      <div class="comment-card h-auto bg-white rounded-lg p-6">
-        <p class="text-center italic">I can say my business have found an easy to use product with Meerge solution. The process of getting my staff to learn how it works was pretty simple.</p>
-        <p class="font-semibold text-lg mt-4 text-center">Akani</p>
-        <p class="font-semibold text-lg mt-4 text-center">Business Owner</p>
+        <div
+          class="comment-card w-[374px] h-auto bg-white p-20 px-10 rounded-lg mt-32"
+        >
+          <p class="w-[302px] text-center italic">
+            At first, we needed to understand how Meerge was going to help us
+            with operations before getting onboard. I believe we made a good
+            decision to.
+          </p>
+          <p class="font-semibold text-lg mt-4 text-center">Olayemi</p>
+          <p class="font-semibold text-lg mt-4 text-center">
+            Resturant Manager
+          </p>
+        </div>
+
+        <div
+          class="comment-card w-[374px] h-auto bg-white p-20 px-10 rounded-lg"
+        >
+          <p class="w-[302px] text-center italic">
+            We started talking with the Customer team and it didn't take long
+            for us to conclude on using Meerge to manage some of our routine
+            business activities.
+          </p>
+          <p class="font-semibold text-lg mt-4 text-center">Chef Janet</p>
+        </div>
       </div>
 
-      <div class="comment-card h-auto bg-white rounded-lg p-6">
-        <p class="text-center italic">At first, we needed to understand how Meerge was going to help us with operations before getting onboard. I believe we made a good decision to.</p>
-        <p class="font-semibold text-lg mt-4 text-center">Olayemi</p>
-        <p class="font-semibold text-lg mt-4 text-center">Resturant Manager</p>
-      </div>
-
-      <div class="h-auto bg-white rounded-lg p-6">
-        <p class="text-center italic">We started talking with the Customer team and it didn't take long for us to conclude on using Meerge to manage some of our routine business activities.</p>
-        <p class="font-semibold text-lg mt-4 text-center">Chef Janet</p>
-      </div>
-    </div>
-
-    <button class="btn btn-secondary !mt-16">Trusted Partners</button>
-
-    <div class="grid grid-cols-3 gap-4 w-full mt-10 pb-28">
-      <div class="flex justify-center">
-        <img src="{% static 'assets/aid.png' %}" />
-      </div>
-      <div class="flex justify-center">
-        <img src="{% static 'assets/sell-it-off-logo.png' %}" />
-      </div>
-      <div class="flex justify-center">
-        <img src="{% static 'assets/megadel-farm-logo.png' %}" />
-      </div>
-      <div class="flex justify-center mt-8">
-        <img src="{% static 'assets/speed.png' %}" />
-      </div>
-      <div class="flex justify-center mt-8">
-        <img src="{% static 'assets/sell-dome-logo.png' %}" />
-      </div>
-      <div class="flex justify-center mt-8">
-        <img src="{% static 'assets/red.png' %}" />
-      </div>
-    </div>
-  </section>
-
-  <section class="last-section" style="
-    background-image: linear-gradient(to bottom, rgb(35 37 41 / 53%), rgb(35 37 41 / 53%)), url('{% static 'assets/bar-man.png' %}');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  ">
-    <div class="py-10 px-8">
-      <p class="text-[22px] font-semibold w-1/2 text-white">Managing your restaurant has never been more effortless.</p>
-
-      <div class="max-w-[240px] mt-8 bg-primary p-4 rounded-lg space-y-4">
-        <p class="text-sm font-medium text-white">You're just one click away from getting started.</p>
-        <button class="mt-5 flex items-center gap-2 justify-center btn btn-secondary">
-          Request Demo
-          <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13.1154 1H2.88462C2.38522 1.00144 1.90669 1.20357 1.55356 1.56221C1.20043 1.92085 1.00142 2.40687 1 2.91406V9.47656C1.00142 9.98376 1.20043 10.4698 1.55356 10.8284C1.90669 11.1871 2.38522 11.3892 2.88462 11.3906H4.23077V14.125L7.38481 11.4542C7.43324 11.4131 7.49435 11.3906 7.55745 11.3906H13.1154C13.6148 11.3892 14.0933 11.1871 14.4464 10.8284C14.7996 10.4698 14.9986 9.98376 15 9.47656V2.91406C14.9986 2.40687 14.7996 1.92085 14.4464 1.56221C14.0933 1.20357 13.6148 1.00144 13.1154 1Z" stroke="white" stroke-linejoin="round"/>
-          </svg>  
+      <div class="flex justify-start mx-8 mt-16">
+        <button
+          style="font-size: 14px"
+          class="text-[20px leading-[30px] text-center bg-[#E15D25] rounded-[10px] max-w-[190px] h-auto text-white px-4 py-2"
+        >
+          Trusted Partners
         </button>
       </div>
-    </div>
-  </section>
-  <footer class="footer-section pt-20 p-6">
-    <div class="container mx-auto py-10">
-      <div class="flex items-start justify-start flex-wrap gap-8 mb-10">
-        <img src="{% static 'assets/Meerge-logo.svg' %}" alt="Logo" class="mb-8" />
-        <div class="col-span-1">
-          <p class="text-black font-semibold" style="font-size: 20px">Contact</p>
-          <p class="text-sm text-black pt-4">hello@meergeafrica.com</p>
-          <p class="text-sm text-black">+234 813 918 8935</p>
-        </div>
 
-        <div class="col-span-1">
-          <ul>
-            <li class="footer-head-txt">About Us</li>
-            <li>
-              <a href="#" class="footer-link">Company</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">Careers</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">Support</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">FAQs</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">Privacy policy</a>
-            </li>
-          </ul>
+      <div class="grid grid-cols-3 gap-4 w-full mt-28 pb-28">
+        <div class="flex justify-center">
+          <img src="{% static 'assets/aid.png' %}" />
         </div>
-
-        <div class="col-span-1">
-          <ul>
-            <li class="footer-head-txt">Products</li>
-            <li>
-              <a href="#" class="footer-link">Pricing</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">Earnings</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">Growth</a>
-            </li>
-          </ul>
+        <div class="flex justify-center">
+          <img src="{% static 'assets/sell-it-off-logo.png' %}" />
         </div>
-
-        <div class="col-span-1">
-          <ul>
-            <li class="footer-head-txt">Partners</li>
-            <li>
-              <a href="#" class="footer-link">Aidi Venture</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">Sell It Off</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">Megadel Farm</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">Sell Dome</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">SpeedMeals Culinary School</a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">Reddish Culinary School</a>
-            </li>
-          </ul>
+        <div class="flex justify-center">
+          <img src="{% static 'assets/megadel-farm-logo.png' %}" />
+        </div>
+        <div class="flex justify-center mt-8">
+          <img src="{% static 'assets/speed.png' %}" />
+        </div>
+        <div class="flex justify-center mt-8">
+          <img src="{% static 'assets/sell-dome-logo.png' %}" />
+        </div>
+        <div class="flex justify-center mt-8">
+          <img src="{% static 'assets/red.png' %}" />
         </div>
       </div>
+    </section>
 
-      <hr class="my-6 border-t" />
+    <section class="last-section" style="background-image: url('{% static 'assets/bar-man.png' %}');">
+ 
+ 
+      <div class="mx-20">
+        <p class="w-[662px]">
+          Managing your restaurant has never been more effortless.
+        </p>
 
-      <div class="flex flex-col justify-left mt-16 socials">
-        <p class="text-left" style="font-size: 20px">Socials</p>
-        <div class="flex mb-10">
-          <a href="#" class="mx-2"><img src="{% static 'assets/instagram-icon.svg' %}" alt="Instagram" /></a>
-          <a href="#" class="mx-2"><img src="{% static 'assets/facebook-icon.svg' %}" alt="Facebook" /></a>
-          <a href="#" class="mx-2"><img src="{% static 'assets/X-icon.svg' %}" alt="X" /></a>
-          <a href="#" class="mx-2"><img src="{% static 'assets/lin.png' %}" alt="LinkedIn" /></a>
-        </div>
-
-        <div class="text-left text-sm">
-          <p style="color: #000000">&copy; 2024 Meerge Africa. All rights reserved</p>
-          <p style="color: #000000">Privacy Policy | Term of use</p>
+        <div class="blue-card mt-20">
+          <p>You're just one click away from getting started.</p>
+          <button class="mt-5 icon-btn cursor-pointer">
+            Request Demo
+            <img src="{% static 'assets/mail-icon.svg' %}" />
+          </button>
         </div>
       </div>
-    </div>
-  </footer>
-{% endblock %}
+    </section>
+
+    <footer class="footer-section pt-20">
+      <div class="container mx-auto py-10">
+        <div class="grid grid-cols-5 gap-8 mb-10">
+          <div class="col-span-1 pr-8">
+            <img
+              src="{% static 'assets/Meerge-logo.svg' %}"
+              alt="Logo"
+              class="mb-8"
+            />
+            <p class="text-black font-semibold" style="font-size: 20px">
+              Contact
+            </p>
+            <p class="text-sm text-black pt-4">hello@meergeafrica.com</p>
+            <p class="text-sm text-black">+234 813 918 8935</p>
+          </div>
+
+          <div class="col-span-1 ml-10">
+            <ul>
+              <li class="footer-head-txt">About Us</li>
+              <li><a href="#" class="footer-link">Company</a></li>
+              <li><a href="#" class="footer-link">Careers</a></li>
+              <li><a href="#" class="footer-link">Support</a></li>
+              <li><a href="#" class="footer-link">FAQs</a></li>
+              <li><a href="#" class="footer-link">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-span-1">
+            <ul>
+              <li class="footer-head-txt">Products</li>
+              <li><a href="#" class="footer-link">Pricing</a></li>
+              <li><a href="#" class="footer-link">Earnings</a></li>
+              <li><a href="#" class="footer-link">Growth</a></li>
+            </ul>
+          </div>
+
+          <div class="col-span-1">
+            <ul>
+              <li class="footer-head-txt">Partners</li>
+              <li><a href="#" class="footer-link">Aidi Venture</a></li>
+              <li><a href="#" class="footer-link">Sell It Off</a></li>
+              <li><a href="#" class="footer-link">Megadel Farm</a></li>
+              <li><a href="#" class="footer-link">Sell Dome</a></li>
+              <li>
+                <a href="#" class="footer-link">SpeedMeals Culinary School</a>
+              </li>
+              <li>
+                <a href="#" class="footer-link">Reddish Culinary School</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <hr class="my-6 border-t" />
+
+        <div class="flex flex-col justify-left mt-16 socials">
+          <p class="text-left" style="font-size: 20px">Socials</p>
+          <div class="flex mb-10">
+            <a href="#" class="mx-2"
+              ><img
+                src="{% static 'assets/instagram-icon.svg' %}"
+                alt="Instagram"
+            /></a>
+            <a href="#" class="mx-2"
+              ><img src="{% static 'assets/facebook-icon.svg' %}" alt="Facebook"
+            /></a>
+            <a href="#" class="mx-2"
+              ><img src="{% static 'assets/X-icon.svg' %}" alt="X" /></a>
+            <a href="#" class="mx-2"
+              ><img src="{% static 'assets/lin.png' %}" alt="LinkedIn"
+            /></a>
+          </div>
+
+          <div class="text-left text-sm">
+            <p style="color: #000000">
+              &copy; 2024 Meerge Africa. All rights reserved
+            </p>
+            <p style="color: #000000">Privacy Policy | Term of use</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="{% static 'landingPage.js' %}"></script>
+  </body>
+</html>

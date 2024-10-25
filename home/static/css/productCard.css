@@ -3,6 +3,16 @@
   padding: 50px;
 }
 
+.product-card h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 60px;
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 40px;
+}
+
 .product-card .cards-row-1 {
   display: flex;
   justify-content: flex-start;
