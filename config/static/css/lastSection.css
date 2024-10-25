@@ -1,4 +1,27 @@
+.last-section {
+  position: relative;
+  background-image: url("/config/static/assets/bar-man.png");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+}
 
+.last-section p {
+  color: #ffffff;
+  margin: 0;
+  font-size: 40px;
+}
+
+.last-section p:first-of-type {
+  font-weight: 600;
+  line-height: 60px;
+  text-align: left;
+  z-index: 2;
+}
 .last-section::before {
   content: "";
   position: absolute;
@@ -8,6 +31,14 @@
   height: 100%;
   background: rgba(0, 0, 128, 0.1);
   z-index: 1;
+}
+
+.blue-card {
+  width: 633px;
+  background: #0e2254;
+  padding: 50px;
+  border-radius: 10px;
+  z-index: 2;
 }
 
 .blue-card p {
