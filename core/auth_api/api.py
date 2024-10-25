@@ -407,10 +407,12 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
 def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     if data.actor_type != "deliveryagent":
         return 403, {"message": "Not a deliveryagent."}
+    ''' 
     try:
         country = Country.objects.get(name=data.address)
     except Country.DoesNotExist:
         return 404, {"message": "Country not accepted for now"}
+     '''
     
     phone_number_exist = phoneNumberExist(data.phone_number)
     if phone_number_exist["status"] == True:
@@ -425,7 +427,7 @@ def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
         last_name=data.last_name,
         phone_number=data.phone_number,
         email=data.email,
-        address=country,
+        address=data.address,
     )
     deliveryagent.set_password(data.password)
     deliveryagent.is_active = False
