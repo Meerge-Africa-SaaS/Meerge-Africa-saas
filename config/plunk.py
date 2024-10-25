@@ -17,7 +17,7 @@ class PlunkEmailBackend(BaseEmailBackend):
                 for addr in message.recipients()
             ]
             subject = message.subject
-            body = message.html or message.body
+            body = getattr(message, "html", message.body)
             headers = message.extra_headers
             payload = {
                 "to": recipients,
