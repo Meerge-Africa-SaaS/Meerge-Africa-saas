@@ -1,11 +1,63 @@
+from typing import Any
 from django.contrib.auth import views as auth_views
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import generic
-from allauth.account.views import PasswordResetView as _PasswordResetView, PasswordResetDoneView as _PasswordResetDoneView
 
-from . import forms, models
+
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import InvalidToken
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+
+
+from allauth.account.views import (
+    PasswordResetView as _PasswordResetView,
+    PasswordResetDoneView as _PasswordResetDoneView,
+    EmailVerificationSentView as _EmailVerificationSentView,
+)
+from allauth.account.models import EmailConfirmation
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+from restaurants.models import Restaurant, Staff
+
+from . import forms, models, serializers
+
+
+@method_decorator(login_required, name="dispatch")
+class ActorRedirect(generic.RedirectView):
+    """
+    This view redirects an actor to the page they are supposed to be on
+    """
+
+    def get_redirect_url(self, *args, **kwargs):
+        user = self.request.user
+        if isinstance(user, Staff):
+            return reverse("restaurants:dashboard", args=(user.restaurants.id,))
+        # assume the user is a restaurant owner
+        if user.groups.filter(name="Restaurant Owner").exists():
+            # check if this user is among a restuarant's owners
+            restaurant = Restaurant.objects.filter(owner__in=(user.id,)).first()
+            if restaurant:
+                return reverse("restaurants:dashboard", args=(restaurant.id,))
+            return reverse("restaurant_onboarding")
+        return "/"
+
+
+class EmailVerificationSentView(_EmailVerificationSentView):
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if "verification_email" not in request.session:
+            return redirect("restaurant_signup")
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["email"] = self.request.session["verification_email"]
+        return context
 
 
 class PasswordResetView(_PasswordResetView):
@@ -56,6 +108,19 @@ class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
             del request.session["reset_email"]
         return super().get(request, *args, **kwargs)
 
+
+class CustomTokenRefreshView(TokenRefreshView):
+    serializer_class = serializers.CustomTokenRefreshSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except InvalidToken as e:
+            return Response({"detail": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 class UserListView(generic.ListView):
     model = models.User

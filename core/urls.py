@@ -4,7 +4,10 @@ from rest_framework import routers
 
 from core.auth_api.api import router as auth_router
 from core.auth_api.password_management import p_router
+from core.auth_api.onboarding import router as onboarding_router
+from banking.ninja_api import router as banking_router
 from core.auth_api.token_management import AuthBearer
+from core.auth_api.temp_admin import router as temp_admin_router
 
 from . import api, htmx, views
 
@@ -12,13 +15,18 @@ router = routers.DefaultRouter()
 router.register("User", api.UserViewSet)
 
 ### NINJA API ROUTES
-ninjaapi = NinjaAPI()#auth=AuthBearer())
+ninjaapi = NinjaAPI()  # auth=AuthBearer())
 ninjaapi.add_router("auth-api", auth_router)
 ninjaapi.add_router("password", p_router)
+ninjaapi.add_router("onboarding", onboarding_router)
+ninjaapi.add_router("banking", banking_router)
+ninjaapi.add_router("temp-admin", temp_admin_router)
+
 
 urlpatterns = (
     path("authenticate/", ninjaapi.urls, name="n-api"),
     path("api/v1/", include(router.urls)),
+    path('token/refresh/', views.CustomTokenRefreshView.as_view(), name='token_refresh'),
     path("User/", views.UserListView.as_view(), name="core_User_list"),
     path("User/create/", views.UserCreateView.as_view(), name="core_User_create"),
     path(

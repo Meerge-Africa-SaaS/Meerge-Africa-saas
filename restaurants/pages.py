@@ -1,11 +1,29 @@
 from typing import Any
 
-from django.urls import path
+from django.shortcuts import redirect
+from django.urls import path, reverse
 from django.views import generic
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
-from restaurants.models import Restaurant
+
+from core.models import User
+from restaurants.models import Restaurant, Staff
 
 app_name = "restaurants"
+
+
+@method_decorator(login_required, name="dispatch")
+class RestaurantRedirectView(generic.TemplateView):
+    template_name = "restaurants/pages/no-allowed.html"
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if isinstance(user, Staff):
+            return redirect(
+                reverse("restaurants:dashboard", args=(user.restaurants.id,))
+            )
+        return super().get(request, *args, **kwargs)
 
 
 class RestaurantMixin:

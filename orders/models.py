@@ -3,8 +3,11 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from ninja import Form
+
 from phonenumber_field.modelfields import PhoneNumberField
 from customers.models import Order
+from banking.models import AccountDetail
 import uuid
 
 User = get_user_model()
@@ -52,7 +55,11 @@ class DeliveryRequest(models.Model):
     #def save(self):
         
 
-class DeliveryAgent(User):  # type: ignore
+class DeliveryAgent(User):
+    # Relationships
+    account_details = models.ForeignKey(AccountDetail, related_name="deliveryagents", on_delete=models.DO_NOTHING, null=True, blank=True)
+    
+    # Fields
     # Choices
     VEHICLE_TYPE_CHOICE = [
         ('bicycle', _('Bicycle')),
@@ -63,40 +70,36 @@ class DeliveryAgent(User):  # type: ignore
     ]
     
     # Personal extended
-    face_capture = models.ImageField(upload_to="images/profile_pic")
+    address = models.ForeignKey("cities_light.Country", on_delete=models.DO_NOTHING)
+    terms_and_condition = models.BooleanField()
+    #face_capture = models.URLField(blank=True, null=True)
+    face_capture = models.ImageField(upload_to="images/profile_pic", null=True, blank=True)
+    work_shift = models.JSONField(null=True, blank=True)
     
     # Driving details
-    vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPE_CHOICE)
-    vehicle_brand = models.CharField(max_length=256)
+    vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPE_CHOICE, null=True, blank=True)
+    vehicle_brand = models.CharField(max_length=256, null=True, blank=True)
     plate_number = models.CharField(max_length=10, blank=True, null=True)
+    #drivers_license = models.URLField(blank=True, null=True)
     drivers_license = models.FileField(upload_to="images/drivers_license", null=True, blank=True)
     drivers_license_id = models.CharField(max_length=20, null=True, blank=True)
+    #voters_card = models.URLField(blank=True, null=True)
     voters_card = models.FileField(upload_to="images/voters_card", null=True, blank=True)
     voters_number = models.CharField(max_length=12, null=True, blank=True)
+    #nin_doc = models.URLField(blank=True, null=True)
     nin_doc = models.FileField(upload_to="images/NIN_doc", null=True, blank=True)
     nin_number = models.CharField(max_length=11, null=True, blank=True)
     
     # Next of kin details
-    N_O_N_full_name = models.CharField(max_length=256)
-    N_O_N_phone_number = PhoneNumberField(
-        blank=False,
-        null=False,
-        verbose_name=_("next-of-kin's phone number"),
-    )
+    N_O_N_full_name = models.CharField(max_length=256, null=True, blank=True)
+    N_O_N_phone_number = PhoneNumberField(verbose_name=_("next-of-kin's phone number"), null=True, blank=True)
     
     # Guarantor's details
-    guarantor_first_name = models.CharField(max_length=20)
-    guarantor_last_name = models.CharField(max_length=20)
-    guarantor_phone_number = PhoneNumberField(
-        blank=False,
-        null=False,
-        verbose_name=_("Guarantor's phone number"),
-    )
-    guarantor_occupation = models.CharField(max_length=30)
+    guarantor_first_name = models.CharField(max_length=20, null=True, blank=True)
+    guarantor_last_name = models.CharField(max_length=20, null=True, blank=True)
+    guarantor_phone_number = PhoneNumberField(verbose_name=_("Guarantor's phone number"), null=True, blank=True)
+    guarantor_occupation = models.CharField(max_length=30, null=True, blank=True)
     
-    address = models.ForeignKey(
-        "cities_light.Country", on_delete=models.SET_NULL, null=True, blank=True
-    )
     # Fields
     # created = models.DateTimeField(auto_now_add=True, editable=False)
     # last_updated = models.DateTimeField(auto_now=True, editable=False)

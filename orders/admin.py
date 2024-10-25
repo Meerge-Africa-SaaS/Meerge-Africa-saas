@@ -9,6 +9,16 @@ class DeliveryRequestAdminForm(forms.ModelForm):
     class Meta:
         model = models.DeliveryRequest
         fields = "__all__"
+        
+        
+class DeliveryRequestAdmin(admin.ModelAdmin):
+    class Meta:
+        model = models.DeliveryRequest
+        fields = [
+            "id",
+            "order",
+            "status"
+        ]
 
 
 class DeliveryAgentAdminForm(forms.ModelForm):
@@ -35,3 +45,4 @@ class DeliveryAgentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.DeliveryAgent, DeliveryAgentAdmin)
+admin.site.register(models.DeliveryRequest, DeliveryRequestAdmin)

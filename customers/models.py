@@ -1,9 +1,12 @@
 import uuid
+from phonenumber_field.modelfields import PhoneNumberField
 
 from cities_light.models import City, Country
+from banking.models import AccountDetail
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -50,13 +53,21 @@ class Customer(User):  # type: ignore
     country = models.ForeignKey(
         Country, on_delete=models.SET_NULL, null=True, blank=True
     )
+    account_details = models.ForeignKey(AccountDetail, related_name="customers", on_delete=models.DO_NOTHING, null=True, blank=True)
 
     # Fields
-    # last_name = models.CharField(max_length=30)
+    alt_phone_number = PhoneNumberField(
+        blank=True,
+        null=True,
+        verbose_name=_("phone number"),)
+    allergies = models.CharField(max_length=250, blank=True, null=True)
+    first_time_food_tryouts = models.CharField(max_length=250, blank=True, null=True)
+    healthy_diet_goals = models.CharField(max_length=250, blank=True, null=True)
+    address = models.CharField(max_length=130)
     # last_updated = models.DateTimeField(auto_now=True, editable=False)
     # created = models.DateTimeField(auto_now_add=True, editable=False)
-    address = models.CharField(max_length=130)
-    # first_name = models.CharField(max_length=30)
+    
+    
 
     class Meta:
         db_table = "customers"

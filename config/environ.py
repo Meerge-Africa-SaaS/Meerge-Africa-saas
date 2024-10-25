@@ -35,16 +35,16 @@ def loadenv(
     """Load the environment variables from the env file."""
     # Load environment variables only once
     loaded_envs = getlistenv("ENVS_LOADED", [])
-    if env_file in loaded_envs:
-        if not force_reload:
-            return
-    else:
-        loaded_envs.append(env_file)
 
     if not (env_file and os.path.exists(env_file)):
         if skip_missing:
             return
         raise RuntimeError(f"Environment file {env_file!r} does not exist.")
+    if env_file in loaded_envs:
+        if not force_reload:
+            return
+    else:
+        loaded_envs.append(env_file)
     try:
         with open(env_file) as f:
             env_vars = _extract_env_vars(f.read())

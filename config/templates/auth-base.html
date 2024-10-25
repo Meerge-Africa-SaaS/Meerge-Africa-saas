@@ -36,7 +36,10 @@
             {% block form %}
               <form
                 action="{% block form_action %}{% endblock %}"
-                method="{% block form_method %}post{% endblock %}">
+                method="{% block form_method %}post{% endblock %}"
+                class="{% block form_class %}{% endblock %}"
+                >
+                
                 {% csrf_token %}
                 {% block form_fields %}
                 {% endblock %}

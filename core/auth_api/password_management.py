@@ -1,5 +1,5 @@
 from ninja import Router
-from .schema import SuccessMessageSchema, PasswordChangeRequestSchema, PasswordResetRequestSchema, PasswordResetRequestDoneSchema, NotFoundSchema, EmailLoginRequestSchema
+from .schema import SuccessMessageSchema, PasswordChangeRequestSchema, PasswordResetRequestSchema, PasswordResetRequestDoneSchema, NotFoundSchema, EmailLoginRequestSchema, RefreshTokenResponseSchema
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest, JsonResponse
@@ -11,8 +11,11 @@ from django.utils import timezone as django_timezone
 from allauth.account.views import PasswordResetFromKeyView as allauthPasswordResetFromKeyView
 from allauth.account.forms import ResetPasswordForm as allauthResetPasswordForm
 from allauth.account.forms import ResetPasswordForm, ResetPasswordKeyForm
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 from core.models import EmailVerification
+from core.auth_api.token_management import AuthBearer, CustomRefreshToken
 from .token_management import generate_code
 
 p_router = Router()
@@ -25,25 +28,27 @@ class CustomPasswordResetFromKeyView(allauthPasswordResetFromKeyView):
     #reset_url_key = "set-password"
 
 
-@p_router.post("/change", response = SuccessMessageSchema, tags=["Password management"])
+@p_router.post("/change", auth=AuthBearer(), response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema}, tags=["Password management"])
 @login_required
 def password_change(request, data: PasswordChangeRequestSchema):
     #user = request.auth
-    email = data.email
+    email = request.auth["email"]
     old_password = data.old_password
     new_password = data.new_password
-    
-    user = User.objects.get(email = email)
-    if user and user.is_authenticated:
-        if user.check_password(old_password):
-            user.set_password(new_password)
-            user.save()
-            return 200, SuccessMessageSchema(message = "Password changed")
-        
+    try:
+        user = User.objects.get(email = email)
+        if user and user.is_authenticated:
+            if user.check_password(old_password):
+                user.set_password(new_password)
+                user.save()
+                return 200, SuccessMessageSchema(message = "Password changed")
+            
+            else:
+                return 404, NotFoundSchema(message = "Incorrect password")
         else:
-            return 404, NotFoundSchema(message = "Incorrect password")
-    else:
-        return 404, NotFoundSchema(message = "User needs to login before being allowed to change password.")
+            return 404, NotFoundSchema(message = "User needs to login before being allowed to change password.")
+    except:
+        return 404, {"message": "Error"}
     
     
 @p_router.post("/reset", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
@@ -51,16 +56,15 @@ def password_reset(request, data: PasswordResetRequestSchema):
     try:
         user = User.objects.get(email = data.email)
         if user and user.is_active:
-            
-            print("EEE")
-            token = generate_code()
-            print(0)
-            if EmailVerification.objects.filter(user).exists():
-                EmailVerification.objects.get(user).delete()
-                email_token = EmailVerification.objects.create(user = user, email_code=token)
+            email_instance = EmailVerification.objects.filter(user = user).exists()
+            token = generate_code(6)
+            if not email_instance:
+                email_token = EmailVerification.objects.create(user = user, email_code=token, created_at=django_timezone.now(), expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
             else:
-                
-                email_token = EmailVerification.objects.create(user = user, email_code=token)
+                email_instance = EmailVerification.objects.get(user = user)
+                email_instance.email_code=token
+                email_instance.expires_at= django_timezone.now() + django_timezone.timedelta(minutes = 10)
+                email_instance.save()
             
             subject =  "Password Reset"
             message = f"""
@@ -68,9 +72,8 @@ def password_reset(request, data: PasswordResetRequestSchema):
                     """
             email_sender ="dev@kittchens.com"
             receiver = [data.email]
-            print(1)
             try:
-                email_send = send_mail(subject, message, email_sender, receiver)
+                send_mail(subject, message, email_sender, receiver)
                 return 200, {
                     "message": "Password reset mail sent."
                 }
@@ -102,6 +105,7 @@ def password_reset_done(request, data: PasswordResetRequestDoneSchema):
     try:
         user_model = User.objects.get(email = data.email)
         email_instance = EmailVerification.objects.get(user=user_model)
+        
         if email_instance.expires_at > django_timezone.now():
             if email_instance.email_code == data.token:
                 email_instance.delete()
@@ -120,14 +124,14 @@ def password_reset_done(request, data: PasswordResetRequestDoneSchema):
         return 404, {
             "message": "User does not exist"
         }
-    
     except Exception as e:
+        print(e)
         return 404, {
             "message": "We ran into error while processing your request."
         }
     
 
-@p_router.post("/set-password", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password, management"])
+@p_router.put("/set-password", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
 def set_password(request, data: EmailLoginRequestSchema):
     try:
         user = User.objects.get(email = data.email)
@@ -142,6 +146,22 @@ def set_password(request, data: EmailLoginRequestSchema):
             "message": "User does not exist"
         }
     
+    
+@p_router.post("/refresh/token", tags=["Tokens"], response={200: RefreshTokenResponseSchema, 401: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def refresh_token(request, token:str):
+    try:
+        refresh_token = CustomRefreshToken(token)
+        user_id = refresh_token["user_id"]
+        user = User.objects.get(id = user_id)
+        access_token = AccessToken.for_user(user)
+        return 200, {"refresh": str(token), "access": str(access_token)}
+    
+    except TokenError:
+        return 401, {"message": "Invalid refresh token"}
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+    except Exception as e:
+        return 500, {"message": "We ran into error while processing your request."}
 
     
 ''' @p_router.post("/reset", response={200: SuccessMessageSchema, 404: NotFoundSchema}, tags=["Password management"])
