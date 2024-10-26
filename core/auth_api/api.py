@@ -162,6 +162,7 @@ def socialaccount_user_signup(request, user, **kwargs):
                  # Create a new Customer instance associated with this User
                 customer = Customer(user_ptr=user, address="abuja")
                 customer.set_password(user.password)
+                user.save()
                 user.delete()
                 customer.save()
             
@@ -406,6 +407,8 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
 def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     if data.actor_type != "deliveryagent":
         return 403, {"message": "Not a deliveryagent."}
+    aa = Country.objects.all()
+    print(aa)
     try:
         country = Country.objects.get(name=data.address)
     except Country.DoesNotExist:
@@ -420,11 +423,12 @@ def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
         return 404, {"message": "User with this email address already exists"}
 
     deliveryagent = DeliveryAgent.objects.create(
-        first_name=data.first_name,
-        last_name=data.last_name,
-        phone_number=data.phone_number,
-        email=data.email,
-        address=country,
+            first_name=data.first_name,
+            last_name=data.last_name,
+            phone_number=data.phone_number,
+            email=data.email,
+            address=country,
+            terms_and_condition=data.terms_and_condition,
     )
     deliveryagent.set_password(data.password)
     deliveryagent.is_active = False

@@ -8,7 +8,8 @@ from inventory.models import SupplyManager
 
 class MyCustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
-        
+        pass
+        ''' 
         print("\n"*10)
         user = sociallogin.user
         print("HERE", request.session, "HERE AGAIN")
@@ -46,6 +47,8 @@ class MyCustomSocialAccountAdapter(DefaultSocialAccountAdapter):
                 
         else:
             print("From the else part", user.id)
+             '''
+            
         
     ''' def save_user(self, request, sociallogin, form=None):
         

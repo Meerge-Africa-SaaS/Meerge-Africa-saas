@@ -113,6 +113,7 @@ class DeliveryAgentSignupRequestSchema(Schema):
     address: str
     password: str
     actor_type: str
+    terms_and_condition: bool
     
 
 class DeliveryAgentOnboardStep1Schema(Schema):
@@ -175,8 +176,10 @@ class DeliveryAgentOnboardStep2Schema(Schema):
     #Bank_code: str
     #Bank_account_number: str
     #Bank_account_name: str
-    work_shift: WorkShiftSchema
     #face_capture: str
+    
+class DeliveryAgentOnboardStep3Schema(Schema):
+    work_shift: WorkShiftSchema
     
     @validator("work_shift")
     def validate_work_shift(cls, v):
@@ -193,7 +196,6 @@ class SupplierOnboardSchema(Schema):
     business_address: str
     cac_registration_number: str
     category: List[str]
-    cac_document: str
     business_premise_license: Optional[str] = None
      
 

@@ -31,6 +31,7 @@ from .schema import (
     DeliveryAgentSignupRequestSchema,
     DeliveryAgentOnboardStep1Schema,
     DeliveryAgentOnboardStep2Schema,
+    DeliveryAgentOnboardStep3Schema,
     EmailLoginRequestSchema,
     EmailVerificationSchema,
     JWTLoginResponseSchema,
@@ -83,7 +84,7 @@ def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema =
         return 404, {"message": f"We ran into an error {e}"}
 
 @router.post("/deliveryagent-step2", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, face_capture: File[UploadedFile]):
+def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema):
     try:
         deliveryagent = DeliveryAgent.objects.get(id = request.auth["user_id"])
     except DeliveryAgent.DoesNotExist:
@@ -95,7 +96,22 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, 
         deliveryagent.update(
             N_O_N_full_name = data.NON_full_name, N_O_N_phone_number = data.NON_phone_number, 
             guarantor_first_name = data.guarantor_first_name, guarantor_last_name = data.guarantor_last_name, 
-            guarantor_occupation = data.guarantor_occupation, guarantor_phone_number = data.guarantor.phone_number,
+            guarantor_occupation = data.guarantor_occupation, guarantor_phone_number = data.guarantor.phone_number,            )
+        return 200, {"message": "Driving details done"}
+    except Exception as e:
+        return 404, {"message": f"We ran into an error {e}"}
+    
+@router.post("/deliveryagent-step3", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_deliveryagent_step3(request, data: DeliveryAgentOnboardStep3Schema, face_capture: File[UploadedFile]):
+    try:
+        deliveryagent = DeliveryAgent.objects.get(id = request.auth["user_id"])
+    except DeliveryAgent.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+    except Exception as e:
+        return 500, {"message": "Error while querying user"}
+    try:
+        
+        deliveryagent.update(
             work_shift = data.work_shift.dict(), face_capture = face_capture
             )
         return 200, {"message": "Driving details done"}
@@ -105,7 +121,6 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema, 
 # Supplier onboarding endpoint/function
 @router.post("/supplier", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: UploadedFile = File(...), business_premise_license: Optional[UploadedFile] = File(None)):
-    print(request.auth["user_id"])
     try:
         supply_owner = User.objects.get(id = request.auth["user_id"])
     except User.DoesNotExist:
