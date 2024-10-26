@@ -31,7 +31,7 @@ from .schema import (
     DeliveryAgentSignupRequestSchema,
     DeliveryAgentOnboardStep1Schema,
     DeliveryAgentOnboardStep2Schema,
-    DeliveryAgentOnboardStep3Schema
+    DeliveryAgentOnboardStep3Schema,
     EmailLoginRequestSchema,
     EmailVerificationSchema,
     JWTLoginResponseSchema,
