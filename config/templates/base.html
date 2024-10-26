@@ -36,16 +36,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/tailwind.out.css?aabb' %}" />
     {% endcompress %}
 
-    {# HTMX #}
-    {% compress js %}
-    <script type="text/javascript" src="{% static 'vendor/htmx.min.js' %}"></script>
-    {% endcompress %}
-
-    {# Flowbite #}
-    {% compress js %}
-    <script type="text/javascript" src="{% static 'vendor/flowbite.min.js' %}"></script>
-    {% endcompress %}
-
     {# Global stylesheets #}
     {% compress css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/config.css' %}" />
@@ -57,10 +47,19 @@
   </head>
 
   <body class="{% block body_class %}{% endblock %}">
-    {% wagtailuserbar %}
-
     {% block content %}
+
     {% endblock %}
+
+    {# HTMX #}
+    {% compress js %}
+    <script type="text/javascript" src="{% static 'vendor/htmx.min.js' %}"></script>
+    {% endcompress %}
+
+    {# Flowbite #}
+    {% compress js %}
+    <script type="text/javascript" src="{% static 'vendor/flowbite.min.js' %}"></script>
+    {% endcompress %}
 
     {# Global javascript #}
     {% compress js %}
@@ -88,7 +87,6 @@
         {% endfor %}
     </script>
 
-    {# Modal #}
-    <script type="text/javascript" src="{% static 'js/modal.js' %}"></script>
-    
+  {# Modal #}
+  <script type="text/javascript" src="{% static 'js/modal.js' %}"></script>
 </html>
