@@ -409,8 +409,7 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
 def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     if data.actor_type != "deliveryagent":
         return 403, {"message": "Not a deliveryagent."}
-    aa = Country.objects.all()
-    print(aa)
+    
     try:
         country = Country.objects.get(name=data.address)
     except Country.DoesNotExist:
