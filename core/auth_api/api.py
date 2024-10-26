@@ -206,6 +206,8 @@ def owner_signup(request, data: SignupRequestSchema):
             )
             owner.set_password(data.password)
             owner.is_active = False
+            owner_grp, _ = Group.objects.get_or_create(name="Supplier Owner")
+            owner.groups.add(owner_grp)
             owner.save()
         else:
             return 404, {"message": "User already exists"}
