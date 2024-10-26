@@ -36,6 +36,11 @@
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/tailwind.out.css?aabb' %}" />
     {% endcompress %}
 
+    {# Dropzone CSS #}
+    {% compress css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/dropzone.min.css' %}" />
+    {% endcompress %}
+
     {# Global stylesheets #}
     {% compress css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/config.css' %}" />
@@ -61,6 +66,11 @@
     {# Flowbite #}
     {% compress js %}
     <script type="text/javascript" src="{% static 'vendor/flowbite.min.js' %}"></script>
+    {% endcompress %}
+
+    {# Dropzone #}
+    {% compress js %}
+    <script type="text/javascript" src="{% static 'vendor/dropzone.min.js' %}"></script>
     {% endcompress %}
 
     {# Global javascript #}
