@@ -113,6 +113,7 @@ class DeliveryAgentSignupRequestSchema(Schema):
     address: str
     password: str
     actor_type: str
+    terms_and_condition: bool
     
 
 class DeliveryAgentOnboardStep1Schema(Schema):
