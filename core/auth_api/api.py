@@ -427,8 +427,8 @@ def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
             last_name=data.last_name,
             phone_number=data.phone_number,
             email=data.email,
-            address=country,
-            terms_and_condition=data.terms_and_condition,
+            address=country
+            terms_and_condition=data.terms_and_condition
     )
     deliveryagent.set_password(data.password)
     deliveryagent.is_active = False
