@@ -1,13 +1,11 @@
 from .base import *
-from .dev import DEBUG
-from config.local import local
-LOCAL = local()
+LOCAL = os.getenv("LOCAL", False)
 try:
-    if DEBUG and LOCAL:
-        print(f"DEBUG MODE: {LOCAL}")
+    if LOCAL:
+        print(f"{LOCAL = }")
         EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 except:
-    print(f"DEBUG MODE: {LOCAL}")
+    print(f"{LOCAL = }")
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = "mail.kittchens.com"
