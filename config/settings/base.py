@@ -124,11 +124,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 db_config = dj_database_url.config(default=os.getenv("DATABASE_URL"))
 db_config["ATOMIC_REQUESTS"] = True
 DATABASES = {
-    # "supa": db_config,
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    },
+    "supa": db_config,
+    "default": db_config,
 }
 
 # Password validation
@@ -226,10 +223,3 @@ WAGTAILDOCS_EXTENSIONS = [
     "xlsx",
     "zip",
 ]
-
-
-def load_settings(setting):
-    try:
-        exec(f"from .{setting} import *")
-    except ImportError as e:
-        print(f"Could not import {setting}: {e}")
