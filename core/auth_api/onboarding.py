@@ -102,7 +102,7 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema):
         return 404, {"message": f"We ran into an error {e}"}
     
 @router.post("/deliveryagent-step3", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
-def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep3Schema, face_capture: File[UploadedFile]):
+def onboard_deliveryagent_step3(request, data: DeliveryAgentOnboardStep3Schema, face_capture: File[UploadedFile]):
     try:
         deliveryagent = DeliveryAgent.objects.get(id = request.auth["user_id"])
     except DeliveryAgent.DoesNotExist:
