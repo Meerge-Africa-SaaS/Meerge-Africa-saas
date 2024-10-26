@@ -175,8 +175,10 @@ class DeliveryAgentOnboardStep2Schema(Schema):
     #Bank_code: str
     #Bank_account_number: str
     #Bank_account_name: str
-    work_shift: WorkShiftSchema
     #face_capture: str
+    
+class DeliveryAgentOnboardStep3Schema(Schema):
+    work_shift: WorkShiftSchema
     
     @validator("work_shift")
     def validate_work_shift(cls, v):
