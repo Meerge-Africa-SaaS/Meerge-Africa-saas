@@ -29,7 +29,7 @@
 {% endrawformattedfield %}
 <script type="text/javascript">
   console.log('Dropzone script loaded');
-  (function() {
+  function attachDropzone() {
     const dropzone = document.getElementById('dropzone-{{field.id_for_label}}');
     const fileInput = document.getElementById('{{field.id_for_label}}');
     const fileList = document.getElementById('file-list-{{field.id_for_label}}');
@@ -106,5 +106,10 @@
         fileList.classList.add('hidden');
         fileList.querySelector('.file-name').textContent = '';
     }
-  })();
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attachDropzone);
+  } else {
+    attachDropzone();
+  }
 </script>
