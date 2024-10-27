@@ -18,11 +18,13 @@ def local():
         try:
             response = requests.get(url, headers={"Metadata": "true"}, timeout=1)
             if response.status_code == 200:
-                return f"Running in {cloud} cloud environment."
+                print(f"Running in {cloud} cloud environment.")
+                return False
         except requests.RequestException:
             continue
 
-    return f"Running in a local environment. OS: {os_type}"
+    print(f"Running in a local environment. OS: {os_type}")
+    return True
 
 # Example usage
 if __name__ == "__main__":
