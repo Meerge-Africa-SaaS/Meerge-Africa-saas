@@ -6,3 +6,4 @@ INSTALLED_APPS.extend(
         "restaurants.apps.RestaurantsConfig",
     ]
 )
+print(f"loading. .. {__file__}")

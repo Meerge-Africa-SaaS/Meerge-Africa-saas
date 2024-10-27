@@ -4,3 +4,4 @@ from django.urls import include, path
 from .base import *
 
 INSTALLED_APPS += []
+print(f"loading. .. {__file__}")
