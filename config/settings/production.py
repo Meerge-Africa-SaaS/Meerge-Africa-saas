@@ -2,7 +2,7 @@
 from config.env import getlistenv, getenv
 from .base import *
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS =  getlistenv("DJANGO_ALLOWED_HOSTS", [])
 SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
