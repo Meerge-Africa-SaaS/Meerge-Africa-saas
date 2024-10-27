@@ -1,5 +1,5 @@
 import os
-from config.environ import getenv
+from config.env import getenv
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
