@@ -32,5 +32,6 @@ try:
     from .djext import *
     from .reload import *
     from .compressor import *
-except ImportError:
-    pass
+except Exception as e:
+    print(f"error loading. .. {__file__}")
+    print(e)
