@@ -11,3 +11,4 @@ try:
     STATICFILES_FINDERS.append("compressor.finders.CompressorFinder")  # type: ignore
 except NameError:
     STATICFILES_FINDERS = ["compressor.finders.CompressorFinder"]
+print(f"loading. .. {__file__}")

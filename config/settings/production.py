@@ -10,7 +10,6 @@ try:
     from .local import *  # type: ignore
 except ImportError:
     pass
-
 from .geo import *
 from .auth import *
 from .mail import *
@@ -23,3 +22,4 @@ from .orders import *
 from .djext import *
 from .reload import *
 from .compressor import *
+print(f"loading. .. {__file__}")

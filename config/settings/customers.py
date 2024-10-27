@@ -2,3 +2,4 @@
 from .base import *
 
 INSTALLED_APPS += ["customers"]
+print(f"loading. .. {__file__}")
