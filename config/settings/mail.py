@@ -1,18 +1,16 @@
-from .base import *
-from .dev import DEBUG
-from config.local import local
-LOCAL = local()
-try:
-    if DEBUG and LOCAL:
-        print(f"DEBUG MODE: {LOCAL}")
-        EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-except:
-    print(f"DEBUG MODE: {LOCAL}")
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_USE_TLS = True
-EMAIL_HOST = "mail.kittchens.com"
-EMAIL_PORT = 587
+# ruff: noqa:F403
+from config.env import getenv, getintenv
+from config.settings import DJANGO_ENV
 
-EMAIL_HOST_USER = "dev@kittchens.com"
-EMAIL_HOST_PASSWORD = "8p([~su+2FgR"
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+if DJANGO_ENV == "production":
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_USE_TLS = True
+    EMAIL_HOST = getenv("EMAIL_HOST")
+    EMAIL_PORT = getintenv("EMAIL_PORT")
+    EMAIL_HOST_USER = getenv("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = getenv("EMAIL_HOST_PASSWORD")
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+print(f"DEBUG: email backend '{EMAIL_BACKEND}'")
