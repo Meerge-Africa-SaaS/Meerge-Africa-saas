@@ -65,7 +65,7 @@ class OnboardingForm1(forms.Form):
     business_address = forms.CharField(max_length=100, label="Business Address")
 
     business_category = forms.ChoiceField(
-        choices=BUSINESS_CATEGORY_CHOICES, label="Supplier Category"
+        choices=BUSINESS_CATEGORY_CHOICES, label="Food Business Type"
     )
 
     business_registration_status = forms.ChoiceField(
