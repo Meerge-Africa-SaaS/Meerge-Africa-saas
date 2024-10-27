@@ -3,10 +3,7 @@ import os
 from django import forms
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse
-from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import generic
 from formtools.wizard.views import SessionWizardView

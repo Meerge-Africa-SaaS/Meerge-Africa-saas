@@ -1,14 +1,7 @@
-import os
-from typing import Any
-
 from django import forms
-from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
+from django.http import HttpRequest
+from django.urls import reverse_lazy
 from django.views import generic
-from allauth.account.models import EmailAddress as allauthEmailAddress
-from allauth.account.models import EmailConfirmation as allauthEmailConfirmation
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from phonenumber_field.phonenumber import PhoneNumber
@@ -16,11 +9,7 @@ from allauth.account.views import (
     SignupView,
     SignupForm,
 )
-from django.utils import timezone
 from django.contrib.auth.models import Group
-
-
-from config.form_fields import PhoneNumberField
 
 # from world.models import City
 from core.models import User
