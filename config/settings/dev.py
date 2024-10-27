@@ -21,10 +21,10 @@ DATABASES = {
 try:
     from .sre import *
     from .geo import *
+    from .banking import *
     from .auth import *
     from .mail import *
     from .api import *
-    from .banking import *
     from .restaurants import *
     from .customers import *
     from .inventory import *
@@ -35,5 +35,3 @@ try:
 except Exception as e:
     print(f"error loading. .. {__file__}")
     print(e)
-except ImportError:
-    pass
