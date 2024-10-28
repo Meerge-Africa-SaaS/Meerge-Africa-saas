@@ -55,9 +55,7 @@ INSTALLED_APPS = [
                      'rest_framework',
                      'django_htmx',
                      'rest_framework_swagger',
-                     'rest_framework_simplejwt',
-                     'rest_framework_simplejwt.token_blacklist',
-                     'drf_spectacular'
+                     'rest_framework_simplejwt'
                  ] + [
                      # core
                      "core.apps.CoreConfig",
@@ -82,7 +80,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    #"django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",

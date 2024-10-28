@@ -20,7 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
-    <title>MergeAfrica</title>
+    <title>MeergeAfrica</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
@@ -28,9 +28,9 @@
       class="bg-transparent p-4 md:flex md:justify-between md:items-center w-full z-20"
     >
       <div class="flex justify-between items-center">
-        <div class="logo pl-20">
-          <img src="{% static 'assets/Meerge-logo.svg' %}" width="100px" class="ml-16" />
-        </div>
+        <div class="logo" style="position: absolute; left: 0; margin-left: 10px; top: 10px;">
+          <img src="{% static 'assets/Meerge-logo.svg' %}" style="width: 80px; height: auto; margin-left: 16px;" />
+      </div>
 
         <div class="md:hidden">
           <button id="menu-btn" class="text-white focus:outline-none">
@@ -57,7 +57,7 @@
         class="hidden md:flex flex-col md:flex-row md:gap-x-8 items-center mt-4 md:mt-0"
       >
         <ul class="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-8">
-          <li><a href="#" class="text-white">Features</a></li>
+          <li><a href="#Features" class="text-white">Features</a></li>
           <li><a href="#" class="text-white">Products</a></li>
           <li><a href="#" class="text-white">Pricing</a></li>
           <li><a href="#" class="text-white">Partners</a></li>
@@ -102,7 +102,7 @@
       class="second-section h2 flex flex-col items-center justify-center pt-12 w-full bg-[#f3f5f7]"
     >
       <h2>
-        Food business is <strong> serious as fun!</strong> Ease the
+        Food business is  <strong>as serious as fun!</strong> <br>  Ease the
         stress<strong> by 0.1%</strong>
       </h2>
 
@@ -115,8 +115,16 @@
           competitive prices.
         </p>
       </div>
+      <br>
+      <br>
+      <br>
 
-      <section class="parent-wrapper" id="parent-wrapper-overlay">
+      <section class="parent-wrapper" id="#Features parent-wrapper-overlay" style="
+      background-image: url('{% static 'assets/chef-chopping-tomatoes.png' %}');
+      background-size: cover; /* Ensures the image covers the entire section */
+      background-repeat: no-repeat; /* Prevents the image from repeating */
+      background-position: center; /* Centers the image */
+      ">
         <div class="overlay"></div>
         <section class="features-card" id="features-card">
           <div>
@@ -366,7 +374,7 @@
       <header
         class="head-txt text-center text-3xl font-semibold mb-16 w-full mt-20"
       >
-        Here's what <strong>our trusted partners</strong> say about us
+        Here's what <strong>our trusted partners</strong> <br> say about us
       </header>
 
       <div class="flex justify-center items-center space-x-16 mt-16">
@@ -419,7 +427,7 @@
 
       <div class="grid grid-cols-3 gap-4 w-full mt-28 pb-28">
         <div class="flex justify-center">
-          <img src="{% static 'assets/Rectangle 60.png' %}" />
+          <img src="{% static 'assets/aid.png' %}" />
         </div>
         <div class="flex justify-center">
           <img src="{% static 'assets/sell-it-off-logo.png' %}" />
@@ -428,18 +436,20 @@
           <img src="{% static 'assets/megadel-farm-logo.png' %}" />
         </div>
         <div class="flex justify-center mt-8">
-          <img src="{% static 'assets/Rectangle 76.png' %}" />
+          <img src="{% static 'assets/speed.png' %}" />
         </div>
         <div class="flex justify-center mt-8">
           <img src="{% static 'assets/sell-dome-logo.png' %}" />
         </div>
         <div class="flex justify-center mt-8">
-          <img src="{% static 'assets/Rectangle 77.png' %}" />
+          <img src="{% static 'assets/red.png' %}" />
         </div>
       </div>
     </section>
 
-    <section class="last-section">
+    <section class="last-section" style="background-image: url('{% static 'assets/bar-man.png' %}');">
+ 
+ 
       <div class="mx-20">
         <p class="w-[662px]">
           Managing your restaurant has never been more effortless.
@@ -524,7 +534,7 @@
             <a href="#" class="mx-2"
               ><img src="{% static 'assets/X-icon.svg' %}" alt="X" /></a>
             <a href="#" class="mx-2"
-              ><img src="{% static 'assets/linkedin-icon.svg' %}" alt="LinkedIn"
+              ><img src="{% static 'assets/lin.png' %}" alt="LinkedIn"
             /></a>
           </div>
 

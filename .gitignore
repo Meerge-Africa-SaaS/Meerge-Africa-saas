@@ -88,7 +88,6 @@ __pycache__
 node_modules
 .env
 .env.*
-env
 !.env.example
 local_settings.py
 media
@@ -105,3 +104,4 @@ terraform.tfstahzte.backup
 .vscode
 
 /static
+/.vscode/
