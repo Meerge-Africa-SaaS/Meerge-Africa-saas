@@ -24,7 +24,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
     
     def get_reset_password_from_key_url(self, key):
         print("\n"*5, key, "\n"*5)
-
+    ''' 
     def get_email_confirmation_url(self, request, emailconfirmation):
         
         url = f'http://localhost:8000/test/{emailconfirmation.key}/'
@@ -43,7 +43,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         else:
             email_template = "account/email/email_confirmation"
         self.send_mail(email_template, emailconfirmation.email_address.email, ctx)
-    
+     '''
     
     ''' def get_email_confirmation_url(self, request, emailconfirmation):
         #return 
