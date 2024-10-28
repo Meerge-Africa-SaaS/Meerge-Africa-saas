@@ -12,12 +12,6 @@ SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ["*"]
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
 try:
     from .sre import *
     from .geo import *
