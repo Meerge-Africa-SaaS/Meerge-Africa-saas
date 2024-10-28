@@ -69,16 +69,21 @@ def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema =
     if ((data.vehicle_type == "motorcycle") or (data.vehicle_type == "truck")) and not driver_license_DOC:
         return 404, {"message": "Drivers license document is required for motorcycles and trucks."}
     
-    elif (data.vehicle_type == "bicycle") and not voters_DOC:
+    elif (data.vehicle_type == "bicycle") and not voters_card_DOC:
         return 404, {"message": "Voters card document/image is required for motorcycles."}
     
     try:
-        deliveryagent.update(
-            vehicle_type = data.vehicle_type, vehicle_brand = data.vehicle_brand, 
-            plate_number = data.plate_number, drivers_license = drivers_license_DOC, 
-            drivers_license_id = data.drivers_license_ID, voters_card = voters_card_DOC, 
-            voters_number = data.voters_card_ID, nin_doc = NIN_doc, nin_number = data.NIN_ID
-            )
+        deliveryagent.vehicle_type = data.vehicle_type
+        deliveryagent.vehicle_brand = data.vehicle_brand 
+        deliveryagent.plate_number = data.plate_number
+        deliveryagent.drivers_license = drivers_license_DOC
+        deliveryagent.drivers_license_id = data.drivers_license_ID
+        deliveryagent.voters_card = voters_card_DOC
+        deliveryagent.voters_number = data.voters_card_ID
+        deliveryagent.nin_doc = NIN_doc
+        deliveryagent.nin_number = data.NIN_ID
+        deliveryagent.save()
+            
         return 200, {"message": "Driving details done"}
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
@@ -92,12 +97,14 @@ def onboard_deliveryagent_step2(request, data: DeliveryAgentOnboardStep2Schema):
     except Exception as e:
         return 500, {"message": "Error while querying user"}
     try:
-        
-        deliveryagent.update(
-            N_O_N_full_name = data.NON_full_name, N_O_N_phone_number = data.NON_phone_number, 
-            guarantor_first_name = data.guarantor_first_name, guarantor_last_name = data.guarantor_last_name, 
-            guarantor_occupation = data.guarantor_occupation, guarantor_phone_number = data.guarantor.phone_number,            )
-        return 200, {"message": "Driving details done"}
+        deliveryagent.N_O_N_full_name = data.NON_full_name
+        deliveryagent.N_O_N_phone_number = data.NON_phone_number
+        deliveryagent.guarantor_first_name = data.guarantor_first_name
+        deliveryagent.guarantor_last_name = data.guarantor_last_name
+        deliveryagent.guarantor_occupation = data.guarantor_occupation
+        deliveryagent.guarantor_phone_number = data.guarantor_phone_number
+        deliveryagent.save()
+        return 200, {"message": "Guarantor's details captured done"}
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
     
@@ -110,11 +117,11 @@ def onboard_deliveryagent_step3(request, data: DeliveryAgentOnboardStep3Schema, 
     except Exception as e:
         return 500, {"message": "Error while querying user"}
     try:
-        
-        deliveryagent.update(
-            work_shift = data.work_shift.dict(), face_capture = face_capture
-            )
-        return 200, {"message": "Driving details done"}
+        deliveryagent.work_shift = data.work_shift.dict()
+        deliveryagent.face_capture = face_capture
+        deliveryagent.save()
+      
+        return 200, {"message": "Step 3 details captured"}
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
     
