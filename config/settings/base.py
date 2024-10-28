@@ -55,9 +55,7 @@ INSTALLED_APPS = [
                      'rest_framework',
                      'django_htmx',
                      'rest_framework_swagger',
-                     'rest_framework_simplejwt',
-                     'rest_framework_simplejwt.token_blacklist',
-                     'drf_spectacular'
+                     'rest_framework_simplejwt'
                  ] + [
                      # core
                      "core.apps.CoreConfig",
@@ -83,7 +81,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    #"django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -125,11 +123,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 db_config = dj_database_url.config(default=os.getenv("DATABASE_URL"))
 db_config["ATOMIC_REQUESTS"] = True
 DATABASES = {
-    # "supa": db_config,
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    },
+    "supa": db_config,
+    "default": db_config,
 }
 
 # Password validation
@@ -227,10 +222,3 @@ WAGTAILDOCS_EXTENSIONS = [
     "xlsx",
     "zip",
 ]
-
-
-def load_settings(setting):
-    try:
-        exec(f"from .{setting} import *")
-    except ImportError as e:
-        print(f"Could not import {setting}: {e}")

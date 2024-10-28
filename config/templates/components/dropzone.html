@@ -1,17 +1,115 @@
 {% load wagtailadmin_tags %}
 {% rawformattedfield field=field %}
 <div class="flex items-center justify-center w-full form-group">
-  <label for="{{field.id_for_label}}" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-      <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-      </svg>
-      <p class="mb-2 text-sm text-gray-500">
-        <span class="font-semibold">Click to upload</span> or drag and drop
-      </p>
-      <p class="text-xs text-gray-500">{{help_text}}</p>
-    </div>
-    {% formattedfield field=field classname="hidden" %}
-  </label>
+  <div class="w-full">
+    <label for="{{field.id_for_label}}" id="dropzone-{{field.id_for_label}}" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 relative">
+      <div class="flex flex-col items-center justify-center pt-5 pb-6">
+        <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+        </svg>
+        <p class="mb-2 text-sm text-gray-500">
+          <span class="font-semibold">Click to upload</span> or drag and drop
+        </p>
+        <p class="text-xs text-gray-500">{{help_text}}</p>
+      </div>
+      <div id="file-list-{{field.id_for_label}}" class="hidden absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-500 file-name"></span>
+          <button type="button" class="text-red-500 hover:text-red-700 remove-file">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      {% formattedfield field=field classname="hidden" %}
+    </label>
+  </div>
 </div>
 {% endrawformattedfield %}
+<script type="text/javascript">
+  console.log('Dropzone script loaded');
+  function attachDropzone() {
+    const dropzone = document.getElementById('dropzone-{{field.id_for_label}}');
+    const fileInput = document.getElementById('{{field.id_for_label}}');
+    const fileList = document.getElementById('file-list-{{field.id_for_label}}');
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      console.log(`Adding event listener for ${eventName} to {{field.name}} dropzone`);
+        dropzone.addEventListener(eventName, preventDefaults, false);
+        // document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    // Highlight drop zone when dragging over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, unhighlight, false);
+    });
+
+    // Handle dropped files
+    dropzone.addEventListener('drop', handleDrop, false);
+
+    // Handle clicked files
+    fileInput.addEventListener('change', handleFiles, false);
+
+    // Handle remove file button
+    fileList.querySelector('.remove-file').addEventListener('click', removeFile, false);
+
+    function preventDefaults (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function highlight(e) {
+      console.log("Highlighting");
+        dropzone.classList.add('border-blue-500');
+        dropzone.classList.remove('border-gray-300');
+    }
+
+    function unhighlight(e) {
+      console.log("Unhighlighting");
+        dropzone.classList.remove('border-blue-500');
+        dropzone.classList.add('border-gray-300');
+    }
+
+    function handleDrop(e) {
+      console.log('Handling drop');
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles({ target: { files: files } });
+    }
+
+    function handleFiles(e) {
+      console.log('Handling files');
+        const files = e.target.files;
+        if (files.length > 0) {
+            const file = files[0]; // Handle only the first file
+            fileInput.files = files;
+            showFile(file);
+        }
+    }
+
+    function showFile(file) {
+      console.log('Showing file');
+        fileList.classList.remove('hidden');
+        fileList.querySelector('.file-name').textContent = file.name;
+    }
+
+    function removeFile(e) {
+      console.log('Removing file');
+        e.preventDefault();
+        fileInput.value = '';
+        fileList.classList.add('hidden');
+        fileList.querySelector('.file-name').textContent = '';
+    }
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attachDropzone);
+  } else {
+    attachDropzone();
+  }
+</script>
