@@ -43,7 +43,7 @@ class ActorRedirect(generic.RedirectView):
             # check if this user is among a restuarant's owners
             restaurant = Restaurant.objects.filter(owner__in=(user.id,)).first()
             if restaurant:
-                return reverse("restaurants:dashboard", args=(restaurant.id,))
+                return reverse("restaurants:dashboard", args=(restaurant.custom_link,))
             return reverse("restaurant_onboarding")
         return "/"
 
@@ -110,7 +110,7 @@ class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
 
 
 class CustomTokenRefreshView(TokenRefreshView):
-    serializer_class = serializers.CustomTokenRefreshSerializer
+    serializer_class = serializers.CustomTokenRefreshSerializer # type: ignore
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

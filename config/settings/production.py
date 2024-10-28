@@ -7,3 +7,5 @@ try:
     from .local import *  # type: ignore
 except ImportError:
     pass
+
+print(f"loading. .. {__file__}")

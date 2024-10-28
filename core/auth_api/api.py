@@ -206,6 +206,8 @@ def owner_signup(request, data: SignupRequestSchema):
             )
             owner.set_password(data.password)
             owner.is_active = False
+            owner_grp, _ = Group.objects.get_or_create(name="Supplier Owner")
+            owner.groups.add(owner_grp)
             owner.save()
         else:
             return 404, {"message": "User already exists"}
@@ -407,8 +409,7 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
 def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     if data.actor_type != "deliveryagent":
         return 403, {"message": "Not a deliveryagent."}
-    aa = Country.objects.all()
-    print(aa)
+    
     try:
         country = Country.objects.get(name=data.address)
     except Country.DoesNotExist:
