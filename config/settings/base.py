@@ -67,7 +67,8 @@ INSTALLED_APPS = [
 # Customer User Model
 AUTH_USER_MODEL = "core.User"
 
-
+ACCOUNT_ADAPTER = "core.CustomFiles.CustomAdapterFile.CustomAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "core.CustomFiles.CustomSocialAdapter.MyCustomSocialAccountAdapter"
 AUTHENTICATION_BACKENDS = [
     "core.CustomFiles.CustomBackend.EmailAuthBackend",
     "core.CustomFiles.CustomBackend.PhoneAuthBackend",
