@@ -42,13 +42,14 @@ class ItemCategory(models.Model):
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     name = models.CharField(max_length=30)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         verbose_name_plural = "Item Categories"
 
     def __str__(self):
-        return str(self.name)
+        return str(self.id)
 
     def get_absolute_url(self):
         return reverse("inventory_ItemCategory_detail", args=(self.pk,))

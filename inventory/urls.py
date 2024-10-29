@@ -3,12 +3,13 @@ from rest_framework import routers
 from .views import AdminStockListView
 from .views import AdminStockListApi
 from .views import SupplierStockListView
-from .views import CreateStoreView
 from .views import StockViewApi
-from .views import CreateCategoryAndItemView
 from .views import StockDetailViewApi
-from .views import SupplierProfileView
 from .views import SupplierUpdateProfileViewApi
+from .api_views import CreateItemView, CreateStoreView, DeleteStoreByIDView, GetAllStoresByOwnerView, UpdateStoreView, onboardingSupplierView
+from .api_views import ViewStoreDetailByIDView
+from .api_views import CreateStockApiView
+from .api_views import CreateItemCategoryView
 
 
 from . import api, htmx, views
@@ -93,11 +94,7 @@ urlpatterns = (
         views.ItemDeleteView.as_view(),
         name="inventory_Item_delete",
     ),
-    path(
-        "create-category-item/<int:stock_id>/",
-        CreateCategoryAndItemView.as_view(),
-        name="create-category-item",
-    ),
+   
     path(
         "stock-details/<int:item_id>/",
         StockDetailViewApi.as_view(),
@@ -107,7 +104,6 @@ urlpatterns = (
     path(
         "Stock/create/", views.StockCreateView.as_view(), name="inventory_Stock_create"
     ),
-    path("api/stock-create", views.StockCreateAPIView.as_view(), name="stock-create"),
     path(
         "stock/admin/products/", AdminStockListView.as_view(), name="admin_product_list"
     ),
@@ -258,6 +254,16 @@ urlpatterns = (
         htmx.HTMXSupplyManagerDeleteView.as_view(),
         name="inventory_SupplyManager_htmx_delete",
     ),
-    path("api/stores/create/", CreateStoreView.as_view(), name="create-store"),
+    path("api/supplier/onboard/", onboardingSupplierView.as_view(), name="create-supplier"),
+    path("api/store/create/", CreateStoreView.as_view(), name="create-store"),
+    path("api/store/detail/<int:pk>/", ViewStoreDetailByIDView.as_view(), name="view-store-detail-by-id"),
+    path("api/stores/all-owner/", GetAllStoresByOwnerView.as_view(), name="get-all-stores-by-owner"),
+    path('api/store/delete/<int:pk>/', DeleteStoreByIDView.as_view(), name='store-delete'),
+    path('api/stock/create/', CreateStockApiView.as_view(), name='create-stock'),
+    path('api/store/update/<int:pk>/', UpdateStoreView.as_view(), name='store-update'),
     path("api/stock-details/", StockViewApi.as_view(), name="product-stock"),
+    path('api/item/create/', CreateItemView.as_view(), name='create-item'),
+    path('api/item/category/create/', CreateItemCategoryView.as_view(), name='create-item-category'),
+   
+
 )

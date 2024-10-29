@@ -21,24 +21,40 @@ class ItemCategorySerializer(serializers.ModelSerializer):
             "name",
             "last_updated",
         ]
-
-
 class ItemSerializer(serializers.ModelSerializer):
-    item_name = serializers.CharField(source='item.name')
-    category = serializers.CharField(source='item.category.name')
-    unit_of_measure = serializers.CharField(source='item.unit_of_measure')
-
     class Meta:
         model = models.Item
         fields = [
-            'item_name',          
-            #'product_image',      
-            'category',           
-            #'availability_status',
-            'price',            
-            #'quantity',          
-            'unit_of_measure',   
+            'name',           # Directly use 'name' for item name
+            'category',       # You can directly set this as an ID
+            'price',          
+            'unit_of_measure', 
+            'expiry_date',    # Ensure you include all required fields
+            'supplier',       # Include supplier here if you want to set it directly
         ]
+
+    def create(self, validated_data):
+        # Extract supplier from validated data if included
+        supplier = validated_data.pop('supplier')
+        item = models.Item.objects.create(supplier=supplier, **validated_data)
+        return item
+
+# class ItemSerializer(serializers.ModelSerializer):
+#     item_name = serializers.CharField(source='item.name')
+#     category = serializers.CharField(source='item.category.name')
+#     unit_of_measure = serializers.CharField(source='item.unit_of_measure')
+
+#     class Meta:
+#         model = models.Item
+#         fields = [
+#             'item_name',          
+#             #'product_image',      
+#             'category',           
+#             #'availability_status',
+#             'price',            
+#             #'quantity',          
+#             'unit_of_measure',   
+#         ]
 class ViewStockSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Stock
@@ -94,6 +110,26 @@ class AdminViewAllProductSerializer(serializers.ModelSerializer):
         ]
 
 class SupplierSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Supplier
+        fields = [
+            "id",
+            "created",
+            "name",
+            "owner",
+            "last_updated",
+            "city",
+            "email",
+            "phone_number",
+            "cac_reg_number",
+            "cac_certificate",
+            "business_license",
+            #"category",
+            "profile_img",
+            "cover_img",
+            "address",
+        ]
+class SupplierSerializer2(serializers.ModelSerializer):
     class Meta:
         model = models.Supplier
         fields = [
