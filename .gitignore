@@ -105,3 +105,4 @@ terraform.tfstahzte.backup
 
 /static
 /.vscode/
+poetry.lock
