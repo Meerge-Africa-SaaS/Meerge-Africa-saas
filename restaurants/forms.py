@@ -433,11 +433,15 @@ class RegistrationForm(SignupForm):
         return super().clean()
 
     def save(self, request):
+        request.session["verification_email"] = self.cleaned_data["email"]
         user = super().save(request)
         user.phone_number = self.cleaned_data["phone_number"]
         owner_grp, _ = Group.objects.get_or_create(name="Restaurant Owner")
+        owner_sys_grp, _ = Group.objects.get_or_create(name="owner")
         user.groups.add(owner_grp)
+        user.groups.add(owner_sys_grp)
         user.save()
+        request.session["verification_email"] = user.email
         return user
 
     # def signup(self, request: HttpRequest, user: User) -> None:
