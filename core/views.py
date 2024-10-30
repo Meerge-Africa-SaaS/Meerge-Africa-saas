@@ -1,30 +1,23 @@
 from typing import Any
-from django.contrib.auth import views as auth_views
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
-from django.views import generic
-
-
-from rest_framework_simplejwt.views import TokenRefreshView
-from rest_framework.response import Response
-from rest_framework_simplejwt.exceptions import InvalidToken
-from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
-
 
 from allauth.account.views import (
     PasswordResetView as _PasswordResetView,
     PasswordResetDoneView as _PasswordResetDoneView,
     EmailVerificationSentView as _EmailVerificationSentView,
 )
-from allauth.account.models import EmailConfirmation
-from django.contrib import messages
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
+from django.views import generic
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import InvalidToken
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from restaurants.models import Restaurant, Staff
-
 from . import forms, models, serializers
 
 
