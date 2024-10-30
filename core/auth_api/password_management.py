@@ -1,3 +1,5 @@
+import os
+
 from ninja import Router
 from .schema import SuccessMessageSchema, PasswordChangeRequestSchema, PasswordResetRequestSchema, PasswordResetRequestDoneSchema, NotFoundSchema, EmailLoginRequestSchema, RefreshTokenResponseSchema
 from django.contrib.auth.decorators import login_required
@@ -70,7 +72,7 @@ def password_reset(request, data: PasswordResetRequestSchema):
             message = f"""
                     Hello, here is your one time password reset email verification code {email_token.email_code}
                     """
-            email_sender ="dev@kittchens.com"
+            email_sender =os.getenv("EMAIL_HOST_USER", "dev@kittchens.com")
             receiver = [data.email]
             try:
                 send_mail(subject, message, email_sender, receiver)
