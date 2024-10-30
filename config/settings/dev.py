@@ -11,13 +11,14 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = ["*"]
 
 try:
+    from .restaurants import *
+    from .core import *
     from .sre import *
     from .geo import *
     from .banking import *
     from .auth import *
     from .mail import *
     from .api import *
-    from .restaurants import *
     from .customers import *
     from .inventory import *
     from .orders import *

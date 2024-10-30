@@ -1,6 +1,11 @@
 import os
 
+from allauth.account.forms import SignupForm
 from django import forms
+from django.contrib.auth.models import Group
+from django.http import HttpRequest
+from config.form_fields import PhoneNumberField
+from phonenumber_field.phonenumber import PhoneNumber
 
 # from world.models import City
 from core.models import User
@@ -396,3 +401,53 @@ class RestaurantCoverForm(forms.ModelForm):
     class Meta:
         model = models.Restaurant
         fields = ["cover_img"]
+
+
+class RegistrationForm(SignupForm):
+    first_name = forms.CharField(
+        label="First Name",
+        max_length=30,
+        widget=forms.TextInput(
+            attrs={"autofocus": True, "placeholder": "Enter your first name"}
+        ),
+    )
+    last_name = forms.CharField(
+        label="Last Name",
+        max_length=30,
+        widget=forms.TextInput(attrs={"placeholder": "Enter your last name"}),
+    )
+    phone_number = PhoneNumberField(            label="Phone Number",        )
+
+    def clean_phone_number(self) -> PhoneNumber:
+        phone_number: PhoneNumber = self.cleaned_data["phone_number"]
+        if User.objects.filter(
+            phone_number=phone_number.as_e164.replace(" ", "")
+        ).exists():
+            raise forms.ValidationError("User with this phone number already exists.")
+        return phone_number
+
+    def clean(self):
+        email = self.cleaned_data.get("email")
+        if email:
+            self.cleaned_data["username"] = email.split("@")[0]
+        return super().clean()
+
+    def save(self, request):
+        request.session["verification_email"] = self.cleaned_data["email"]
+        user = super().save(request)
+        user.phone_number = self.cleaned_data["phone_number"]
+        owner_grp, _ = Group.objects.get_or_create(name="Restaurant Owner")
+        owner_sys_grp, _ = Group.objects.get_or_create(name="owner")
+        user.groups.add(owner_grp)
+        user.groups.add(owner_sys_grp)
+        user.save()
+        request.session["verification_email"] = user.email
+        return user
+
+    # def signup(self, request: HttpRequest, user: User) -> None:
+    #     user.phone_number = self.cleaned_data["phone_number"]
+    #     owner_grp, _ = Group.objects.get_or_create(name="Restaurant Owner")
+    #     user.groups.add(owner_grp)
+    #     user.save()
+    #     request.session["verification_email"] = user.email
+    #     return super().signup(request, user)

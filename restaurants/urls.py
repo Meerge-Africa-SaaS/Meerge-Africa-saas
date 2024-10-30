@@ -20,7 +20,7 @@ urlpatterns = (
     path("api/v1/", include(router.urls)),
     path(
         "signup/",
-        registration.RegistrationView.as_view(),
+        registration.signup,
         name="restaurant_signup",
     ),
     path(
