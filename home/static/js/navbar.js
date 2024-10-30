@@ -15,20 +15,17 @@ window.addEventListener('scroll', () => {
   }
 })
 
-const menuBtn = document.getElementById('menu-btn')
-const closeBtn = document.getElementById('close-menu-btn')
+/**@type {HTMLInputElement} */
+const menuToggle = document.querySelector('#menu-toggle > input[type=checkbox]')
 const menuLinks = document.querySelectorAll('.mobile-menu-link')
 const menu = document.getElementById('mobile-menu')
-menuBtn.addEventListener('click', () => {
+menuToggle.addEventListener('change', (ev) => {
   const isShown = menu.getAttribute('data-shown') === 'true'
-  if (isShown) {
-    menu.setAttribute('data-shown', 'false')
-  } else {
+  if (menuToggle.checked) {
     menu.setAttribute('data-shown', 'true')
+  } else {
+    menu.setAttribute('data-shown', 'false')
   }
-})
-closeBtn.addEventListener('click', () => {
-  menu.setAttribute('data-shown', 'false')
 })
 menuLinks.forEach((link) => {
   link.addEventListener('click', () => {
