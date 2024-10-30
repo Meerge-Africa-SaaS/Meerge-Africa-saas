@@ -15,28 +15,69 @@
   .mobile-menu-link {
     @apply text-black hover:text-secondary text-base font-medium;
   }
+  .hamburger {
+    cursor: pointer;
+  }
+  
+  .hamburger input {
+    display: none;
+  }
+  
+  .hamburger svg {
+    /* The size of the SVG defines the overall size */
+    height: 2em;
+    /* Define the transition for transforming the SVG */
+    transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .line {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+    /* Define the transition for transforming the Stroke */
+    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .line-top-bottom {
+    stroke-dasharray: 12 63;
+  }
+  
+  .hamburger input:checked + svg {
+    transform: rotate(-45deg);
+  }
+  
+  .hamburger input:checked + svg .line-top-bottom {
+    stroke-dasharray: 20 300;
+    stroke-dashoffset: -32.42;
+  }
+  
   #mobile-menu {
     @apply bg-white fixed top-0 left-0 flex flex-col
-      items-center justify-center w-full z-50 pt-16 pb-4 px-4
+      items-center justify-center w-full z-40 pt-16 pb-4 px-4
       transition-all duration-300 ease-in-out translate-y-0
       bg-opacity-100 gap-y-4 data-[shown=false]:-translate-y-full
       data-[shown=false]:bg-opacity-0;
   }
 </style>
 
-<nav class="fixed top-0 w-full z-50 bg-transparent transition-colors duration-300">
-  <div class="container mx-auto px-6 py-4">
+<nav class="fixed top-0 w-full z-40 bg-transparent transition-colors duration-300">
+  <div class="container relative z-50 mx-auto px-6 py-4">
     <div class="flex justify-between items-center">
       <a href="/#" class="logo">
         <img src="{% static 'assets/Meerge-logo.svg' %}" class="w-20 h-auto ml-4" alt="Meerge Logo" />
       </a>
 
       <!-- Mobile Menu Button -->
-      <button id="menu-btn" class="md:hidden bg-white p-2 rounded-full">
-        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M3 12.75C3 12.5511 3.07902 12.3603 3.21967 12.2197C3.36032 12.079 3.55109 12 3.75 12H20.712C20.9109 12 21.1017 12.079 21.2423 12.2197C21.383 12.3603 21.462 12.5511 21.462 12.75C21.462 12.9489 21.383 13.1397 21.2423 13.2803C21.1017 13.421 20.9109 13.5 20.712 13.5H3.75C3.55109 13.5 3.36032 13.421 3.21967 13.2803C3.07902 13.1397 3 12.9489 3 12.75ZM3 6.75C3 6.55109 3.07902 6.36032 3.21967 6.21967C3.36032 6.07902 3.55109 6 3.75 6H26.25C26.4489 6 26.6397 6.07902 26.7803 6.21967C26.921 6.36032 27 6.55109 27 6.75C27 6.94891 26.921 7.13968 26.7803 7.28033C26.6397 7.42098 26.4489 7.5 26.25 7.5H3.75C3.55109 7.5 3.36032 7.42098 3.21967 7.28033C3.07902 7.13968 3 6.94891 3 6.75ZM3 18.75C3 18.5511 3.07902 18.3603 3.21967 18.2197C3.36032 18.079 3.55109 18 3.75 18H26.25C26.4489 18 26.6397 18.079 26.7803 18.2197C26.921 18.3603 27 18.5511 27 18.75C27 18.9489 26.921 19.1397 26.7803 19.2803C26.6397 19.421 26.4489 19.5 26.25 19.5H3.75C3.55109 19.5 3.36032 19.421 3.21967 19.2803C3.07902 19.1397 3 18.9489 3 18.75ZM3 24.75C3 24.5511 3.07902 24.3603 3.21967 24.2197C3.36032 24.079 3.55109 24 3.75 24H20.712C20.9109 24 21.1017 24.079 21.2423 24.2197C21.383 24.3603 21.462 24.5511 21.462 24.75C21.462 24.9489 21.383 25.1397 21.2423 25.2803C21.1017 25.421 20.9109 25.5 20.712 25.5H3.75C3.55109 25.5 3.36032 25.421 3.21967 25.2803C3.07902 25.1397 3 24.9489 3 24.75Z" fill="#0E2254" />
+      <label id="menu-toggle" class="hamburger md:hidden bg-white p-2 rounded-full">
+        <input type="checkbox">
+        <svg viewBox="0 0 32 32">
+          <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+          <path class="line" d="M7 16 27 16"></path>
         </svg>
-      </button>
+      </label>
 
       <!-- Desktop Menu -->
       <div id="desktop-menu" class="hidden md:flex items-center space-x-8">
@@ -44,24 +85,20 @@
         <a href="#products" class="desktop-menu-link">Products</a>
         <a href="#company" class="desktop-menu-link">Company</a>
         <a href="#partners" class="desktop-menu-link">Partners</a>
-        <button class="bg-secondary text-white px-6 py-2 rounded-md hover:bg-secondary/50 transition-colors">Request Demo</button>
+        <a href="https://forms.gle/PVNCmsyiQgdUC7KG9" class="px-8 py-2 text-center bg-secondary text-white rounded-lg hover:bg-secondary/50 transition-colors"
+          style="color:white"
+        >Request Demo</a>
       </div>
 
       <!-- Mobile Menu -->
-      <div id="mobile-menu" class="" data-shown="false">
-        <div id="close-menu-btn" class="absolute top-4 right-4 text-black hover:text-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </div>
-        <a href="#features" class="mobile-menu-link">Features</a>
-        <a href="#products" class="mobile-menu-link">Products</a>
-        <a href="#company" class="mobile-menu-link">Company</a>
-        <a href="#partners" class="mobile-menu-link">Partners</a>
-        <button class="bg-secondary text-white px-6 py-2 rounded-md hover:bg-secondary/50 transition-colors">Request Demo</button>
-      </div>
     </div>
+  </div>
+  <div id="mobile-menu" class="" data-shown="false">
+    <a href="#features" class="mobile-menu-link">Features</a>
+    <a href="#products" class="mobile-menu-link">Products</a>
+    <a href="#company" class="mobile-menu-link">Company</a>
+    <a href="#partners" class="mobile-menu-link">Partners</a>
+    <a href="https://forms.gle/PVNCmsyiQgdUC7KG9" class="px-8 py-2 text-center bg-secondary !text-white rounded-lg hover:bg-secondary/50 transition-colors">Request Demo</a>
   </div>
 </nav>
 <script type="text/javascript" src="{% static 'js/navbar.js' %}"></script>
