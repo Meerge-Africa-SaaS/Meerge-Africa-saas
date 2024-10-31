@@ -60,7 +60,6 @@ router = Router()
 
 @router.post("/deliveryagent-step1", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema = Form(...), NIN_doc: UploadedFile = File(...), drivers_license_DOC: Optional[UploadedFile] = File(None), voters_card_DOC: Optional[UploadedFile] = File(None)):
-    print("\n"*20, "I am here", "\n"*20)
     try:
         deliveryagent = DeliveryAgent.objects.get(id = request.auth["user_id"])
     except DeliveryAgent.DoesNotExist:
