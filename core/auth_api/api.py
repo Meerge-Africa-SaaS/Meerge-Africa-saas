@@ -107,18 +107,18 @@ def getActorType(email):
     User = get_user_model()
     try:
         user = User.objects.get(email = email)
-        if isinstance(user, Customer):
+        if "customer" in user.groups.all():
             return "customer"
-        elif isinstance(user, DeliveryAgent):
+        elif "deliveryagent" in user.groups.all():
             return 'deliveryagent'
-        elif isinstance(user, Staff):
+        elif "staff" in user.groups.all():
             return "staff"
-        elif isinstance(user, SupplyManager):
+        elif "supplymanager" in user.groups.all():
             return "supplymanager"
-        elif Supplier.objects.filter(owner = user).exists():
-            return "supplyowner"
-        elif Restaurant.objects.filter(owner = user).exists():
-            return "restaurantowner"
+        elif "SupplierOwner" in user.groups.all():
+            return "SupplierOwner"
+        elif "Restaurant Owner" in user.groups.all():
+            return "RestaurantOwner"
         else:
             return "unknown_actortype"
         
