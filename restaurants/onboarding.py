@@ -195,7 +195,7 @@ class OnboardingWizardView(SessionWizardView):
             self.request, f"Your restaurant {restaurant.name} has been created"
         )
         return HttpResponseClientRedirect(
-            reverse("restaurants:dashboard", args=(restaurant.custom_link,))
+            reverse("restaurants:dashboard", args=(restaurant.custom_link,)) + "?empty"
         )
 
 
