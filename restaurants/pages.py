@@ -21,7 +21,7 @@ class RestaurantRedirectView(generic.TemplateView):
         user = request.user
         if isinstance(user, Staff):
             return redirect(
-                reverse("restaurants:dashboard", args=(user.restaurants.id,))
+                reverse("restaurants:dashboard", args=(user.restaurants.custom_link,))
             )
         return super().get(request, *args, **kwargs)
 
