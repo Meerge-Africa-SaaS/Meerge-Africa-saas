@@ -15,13 +15,17 @@ app_name = "restaurants"
 
 @method_decorator(login_required, name="dispatch")
 class RestaurantRedirectView(generic.TemplateView):
-    template_name = "restaurants/pages/no-allowed.html"
+    template_name = "restaurants/pages/not-allowed.html"
 
     def get(self, request, *args, **kwargs):
         user = request.user
         if isinstance(user, Staff):
             return redirect(
                 reverse("restaurants:dashboard", args=(user.restaurants.custom_link,))
+            )
+        elif hasattr(user, "staff"):
+            return redirect(
+                reverse("restaurants:dashboard", args=(user.staff.restaurants.custom_link,))
             )
         return super().get(request, *args, **kwargs)
 

@@ -6,9 +6,11 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import generic
+from allauth.account.utils import perform_login
 
 # from world.models import City
-from restaurants.forms import RegistrationForm
+from restaurants.forms import InvitationRegistrationForm, RegistrationForm
+from restaurants.models import StaffInvitation
 
 PLACEHOLDERS = {
     "first_name": "First Name",
@@ -31,10 +33,11 @@ class RegistrationView(SignupView):
 
     # def get_form_class(self):
     #     return RegistrationForm
+
+
 signup = RegistrationView.as_view()
 
 # TODO: add this back, but currently not working
-
 
 
 @method_decorator(
@@ -42,3 +45,19 @@ signup = RegistrationView.as_view()
 )
 class EmailVerificationDoneView(generic.TemplateView):
     template_name = "restaurants/onboarding/email-verification-done.html"
+
+
+class InvitationRegistrationView(generic.FormView):
+    template_name = "restaurants/onboarding/invitation-registration.html"
+    success_url = reverse_lazy("actor_redirect")
+    form_class = InvitationRegistrationForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["invite_key"] = self.kwargs["invite_key"]
+        return initial
+
+    def form_valid(self, form: InvitationRegistrationForm):
+        staff = form.save(self.request)
+        perform_login(self.request, staff, email_verification=True)
+        return super().form_valid(form)

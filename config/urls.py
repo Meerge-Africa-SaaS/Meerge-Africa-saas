@@ -41,6 +41,7 @@ urlpatterns = [
         EmailVerificationSentView.as_view(),
         name="account_email_verification_sent",
     ),
+    path("invitations/", include('invitations.urls', namespace='invitations')),
     path(
         "redirect-actor/",
         ActorRedirect.as_view(),
@@ -52,12 +53,7 @@ urlpatterns = [
     path("customers/", include("customers.urls")),
     path("inventory/", include("inventory.urls")),
     path("orders/", include("orders.urls")),
-    path(
-        "<slug:custom_link>",
-        restaurant_views.RestaurantDetailView.as_view(),
-        name="restaurant_detail",
-    ),
-]
+]   
 
 
 if settings.DEBUG:

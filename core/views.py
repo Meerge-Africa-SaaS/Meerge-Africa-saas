@@ -105,7 +105,7 @@ class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
 
 
 class CustomTokenRefreshView(TokenRefreshView):
-    serializer_class = serializers.CustomTokenRefreshSerializer # type: ignore
+    serializer_class = serializers.CustomTokenRefreshSerializer  # type: ignore
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -113,9 +113,12 @@ class CustomTokenRefreshView(TokenRefreshView):
         try:
             serializer.is_valid(raise_exception=True)
         except InvalidToken as e:
-            return Response({"detail": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"detail": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
 
 class UserListView(generic.ListView):
     model = models.User
