@@ -10,6 +10,7 @@ h-screen w-screen max-w-[100vw] max-h-[100vh] overflow-clip flex justify-start i
 {% endblock %}
 
 {% block content %}
+  {% include 'restaurants/components/logout-modal.html' %}
   {% block sidebar %}
     {% include 'restaurants/components/sidebar.html' %}
   {% endblock %}
