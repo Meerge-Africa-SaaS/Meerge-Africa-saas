@@ -1,7 +1,8 @@
 {% load static %}
 <style type="text/tailwindcss">
   .growth-card {
-    @apply p-8 rounded-lg flex flex-col;
+    @apply p-8 rounded-lg grid grid-cols-1 grid-rows-2 md:grid-rows-[2fr,3fr]
+    lg:grid-rows-2 xl:grid-rows-[2fr,3fr] 2xl:grid-rows-[3fr,5fr]
   }
   
   .growth-card > div {
@@ -9,7 +10,7 @@
   }
   
   .growth-card img {
-    @apply mb-6 flex-shrink-0;
+    @apply block flex-shrink-0 my-auto;
   }
   
   .growth-card h3 {
