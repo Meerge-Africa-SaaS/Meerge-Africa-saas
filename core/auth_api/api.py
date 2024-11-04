@@ -101,6 +101,30 @@ def emailAddressExist(email):
         
     except Exception as e:
         return {"status": False, "message": e}
+    
+
+def getActorType(email):
+    User = get_user_model()
+    try:
+        user = User.objects.get(email = email)
+        if "customer" in user.groups.all():
+            return "customer"
+        elif "deliveryagent" in user.groups.all():
+            return 'deliveryagent'
+        elif "staff" in user.groups.all():
+            return "staff"
+        elif "supplymanager" in user.groups.all():
+            return "supplymanager"
+        elif "SupplierOwner" in user.groups.all():
+            return "SupplierOwner"
+        elif "Restaurant Owner" in user.groups.all():
+            return "RestaurantOwner"
+        else:
+            return "unknown_actortype"
+        
+    except User.DoesNotExist:
+        return None
+
 
 
 #############      SIGNALS EMITTED        ############
@@ -208,8 +232,10 @@ def owner_signup(request, data: SignupRequestSchema):
             )
             owner.set_password(data.password)
             owner.is_active = False
-            owner_grp, _ = Group.objects.get_or_create(name="Supplier Owner")
+            owner_grp, _ = Group.objects.get_or_create(name="owner")
+            owner_sys_grp, _ = Group.objects.get_or_create(name="SupplierOwner")
             owner.groups.add(owner_grp)
+            owner.groups.add(owner_sys_grp)
             owner.save()
         else:
             return 404, {"message": "User already exists"}
@@ -272,36 +298,6 @@ def owner_signup(request, data: SignupRequestSchema):
     except Exception as e:
         return 500, {"message": e}
 
-''' 
-
-@router.post("/supply-owner-signup", tags = ["Default Signup"])
-def supply_owner_signup(request, data: SignupRequestSchema):
-    # Model signup
-    if data.actor_type != "owner":
-        return JsonResponse({"message": "Not an owner."})
-    
-    owner = User.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username)
-    owner.set_password(data.password)
-    owner.is_active = False
-    owner.save()
-    
-    # Get the model instance for allauth implementation.
-    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
-        user=owner,
-        email=data.email,
-        defaults={'verified': False, 'primary': True}
-    )
-
-    # Create EmailConfirmation instance and send verification mail
-    confirmation = allauthEmailConfirmation.create(email_address = allauthemail_address)
-    confirmation.send(request = request, signup=True)
-    confirmation.sent = django_timezone.now()
-    confirmation.save()
-    
-    # Return info.
-    return {"message": registration_successful}
-
- '''
 
 @router.post("/add-employee", tags=["Accept and Invite"], response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
 def add_employee(request, data: AddEmployeeSchema):
@@ -396,6 +392,10 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
         email=data.email,
     )
     customer.set_password(data.password)
+    
+    customer_grp, _ = Group.objects.get_or_create(name="customer")
+    customer.groups.add(customer_grp)
+    
     customer.is_active = False
     customer.save()
     
@@ -435,6 +435,10 @@ def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     )
     deliveryagent.set_password(data.password)
     deliveryagent.is_active = False
+    
+    deliveryagent_grp, _ = Group.objects.get_or_create(name="deliveryagent")
+    deliveryagent.groups.add(deliveryagent_grp)
+    
     deliveryagent.save()
     return 200, {"message": "Delivery agent account registered, check your email for verification"}
 
@@ -597,29 +601,6 @@ def logout(request, data: LogoutResponseSchema):
         return 404, {"message": "Invalid Token"}
             
    
-
-def getActorType(email):
-    User = get_user_model()
-    try:
-        user = User.objects.get(email = email)
-        if isinstance(user, Customer):
-            return "customer"
-        elif isinstance(user, DeliveryAgent):
-            return 'deliveryagent'
-        elif isinstance(user, Staff):
-            return "staff"
-        elif isinstance(user, SupplyManager):
-            return "supplymanager"
-        elif Supplier.objects.filter(owner = user).exists():
-            return "supplyowner"
-        elif Restaurant.objects.filter(owner = user).exists():
-            return "restaurantowner"
-        else:
-            return "unknown_actortype"
-        
-    except User.DoesNotExist:
-        return None
-
 
 #### SIGN IN ENDPOINTS ##########
 # Sign in with email

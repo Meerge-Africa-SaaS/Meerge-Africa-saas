@@ -13,12 +13,13 @@ from orders.models import DeliveryAgent
 
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-class CustomAccountAdapter(DefaultAccountAdapter):
+from allauth.account.signals import user_signed_up
 
+class CustomAccountAdapter(DefaultAccountAdapter):
     def send_confirmation_mail(self, request, emailconfirmation, signup):
         # current_site = request.site
         user = emailconfirmation.email_address.user
-        if "owner" in [g.name for g in user.groups.all()]:
+        if "owner" in [g.name.lower() for g in user.groups.all()]:
             user_type = "owner"
         # Choose template based on user type
         template_prefix = {
@@ -43,7 +44,12 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         email = EmailMessage(subject, body, settings.DEFAULT_FROM_EMAIL, [emailconfirmation.email_address.email])
         email.send()
 
-    
+    def is_open_for_signup(self, request):
+        return True
+
+    def get_user_signed_up_signal(self):
+        return user_signed_up
+
     def get_from_email(self):
         return os.getenv("EMAIL_HOST_USER", "account@meergeafrica.com")
     

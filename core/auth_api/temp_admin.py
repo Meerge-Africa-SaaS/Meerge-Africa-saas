@@ -7,6 +7,8 @@ from .schema import SuccessMessageSchema, NotFoundSchema, CategorySchema
 User = get_user_model()
 router = Router()
 
+# This particular file will be deleted, but in the meantime, every superadmin actions will be accessed from here [for development] until production.
+
 @router.post("/add-supplier-category", tags=["For Admin"], auth = None, response={200: SuccessMessageSchema, 404: NotFoundSchema})
 def add_supplier_category(request, name: str):
     try:

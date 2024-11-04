@@ -22,6 +22,12 @@ ACCOUNT_EMAIL_CONFIRMATION_URL = (
         WEB_APP_SCHEME + "api/authenticate/auth-api/confirm-email/"
 )
 ACCOUNT_AUTHENTICATION_METHOD = "email"
+INVITATIONS_INVITATION_MODEL = "restaurants.StaffInvitation"
+INVITATIONS_SIGNUP_REDIRECT = "actor_redirect"
+INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
+INVITATIONS_INVITATION_EXPIRY = 7
+INVITATIONS_ADAPTER = "core.CustomFiles.CustomAdapterFile.CustomAccountAdapter"
+INVITATIONS_CONFIRMATION_URL_NAME = "restaurant_accept_invite"
 
 # ACCOUNT_FORMS = {
 # #     "login": "core.forms.UserSigninForm",

@@ -186,13 +186,6 @@ class RestaurantCreateView(LoginRequiredMixin, generic.CreateView):
         kwargs["user"] = self.request.user
         return kwargs
 
-
-class RestaurantDetailView(generic.DetailView):
-    model = models.Restaurant
-    form_class = forms.RestaurantForm
-    slug_field = "custom_link"
-
-
 class RestaurantUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Restaurant
     form_class = forms.RestaurantForm

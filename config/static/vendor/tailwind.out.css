@@ -1382,6 +1382,14 @@ input:checked + .toggle-bg {
   margin-top: 2rem;
 }
 
+.mb-20 {
+  margin-bottom: 5rem;
+}
+
+.\!mb-20 {
+  margin-bottom: 5rem !important;
+}
+
 .block {
   display: block;
 }
@@ -2049,6 +2057,11 @@ input:checked + .toggle-bg {
   border-color: rgb(226 232 240 / var(--tw-border-opacity));
 }
 
+.border-green-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(49 196 141 / var(--tw-border-opacity));
+}
+
 .border-white {
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
@@ -2146,6 +2159,11 @@ input:checked + .toggle-bg {
 
 .bg-gray-900\/50 {
   background-color: rgb(17 24 39 / 0.5);
+}
+
+.bg-green-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(222 247 236 / var(--tw-bg-opacity));
 }
 
 .bg-green-500 {
@@ -2528,6 +2546,10 @@ input:checked + .toggle-bg {
   text-transform: lowercase;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 .italic {
   font-style: italic;
 }
@@ -2589,6 +2611,11 @@ input:checked + .toggle-bg {
   color: rgb(14 159 110 / var(--tw-text-opacity));
 }
 
+.text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgb(4 108 78 / var(--tw-text-opacity));
+}
+
 .text-primary {
   --tw-text-opacity: 1;
   color: rgb(2 1 100 / var(--tw-text-opacity));
@@ -2632,6 +2659,15 @@ input:checked + .toggle-bg {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.underline {
+  text-decoration-line: underline;
+}
+
+.antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .opacity-0 {
@@ -2787,6 +2823,10 @@ input:checked + .toggle-bg {
   transition-property: all;
   transition-duration: 300ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#sidebar > div:first-child::-webkit-scrollbar {
+  width: 0px;
 }
 
 #sidebar:not(.active) {
@@ -4133,6 +4173,10 @@ section#sales-history {
   white-space: nowrap;
 }
 
+*::-webkit-scrollbar {
+  width: 1px;
+}
+
 body {
   font-family: Poppins;
 }
@@ -5080,6 +5124,10 @@ button.btn-secondary.btn-outline:focus, .btn.btn-secondary.btn-outline:focus {
 
   .sm\:inline-block {
     display: inline-block;
+  }
+
+  .sm\:inline {
+    display: inline;
   }
 
   .sm\:flex {
