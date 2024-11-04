@@ -1,4 +1,6 @@
-from .base import *
+from .base import *  # noqa: F403
+TEMPLATE_EXTENSION = "html"
+LOGIN_REDIRECT_URL = "actor_redirect"
 
 INSTALLED_APPS += [
     "allauth",

@@ -174,11 +174,6 @@ urlpatterns = (
         name="restaurant_Restaurant_create",
     ),
     path(
-        "Restaurant/detail/<int:pk>/",
-        views.RestaurantDetailView.as_view(),
-        name="restaurant_Restaurant_detail",
-    ),
-    path(
         "Restaurant/update/<int:pk>/",
         views.RestaurantUpdateView.as_view(),
         name="restaurant_Restaurant_update",

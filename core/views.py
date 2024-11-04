@@ -30,7 +30,9 @@ class ActorRedirect(generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         user = self.request.user
         if isinstance(user, Staff):
-            return reverse("restaurants:dashboard", args=(user.restaurants.id,))
+            return reverse("restaurants:dashboard", args=(user.restaurants.custom_link,))
+        if hasattr(user, "staff"):
+            return reverse("restaurants:dashboard", args=(user.staff.restaurants.custom_link,))
         # assume the user is a restaurant owner
         if user.groups.filter(name="Restaurant Owner").exists():
             # check if this user is among a restuarant's owners
