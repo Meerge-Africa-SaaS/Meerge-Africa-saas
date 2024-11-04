@@ -24,3 +24,5 @@ uritemplate
 django-rest-swagger
 djangorestframework-simplejwt
 drf-spectacular
+django-invitations
+sentry-sdk
