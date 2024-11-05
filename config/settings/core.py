@@ -1,11 +1,14 @@
-from .base import *
+from .base import *  # noqa: F403
+TEMPLATE_EXTENSION = "html"
+LOGIN_REDIRECT_URL = "actor_redirect"
 
-INSTALLED_APPS += [
+INSTALLED_APPS += [  # noqa: F405
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.google",
+    "invitations",
 ]
 
 AUTHENTICATION_BACKENDS = [

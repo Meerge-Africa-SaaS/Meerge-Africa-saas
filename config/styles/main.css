@@ -12,6 +12,10 @@
 @import "./pages/business-profile.css";
 
 
+*::-webkit-scrollbar {
+    width: 1px;
+}
+
 body {
     @apply font-poppins;
 }

@@ -1,0 +1,19 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %}
+Hello,
+
+You ({{ email }}) have been invited to join {{ restaurant }} as a {{ role }}.
+
+To accept this invitation and set up your account, please visit:
+{{ invite_url }}
+
+If you weren't expecting this invitation, you can safely ignore this email.
+
+Best regards,
+The {{ site_name }} Team
+
+{% endblocktrans %}
+---
+© {% now "Y" %} {{ site_name }}. All rights reserved.
+{% endautoescape %}

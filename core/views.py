@@ -30,7 +30,9 @@ class ActorRedirect(generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         user = self.request.user
         if isinstance(user, Staff):
-            return reverse("restaurants:dashboard", args=(user.restaurants.id,))
+            return reverse("restaurants:dashboard", args=(user.restaurants.custom_link,))
+        if hasattr(user, "staff"):
+            return reverse("restaurants:dashboard", args=(user.staff.restaurants.custom_link,))
         # assume the user is a restaurant owner
         if user.groups.filter(name="Restaurant Owner").exists():
             # check if this user is among a restuarant's owners
@@ -103,7 +105,7 @@ class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
 
 
 class CustomTokenRefreshView(TokenRefreshView):
-    serializer_class = serializers.CustomTokenRefreshSerializer # type: ignore
+    serializer_class = serializers.CustomTokenRefreshSerializer  # type: ignore
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -111,9 +113,12 @@ class CustomTokenRefreshView(TokenRefreshView):
         try:
             serializer.is_valid(raise_exception=True)
         except InvalidToken as e:
-            return Response({"detail": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"detail": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
 
 class UserListView(generic.ListView):
     model = models.User
