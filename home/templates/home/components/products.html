@@ -21,60 +21,62 @@
     @apply text-base text-center mb-4;
   }
   
-  .product-card button {
+  .product-card button, .product-card a {
     @apply bg-secondary text-white rounded-lg px-4 py-2 hover:bg-secondary/50 transition-colors;
   }
 </style>
 
-<section class="bg-primary relative container mx-auto px-8 py-16 md:min-w-full md:px-20" id="products">
-  <h2 class="text-2xl font-semibold text-center text-white mb-6">Our Products/Channels</h2>
-  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-    <div class="product-card">
-      <img src="{% static 'assets/tomato-img.png' %}" />
-      <div>
-        <h3>Quick Market</h3>
-        <p>Connect to our pool of suppliers to get access to quality ingredients for all your kitchen resources at a fair and competitive market price.</p>
-        <button>Learn More</button>
+<section class="container mx-auto md:min-w-full xl:min-w-[unset]" id="products">
+  <div class="bg-primary mx-auto px-8 py-16 w-full md:px-20">
+    <h2 class="text-2xl font-semibold text-center text-white mb-6">Our Products/Channels</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="product-card">
+        <img src="{% static 'assets/tomato-img.png' %}" />
+        <div>
+          <h3>Quick Market</h3>
+          <p>Connect to our pool of suppliers to get access to quality ingredients for all your kitchen resources at a fair and competitive market price.</p>
+          <button>Learn More</button>
+        </div>
       </div>
-    </div>
-    <div class="product-card">
-      <img src="{% static 'assets/kitchen-mobile-app.png' %}" />
-      <div>
-        <h3>Kittchen's Mobile</h3>
-        <p>Our customer facing mobile application allows chefs and restaurants to connect with a wide range of customers who place orders at their convenience.</p>
-        <button>Learn More</button>
+      <div class="product-card">
+        <img src="{% static 'assets/kitchen-mobile-app.png' %}" />
+        <div>
+          <h3>Kittchen's Mobile</h3>
+          <p>Our customer facing mobile application allows chefs and restaurants to connect with a wide range of customers who place orders at their convenience.</p>
+          <a href="https://kittchens.com/">Learn More</a>
+        </div>
       </div>
-    </div>
-    <div class="product-card">
-      <img src="{% static 'assets/delivery-guy.png' %}" />
-      <div>
-        <h3>Kittchen's Go</h3>
-        <p>Get your meals delivered anywhere in your city. Our delivery agents are on standby to help you move stuff from favorite food outlets to your doorstep.</p>
-        <button>Learn More</button>
+      <div class="product-card">
+        <img src="{% static 'assets/delivery-guy.png' %}" />
+        <div>
+          <h3>Kittchen's Go</h3>
+          <p>Get your meals delivered anywhere in your city. Our delivery agents are on standby to help you move stuff from favorite food outlets to your doorstep.</p>
+          <a href="https://kittchens.com/">Learn More</a>
+        </div>
       </div>
-    </div>
-    <div class="product-card">
-      <img src="{% static 'assets/chef.png' %}" />
-      <div>
-        <h3>Cloud Kittchens</h3>
-        <p>Seasoned chefs use our state of the art on-site Kittchen's to run their business. Take advantage of our exquisite locations on a plan that works for you.</p>
-        <button>Learn More</button>
+      <div class="product-card">
+        <img src="{% static 'assets/chef.png' %}" />
+        <div>
+          <h3>Cloud Kittchens</h3>
+          <p>Seasoned chefs use our state of the art on-site Kittchen's to run their business. Take advantage of our exquisite locations on a plan that works for you.</p>
+          <a href="https://kittchen.vercel.app">Learn More</a>
+        </div>
       </div>
-    </div>
-    <div class="product-card">
-      <img src="{% static 'assets/pasteries.png' %}" />
-      <div>
-        <h3>Kittchen's Pastries</h3>
-        <p>Delight your taste with the variety of our pastry offerings. Visit our roadside tuck shops and grab a healthy bite on your way anywhere in your city.</p>
-        <button>Learn More</button>
+      <div class="product-card">
+        <img src="{% static 'assets/pasteries.png' %}" />
+        <div>
+          <h3>Kittchen's Pastries</h3>
+          <p>Delight your taste with the variety of our pastry offerings. Visit our roadside tuck shops and grab a healthy bite on your way anywhere in your city.</p>
+          <a href="https://kittchens.com/">Learn More</a>
+        </div>
       </div>
-    </div>
-    <div class="product-card">
-      <img src="{% static 'assets/farmer-img.png' %}" />
-      <div>
-        <h3>Megadel Farms</h3>
-        <p>Restaurants plug in immediate and future procurements for price friendly, quality supplies from our farms, so they can give their customers good meals at fair prices.</p>
-        <button>Learn More</button>
+      <div class="product-card">
+        <img src="{% static 'assets/farmer-img.png' %}" />
+        <div>
+          <h3>Megadel Farms</h3>
+          <p>Restaurants plug in immediate and future procurements for price friendly, quality supplies from our farms, so they can give their customers good meals at fair prices.</p>
+          <button>Learn More</button>
+        </div>
       </div>
     </div>
   </div>
