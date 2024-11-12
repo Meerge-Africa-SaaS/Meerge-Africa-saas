@@ -1,0 +1,71 @@
+{% extends 'restaurants/layout.html' %}
+{% load static %}
+
+{% block title %}Inventory{% endblock %}
+
+{% block sidebar %}
+  {% include 'restaurants/components/sidebar.html' with active_tab='inventory' %}
+{% endblock %}
+
+{% block navbar %}
+  {% include 'restaurants/components/navbar.html' with page_name='Inventory' show_searchbar=True %}
+{% endblock %}
+
+{% block extra_js %}
+{{block.super}}
+<script src="{% static 'js/dashboard.js' %}" defer></script>
+<script src="{% static 'js/create-store-modal.js' %}"></script>
+<script src="{% static 'js/add-stock-item-modal.js' %}"></script>
+{% endblock %}
+
+{% block main_class %}
+  w-full space-y-6 bg-slate-200 overflow-y-auto p-4 lg:p-10
+{% endblock %}
+
+{% block main %}
+  {% comment %} {% include 'restaurants/components/create-store.html' with name='NAME' title='TITLE' %} {% endcomment %}
+  {% comment %} Modal {% endcomment %}
+  {% include 'restaurants/components/add-stock-item.html' %}
+  
+  <div class="header flex justify-between">
+    <h1 class="text-xl">
+      <span class="">Stores</span>
+    </h1>
+    <div class="flex gap-4">
+      <button data-modal-trigger="add-stock-item-modal" class="bg-primary text-lg text-white ml-4">Add stock</button>
+      <button class="bg-white">Stores</button>
+      <input type="search" placeholder="in-progress" class="w-10">
+    </div>    
+  </div>
+
+  <div class="min-h-[73vh] bg-white relative">
+    {% if restaurant_stocks %}
+    {{restaurant_stocks}}
+    {% else %}
+    <div class="absolute w-full h-full flex items-center justify-center">
+      <p class="text-gray-400 text-2xl">All stock items added will be displayed here</p>
+    </div>
+    
+    {% endif %}
+    {% comment %} {% for stock_category in stock_categories %}
+    {{ stock_category }}
+    {% endfor %} {% endcomment %}
+  </div>
+
+  {% comment %} <div>
+    <form class="flex flex-col">
+      <div class="hidden form-control">
+        <label for="restaurant" ></label>
+        <select name="restaurant" id="restaurant" value={{restaurant}} hidden="hidden">
+            <option value={{restaurant.pk}} selected>{{restaurant}}</option>
+        </select>
+    </div>
+    <div>
+      <label>
+    </div>
+    
+    </form>
+  </div> {% endcomment %}
+  
+  
+{% endblock %}

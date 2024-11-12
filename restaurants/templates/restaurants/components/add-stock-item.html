@@ -1,0 +1,80 @@
+{% extends 'components/modal.html' %}
+{% load static %}
+
+
+{% block main %}
+<script src="{% static 'js/add-stock-item-modal.js' %}"></script>
+{% with name="add-stock-item" title="Add Stock Item" %}
+  {{block.super}}
+{% endwith %}
+{% endblock %}
+
+{% block close_modal_presence %}
+flex
+{% endblock %}
+
+{% block content %}
+<div class="w-full h-full">
+    {{restaurant_store}}
+    b
+    {{restaurant_stocks}}
+    c
+    {% block form_fields %}
+        <div class="flex flex-col lg:flex-row gap-20 justify-between w-full">
+            <div class="w-full">
+                <div class="">
+                    <label>Stock Item Name<span class="text-red-600">*</span></label>
+                    <input type="text"  name="name" id="name" value="{{restaurant_stocks.name.value}}" class="" required>
+                </div>
+                <div class="">
+                    <label>Stock Item Image<span class="text-red-600">*</span></label>
+                    <div class="border-2 border-gray-400 h-[70%] w-full rounded">
+                        <input type="file">
+                    </div>
+                </div>
+                <div class="">
+                    <label>Category<span class="text-red-600">(Optional)*</span></label>
+                    <input name="category" id="category" type="text">
+                </div>
+                <div class="">
+                    <label>Purchasing Price<span class="text-red-600">(Optional)*</span></label>
+                    <input name="purchasing_price" id="purchasing_price" type="text">
+                </div>
+            </div>
+
+            <div class="w-full">
+                <div class="">
+                    <label>Expiry Date<span class="text-red-600">(Optional)*</span></label>
+                    <input type="text">
+                </div>
+                <div class="">
+                    <label>Quantity<span class="text-red-600">(Optional)*</span></label>
+                    <input name="quantity" id="quantity" type="text">
+                </div>
+                <div class="">
+                    <label>Measuring Unit<span class="text-red-600">(Optional)*</span></label>
+                    <input name="measuring_unit" id="measuring_unit" type="text">
+                </div>
+                <div class="">
+                    <label>Low Stock alert<span class="text-red-600">(Optional)*</span></label>
+                    <input type="text">
+                </div>
+            </div>
+
+            
+            
+        </div>
+    {% endblock %}
+    {% block buttons %}
+        <div class="flex justify-end mt-8">
+        {# Add buttons here #}
+        {% block submit_btn %}
+            <button class="bg-primary disabled:bg-gray-700 disabled:cursor-not-allowed text-lg text-white ml-4 add">Add Stock</button>
+        {% endblock %}
+        </div>
+    {% endblock %}
+</div>
+    
+{% comment %} <div id="create-store-form" hx-get="{% url 'restaurant-invite-employee' restaurant.custom_link %}" hx-swap="outerHTML" hx-trigger="load">
+</div> {% endcomment %}
+{% endblock %}

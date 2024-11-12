@@ -304,8 +304,9 @@ class MenuItem(models.Model):
 
 class RestaurantStock(models.Model):
     # Relationships
-    category = models.ForeignKey("inventory.Category", on_delete=models.DO_NOTHING)
-    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE)
+    category = models.ForeignKey("inventory.Category", on_delete=models.DO_NOTHING, related_name="stocks")
+    store = models.ForeignKey("restaurants.RestaurantStore", on_delete=models.CASCADE, related_name="stocks")
+    #restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE, related_name="stocks")
 
     # Fields
     name = models.CharField(max_length=128)
@@ -462,7 +463,7 @@ class Restaurant(models.Model):
 
 class RestaurantStore(models.Model):
     # Relationships
-    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE)
+    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE, related_name="stores")
 
     # Fields
     name = models.CharField(max_length=128)

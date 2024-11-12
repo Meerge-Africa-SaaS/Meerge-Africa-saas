@@ -340,13 +340,21 @@ class GeneralViewRestaurantForm(forms.ModelForm):
         return custom_link
 
 
-class RestauarantStoreForm(forms.ModelForm):
+class RestaurantStoreForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStore
         fields = ["restaurant", "name", "description", "image", "section_name"]
+        
+    def __init__(self, *args, **kwargs):
+        if "instance" not in kwargs or kwargs["instance"] is None:
+            kwargs["instance"] = models.RestaurantStore()
+        super().__init__(*args, **kwargs)
+    
+    def save(self, restaurant, name, description, section_name, image=None) -> models.RestaurantStore:
+        return models.RestaurantStore.objects.create(restaurant=restaurant, name=name, description=description, section_name=section_name, image=image)
 
 
-class RestauarantStockForm(forms.ModelForm):
+class RestaurantStockForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStock
         fields = [
@@ -357,7 +365,8 @@ class RestauarantStockForm(forms.ModelForm):
             "purchasing_price",
             "quantity",
             "measuring_unit",
-            "restaurant",
+            #"restaurant",
+            "store",
         ]
 
 
@@ -519,3 +528,5 @@ class InvitationRegistrationForm(forms.ModelForm):
         invitation.delete()
         setup_user_email(request, staff, [EmailAddress(email=staff.email)])
         return staff
+
+

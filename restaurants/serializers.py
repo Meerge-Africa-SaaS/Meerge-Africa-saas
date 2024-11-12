@@ -75,7 +75,7 @@ class RestaurantStockSerializer(serializers.ModelSerializer):
             "purchasing_price",
             "quantity",
             "measuring_unit",
-            "restaurant",
+            "store",
         ]
 
 """ 

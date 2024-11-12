@@ -48,6 +48,8 @@ urlpatterns = (
         onboarding.OnboardingWizardView.as_view(),
         name="restaurant_onboarding_wizard",
     ),
+    
+    
     path(
         "Ingredient/",
         views.IngredientListView.as_view(),
@@ -173,6 +175,18 @@ urlpatterns = (
         views.MenuItemDeleteView.as_view(),
         name="restaurant_MenuItem_delete",
     ),
+    path(
+        "RestaurantStore/<int:pk>/",
+        views.RestaurantStoreListView.as_view(),
+        name="restaurant_RestaurantStore_list",
+    ),
+    path(
+        "RestaurantStore/create/",
+        views.RestaurantStoreCreateView.as_view(),
+        name="restaurant_RestaurantStore_create",
+    ),
+    
+        
     path(
         "Restaurant/",
         views.RestaurantListView.as_view(),
