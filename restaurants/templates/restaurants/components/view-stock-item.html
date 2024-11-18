@@ -1,0 +1,30 @@
+{% extends 'components/modal.html' %}
+{% load static %}
+
+{% block main %}
+<script src="{% static 'js/view-stock-item-modal.js' %}"></script>
+{% with name="view-stock-item" title="" %}
+  {{block.super}}
+{% endwith %}
+{% endblock %}
+
+{% block close_modal_presence %}
+flex focus:ring-0
+{% endblock %}
+
+{% block modal_width %}
+w-full lg:w-[50%]
+{% endblock %}
+
+{% block content %}
+{% comment %} {% block url_link %}
+restaurant_RestaurantStore_create
+{% endblock %} {% endcomment %}
+
+<div class="w-full lg:px-10">
+    <div id="content-change">
+
+    </div>
+</div>
+
+{% endblock %}

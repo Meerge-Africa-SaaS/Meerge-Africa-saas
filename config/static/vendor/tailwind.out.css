@@ -1438,12 +1438,24 @@ input:checked + .toggle-bg {
   height: 0.5rem;
 }
 
+.h-20 {
+  height: 5rem;
+}
+
+.h-28 {
+  height: 7rem;
+}
+
 .h-3 {
   height: 0.75rem;
 }
 
 .h-4 {
   height: 1rem;
+}
+
+.h-40 {
+  height: 10rem;
 }
 
 .h-5 {
@@ -1476,6 +1488,14 @@ input:checked + .toggle-bg {
 
 .h-9 {
   height: 2.25rem;
+}
+
+.h-\[12rem\] {
+  height: 12rem;
+}
+
+.h-\[1px\] {
+  height: 1px;
 }
 
 .h-\[70\%\] {
@@ -1535,6 +1555,10 @@ input:checked + .toggle-bg {
   width: 3rem;
 }
 
+.w-14 {
+  width: 3.5rem;
+}
+
 .w-2 {
   width: 0.5rem;
 }
@@ -1583,12 +1607,24 @@ input:checked + .toggle-bg {
   width: 100px;
 }
 
+.w-\[12\%\] {
+  width: 12%;
+}
+
+.w-\[15\%\] {
+  width: 15%;
+}
+
 .w-\[161px\] {
   width: 161px;
 }
 
 .w-\[45\%\] {
   width: 45%;
+}
+
+.w-\[50\%\] {
+  width: 50%;
 }
 
 .w-\[500px\] {
@@ -1605,6 +1641,10 @@ input:checked + .toggle-bg {
 
 .w-\[700px\] {
   width: 700px;
+}
+
+.w-\[80\%\] {
+  width: 80%;
 }
 
 .w-\[90\%\] {
@@ -1626,6 +1666,10 @@ input:checked + .toggle-bg {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-96 {
+  width: 24rem;
 }
 
 .min-w-0 {
@@ -1694,6 +1738,10 @@ input:checked + .toggle-bg {
 
 .table-auto {
   table-layout: auto;
+}
+
+.table-fixed {
+  table-layout: fixed;
 }
 
 .border-collapse {
@@ -1854,10 +1902,6 @@ input:checked + .toggle-bg {
 
 .gap-2 {
   gap: 0.5rem;
-}
-
-.gap-20 {
-  gap: 5rem;
 }
 
 .gap-3 {
@@ -2033,12 +2077,20 @@ input:checked + .toggle-bg {
   border-width: 4px;
 }
 
+.border-\[1px\] {
+  border-width: 1px;
+}
+
 .border-r {
   border-right-width: 1px;
 }
 
 .border-t {
   border-top-width: 1px;
+}
+
+.border-solid {
+  border-style: solid;
 }
 
 .border-dashed {
@@ -2159,6 +2211,11 @@ input:checked + .toggle-bg {
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
+.bg-blue-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(195 221 253 / var(--tw-bg-opacity));
+}
+
 .bg-blue-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(26 86 219 / var(--tw-bg-opacity));
@@ -2172,6 +2229,11 @@ input:checked + .toggle-bg {
 .bg-gray-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+
+.bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
 
 .bg-gray-50 {
@@ -2470,6 +2532,18 @@ input:checked + .toggle-bg {
   text-align: right;
 }
 
+.text-start {
+  text-align: start;
+}
+
+.text-end {
+  text-align: end;
+}
+
+.font-poppins {
+  font-family: Poppins;
+}
+
 .font-sans {
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
@@ -2515,6 +2589,10 @@ input:checked + .toggle-bg {
 
 .text-\[80\%\] {
   font-size: 80%;
+}
+
+.text-\[85\%\] {
+  font-size: 85%;
 }
 
 .text-base {
@@ -2655,6 +2733,11 @@ input:checked + .toggle-bg {
 .text-primary {
   --tw-text-opacity: 1;
   color: rgb(2 1 100 / var(--tw-text-opacity));
+}
+
+.text-red-400 {
+  --tw-text-opacity: 1;
+  color: rgb(249 128 128 / var(--tw-text-opacity));
 }
 
 .text-red-500 {
@@ -2947,14 +3030,17 @@ input:checked + .toggle-bg {
 
 #sidebar-list {
   display: flex;
+  height: 80%;
   width: 100%;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 1.25rem;
 }
 
 .sidebar__item {
+  display: flex;
+  height: 10rem;
   width: 100%;
 }
 
@@ -3531,7 +3617,7 @@ section#sales-history {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   align-items: center;
   justify-content: center;
-  overflow: auto;
+  overflow: hidden;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.5;
   padding: 2rem;
@@ -3542,10 +3628,11 @@ section#sales-history {
 
 .modal-content {
   position: relative;
-  margin-top: 10rem;
+  max-height: 95%;
   --tw-scale-x: .95;
   --tw-scale-y: .95;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  overflow-y: auto;
   border-radius: 0.5rem;
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -5275,6 +5362,10 @@ button.btn-secondary.btn-outline:focus, .btn.btn-secondary.btn-outline:focus {
     justify-content: space-between;
   }
 
+  .md\:gap-6 {
+    gap: 1.5rem;
+  }
+
   .md\:gap-x-8 {
     -moz-column-gap: 2rem;
          column-gap: 2rem;
@@ -5299,17 +5390,48 @@ button.btn-secondary.btn-outline:focus, .btn.btn-secondary.btn-outline:focus {
 }
 
 @media (min-width: 1024px) {
+  .lg\:w-\[40\%\] {
+    width: 40%;
+  }
+
+  .lg\:w-\[50\%\] {
+    width: 50%;
+  }
+
+  .lg\:w-\[90\%\] {
+    width: 90%;
+  }
+
   .lg\:flex-row {
     flex-direction: row;
+  }
+
+  .lg\:gap-10 {
+    gap: 2.5rem;
+  }
+
+  .lg\:gap-8 {
+    gap: 2rem;
   }
 
   .lg\:p-10 {
     padding: 2.5rem;
   }
 
+  .lg\:px-10 {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:w-\[80\%\] {
+    width: 80%;
   }
 }
 

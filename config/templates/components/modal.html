@@ -1,6 +1,6 @@
 {% block main %}
   <div id="{{ name }}-modal" class="modal bg-white" role="dialog" aria-modal="true" aria-labelledby="{{ name }}-modal-title">
-    <div class="rounded-lg p-8 transition-all ease-in-out space-y-4 modal-content">
+    <div class="{% block modal_width %}{% endblock %} rounded-lg p-8 transition-all ease-in-out space-y-4 modal-content">
       {% block title %}
       <div class="flex justify-between">
         <h1 id="{{ name }}-modal-title" class="text-2xl mb-6">{{ title }}</h1>
@@ -31,7 +31,7 @@
               <button class="text-lg cancel">Cancel</button>
             {% endblock %}
             {% block submit_btn %}
-              <button type="submit" class="bg-primary disabled:bg-gray-700 disabled:cursor-not-allowed text-lg text-white ml-4 add">'{% block button_name %} {% endblock %}'</button>
+              <button type="submit" class="bg-primary disabled:bg-gray-700 disabled:cursor-not-allowed text-lg text-white ml-4 add !w-fit">'{% block button_name %} {% endblock %}'</button>
             {% endblock %}
           </div>
         {% endblock %}

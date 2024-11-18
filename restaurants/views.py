@@ -280,6 +280,11 @@ class RestaurantStockUpdateView(LoginRequiredMixin, generic.UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
+    
+class RestaurantStockDetailView(generic.DetailView):
+    model = models.RestaurantStock
+    form_class = forms.RestaurantStockForm
+    template_name = "restaurants/restaurantstock_detail.html"
 
 
 """ 

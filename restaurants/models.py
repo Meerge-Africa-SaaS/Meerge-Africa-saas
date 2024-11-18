@@ -316,6 +316,9 @@ class RestaurantStock(models.Model):
     purchasing_price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.IntegerField()
     measuring_unit = models.IntegerField()
+    # manufacturers name = models.CharField(max_length = 128)
+    # low_stock_alert_unit = models.DecimalField(max_digits=10, decimal_places = 2)
+    # expiry_date = models.DateField()
 
     # Time
     created = models.DateTimeField(auto_now_add=True, editable=False)

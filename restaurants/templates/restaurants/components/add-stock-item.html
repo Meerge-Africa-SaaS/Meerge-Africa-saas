@@ -9,59 +9,66 @@
 {% endwith %}
 {% endblock %}
 
+{% block modal_width %}
+lg:w-[90%] xl:w-[80%]
+{% endblock %}
+
 {% block close_modal_presence %}
-flex
+flex focus:ring-0
 {% endblock %}
 
 {% block content %}
 <div class="w-full h-full">
-    {{restaurant_store}}
-    b
-    {{restaurant_stocks}}
-    c
+    
     {% block form_fields %}
-        <div class="flex flex-col lg:flex-row gap-20 justify-between w-full">
-            <div class="w-full">
+        <div class="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-10 xl:gap-15 justify-between w-full">
+            <div class="flex flex-col gap-4 w-full">
                 <div class="">
                     <label>Stock Item Name<span class="text-red-600">*</span></label>
                     <input type="text"  name="name" id="name" value="{{restaurant_stocks.name.value}}" class="" required>
                 </div>
-                <div class="">
+                <div class="h-[12rem] rounded-md border-gray-300 border-solid border-[1px]">
                     <label>Stock Item Image<span class="text-red-600">*</span></label>
-                    <div class="border-2 border-gray-400 h-[70%] w-full rounded">
+                    <div class="border-2 border-gray-400 w-full rounded">
                         <input type="file">
                     </div>
                 </div>
                 <div class="">
-                    <label>Category<span class="text-red-600">(Optional)*</span></label>
-                    <input name="category" id="category" type="text">
+                    <label>Category<span class="text-red-600">*</span></label>
+                    <select name="category" id="category" required>
+                        {% for category in stock_categories%}
+                            <option value={{category}}>{{category}}</option>
+                        {% endfor %}
+                        
+                    </select>
                 </div>
                 <div class="">
-                    <label>Purchasing Price<span class="text-red-600">(Optional)*</span></label>
-                    <input name="purchasing_price" id="purchasing_price" type="text">
+                    <label>Purchasing Price<span class="text-red-600">*</span></label>
+                    <input name="purchasing_price" id="purchasing_price" value="{{restaurant_stocks.purchasing_price.value}}" type="text" required>
                 </div>
             </div>
 
-            <div class="w-full">
+            <div class="flex flex-col gap-4 w-full">
                 <div class="">
-                    <label>Expiry Date<span class="text-red-600">(Optional)*</span></label>
+                    <label>Expiry Date<span class="text-red-600">*</span></label>
                     <input type="text">
                 </div>
                 <div class="">
-                    <label>Quantity<span class="text-red-600">(Optional)*</span></label>
-                    <input name="quantity" id="quantity" type="text">
+                    <label>Quantity<span class="text-red-600">*</span></label>
+                    <input name="quantity" id="quantity" value="{{restaurant_stocks.quantity.value}}" type="text" required>
                 </div>
                 <div class="">
-                    <label>Measuring Unit<span class="text-red-600">(Optional)*</span></label>
-                    <input name="measuring_unit" id="measuring_unit" type="text">
+                    <label>Measuring Unit<span class="text-red-600">*</span></label>
+                    <input name="measuring_unit" id="measuring_unit" value="{{restaurant_stocks.measuring_unit.value}}" type="text" required>
                 </div>
                 <div class="">
-                    <label>Low Stock alert<span class="text-red-600">(Optional)*</span></label>
+                    <label>Low Stock Alert Unit<span class="text-red-600"><span class="text-red-400 text-[80%] italic">(when item is below a number in quantity)</span>*</span></label>
                     <input type="text">
+                </div>
+                <div>
+                    <p class="text-red-600 text-[85%] text-end">Details of added stock items cannot be updated.</p>
                 </div>
             </div>
-
-            
             
         </div>
     {% endblock %}

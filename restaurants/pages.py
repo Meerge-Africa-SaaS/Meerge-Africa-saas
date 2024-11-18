@@ -76,6 +76,7 @@ class RestaurantStoreDetailView(RestaurantMixin, generic.DetailView):
         context["restaurant_store"] = restaurant_store
         context["restaurant_stock_form"] =forms.RestaurantStockForm
         context["restaurant_stocks"] = restaurant_store.stocks.all()
+        context["stock_categories"] = StockCategory.objects.all()
         
         print(context)
         return context
