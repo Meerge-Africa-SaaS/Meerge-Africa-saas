@@ -20,7 +20,7 @@ restaurant_RestaurantStore_create
     {% block form_fields %}
         <div clas="hidden">
             <label for="restaurant" ></label>
-            <select name="restaurant" id="restaurant" value={{restaurant}} hidden="hidden">
+            <select name="restaurant" id="restaurant" value={{restaurant}} hidden="hidden" readonly>
                 <option value={{restaurant.pk}} selected>{{restaurant}}</option>
             </select>
         </div>

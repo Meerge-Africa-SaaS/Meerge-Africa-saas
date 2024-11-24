@@ -358,6 +358,7 @@ class RestaurantStockForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStock
         fields = [
+            "store",
             "category",
             "name",
             "image",
@@ -365,11 +366,17 @@ class RestaurantStockForm(forms.ModelForm):
             "purchasing_price",
             "quantity",
             "measuring_unit",
+            "manufacturers_name",
+            "low_stock_alert_unit",
+            "expiry_date",
             #"restaurant",
-            "store",
         ]
-
-
+    '''     
+    def save(self, store, category, name, purchasing_price, quantity, measuring_unit, low_stock_alert_unit, expiry_date, stock_type=None, image=None) -> models.RestaurantStock:
+        return models.RestaurantStock.objects.create(store=store, category=category, name=name, image=image, stock_type=stock_type, purchasing_price=purchasing_price, quantity=quantity, measuring_unit=measuring_unit, low_stock_alert_unit=low_stock_alert_unit, expiry_date=expiry_date)
+ '''
+ 
+ 
 """ 
 
 class ChefForm(forms.ModelForm):

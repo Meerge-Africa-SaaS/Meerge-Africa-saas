@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0002_alter_emailverification_email_code'),
+        ('restaurants', '0002_restaurantstock_mode'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='emailverification',
-            name='email_code',
-            field=models.CharField(default='077666', max_length=6),
+            model_name='restaurantstock',
+            name='stock_type',
+            field=models.CharField(blank=True, max_length=128, null=True),
         ),
     ]

@@ -312,13 +312,14 @@ class RestaurantStock(models.Model):
     name = models.CharField(max_length=128)
     image = models.URLField(blank=True, null=True)
     # image = models.ImageField(upload_to='images/restaurant/Stock')
-    stock_type = models.CharField(max_length=128)
+    stock_type = models.CharField(max_length=128, null=True, blank=True)
     purchasing_price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.IntegerField()
     measuring_unit = models.IntegerField()
-    # manufacturers name = models.CharField(max_length = 128)
-    # low_stock_alert_unit = models.DecimalField(max_digits=10, decimal_places = 2)
-    # expiry_date = models.DateField()
+    manufacturers_name = models.CharField(max_length = 128, null=True, blank=True)
+    low_stock_alert_unit = models.DecimalField(max_digits=10, decimal_places = 2, null=True, blank=True)
+    expiry_date = models.DateField()
+    mode = models.BooleanField(default=True)
 
     # Time
     created = models.DateTimeField(auto_now_add=True, editable=False)

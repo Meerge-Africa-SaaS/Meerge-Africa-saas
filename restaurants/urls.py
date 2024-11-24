@@ -176,6 +176,11 @@ urlpatterns = (
         name="restaurant_MenuItem_delete",
     ),
     path(
+        "RestaurantStock/create/",
+        views.RestaurantStockCreateView.as_view(),
+        name="restaurant_RestaurantStock_create",
+    ),
+    path(
         "RestaurantStock/detail/<int:pk>/",
         views.RestaurantStockDetailView.as_view(),
         name="restaurant_RestaurantStock_detail",

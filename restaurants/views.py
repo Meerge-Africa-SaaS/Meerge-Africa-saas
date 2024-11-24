@@ -4,7 +4,8 @@ from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import generic
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from inventory.models import Category
 
 from . import forms, models
 
@@ -266,11 +267,39 @@ class RestaurantStockListView(LoginRequiredMixin, generic.ListView):
 class RestaurantStockCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.RestaurantStock
     form_class = forms.RestaurantStockForm
+    template_name = "restaurants/components/add-stock-item.html"
+    success_url = None
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
         return kwargs
+    
+    def form_valid(self, form: form_class):
+        super().form_valid(form)
+        return JsonResponse({"status_code":200}, safe=False)
+    ''' 
+    def form_valid(self, form: form_class):
+        store = form.cleaned_data["store"],
+        category = form.cleaned_data["category"],
+        name = form.cleaned_data["name"],
+        purchasing_price = form.cleaned_data["purchasing_price"],
+        quantity = form.cleaned_data["quantity"],
+        measuring_unit = form.cleaned_data["measuring_unit"],
+        low_stock_alert_unit = form.cleaned_data["low_stock_alert_unit"],
+        expiry_date = form.cleaned_data["expiry_date"],
+        print(store, category)
+        form_saved = form.save(store=store, category=category.id, name=name, purchasing_price=purchasing_price, 
+                               quantity=quantity, measuring_unit=measuring_unit, low_stock_alert_unit=low_stock_alert_unit, 
+                               expiry_date=expiry_date)
+        return HttpResponse(form_saved)
+    
+    def form_invalid(self, form):
+        print("form invalid", form)
+        return HttpResponse(form)
+    
+    '''
+         
+    
 
 class RestaurantStockUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.RestaurantStock
