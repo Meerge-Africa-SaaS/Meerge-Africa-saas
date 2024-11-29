@@ -30,23 +30,15 @@
     </div>
     <div class="flex w-full">
         <p class="w-1/2">Weight:</p>
-        <p class="w-1/2">Value</p>
+        <p class="w-1/2">{{object.measuring_unit}}</p>
     </div>
     <div class="flex w-full">
         <p class="w-1/2">Expiry Date:</p>
-        <p class="w-1/2">Value</p>
+        <p class="w-1/2">{{object.expiry_date}}</p>
     </div>
     <div class="flex w-full">
         <p class="w-1/2">Availability:</p>
         <p class="w-1/2">{% if object.quantity > 0 %}In-stock{% else %}Out-of-stock{% endif %}</p>
-    </div>
-    <div class="flex w-full">
-        <p class="w-1/2">Delivery Time Estimate:</p>
-        <p class="w-1/2">Value</p>
-    </div>
-    <div class="flex w-full">
-        <p class="w-1/2">Pickup Option:</p>
-        <p class="w-1/2">Value</p>
     </div>
 
 </div>

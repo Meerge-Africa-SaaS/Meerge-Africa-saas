@@ -3,7 +3,7 @@ from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views import generic, View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from inventory.models import Category
 
@@ -299,7 +299,17 @@ class RestaurantStockCreateView(LoginRequiredMixin, generic.CreateView):
     
     '''
          
-    
+
+class RestaurantStockDeactivateView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        try:
+            model_class = models.RestaurantStock.get(id = pk)
+            model_class.mode = False
+            model_class.save()
+            return JsonResponse({"message": "Deactivated"}, status=200)
+        except RestaurantStock.DoesNotExist:
+            return JsonResponse({"message": "Restaurant Stock selected does not exist in our database"}, status=404)
+        
 
 class RestaurantStockUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.RestaurantStock
