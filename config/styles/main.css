@@ -10,6 +10,8 @@
 @import "./components/sales-history.css";
 @import "./components/modal.css";
 @import "./pages/business-profile.css";
+@import "./components/card.css";
+
 
 
 *::-webkit-scrollbar {

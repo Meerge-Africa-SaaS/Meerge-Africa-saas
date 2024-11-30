@@ -35,7 +35,7 @@
         </a>
       </li>
       <li class="sidebar__item">
-        <a class="group-data-[active-tab='inventory']:tab-active" href="">
+        <a class="group-data-[active-tab='inventory']:tab-active" href="{% url 'restaurants:inventory' restaurant.custom_link %}">
           {% include 'svg/inventory.html' %}
           <span>Inventory</span>
         </a>

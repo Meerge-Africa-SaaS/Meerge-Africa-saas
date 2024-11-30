@@ -1,0 +1,118 @@
+{% extends 'components/modal.html' %}
+{% load static %}
+
+
+{% block main %}
+<script src="{% static 'js/add-stock-item-modal.js' %}"></script>
+
+{% with name="add-stock-item" title="Add Stock Item" %}
+  {{block.super}}
+{% endwith %}
+{% endblock %}
+
+{% block modal_width %}
+lg:w-[90%] xl:w-[80%]
+{% endblock %}
+
+{% block close_modal_presence %}
+flex focus:ring-0
+{% endblock %}
+
+{% block content %}
+<div class="w-full h-full">
+    
+    <form id="add-stock-item-form" hx-post="{% url 'restaurant_RestaurantStock_create' %}" >
+        {% csrf_token %}
+
+        {% block form_fields %}
+            <div class="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-10 xl:gap-15 justify-between w-full">
+                <div class="flex flex-col gap-4 w-full">
+                    <div class="">
+                        <label>Stock Item Name<span class="text-red-600">*</span></label>
+                        <input type="text"  name="name" id="name" value="{{restaurant_stocks.name.value}}" class="" required>
+                    </div>
+                    <div class="">
+                        <label>Stock Item Image<span class="text-red-600">*</span></label>
+                        <div class="h-[12rem] border-solid border-[1px] border-gray-300 w-full rounded relative">
+                            <input class="absolute -z-10" type="file" id="stock-item-image">
+                            <div class="bg-white absolute h-full w-full z-10 flex justify-center items-center">
+                                <button type="button" id="upload-stock-item-image ring-0 focus:ring-0">
+                                    <svg width="50" height="47" viewBox="0 0 50 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M40.907 38.6344H4.54522C2.04535 38.6344 5.32643e-08 36.5891 0 34.0892V4.54522C0 2.04535 2.04535 5.32643e-08 4.54522 0H40.907C43.4069 0 45.4522 2.04535 45.4522 4.54522V34.0892C45.4522 36.5891 43.4069 38.6344 40.907 38.6344Z" fill="#8CBCD6"/>
+                                        <path d="M31.8203 10.2273C31.8203 11.1315 32.1795 11.9985 32.8188 12.6379C33.4581 13.2772 34.3252 13.6363 35.2293 13.6363C36.1334 13.6363 37.0005 13.2772 37.6398 12.6379C38.2791 11.9985 38.6383 11.1315 38.6383 10.2273C38.6383 9.32322 38.2791 8.45613 37.6398 7.81683C37.0005 7.17752 36.1334 6.81836 35.2293 6.81836C34.3252 6.81836 33.4581 7.17752 32.8188 7.81683C32.1795 8.45613 31.8203 9.32322 31.8203 10.2273Z" fill="#B3DDF5"/>
+                                        <path d="M18.1793 10.2273L5.67969 28.4085H30.6789L18.1793 10.2273Z" fill="#9AC9E3"/>
+                                        <path d="M30.6844 17.0439L21.5938 28.4072H39.775L30.6844 17.0439Z" fill="#B3DDF5"/>
+                                        <path d="M27.2734 35.226C27.2734 38.2397 28.4706 41.13 30.6017 43.261C32.7327 45.392 35.623 46.5892 38.6367 46.5892C41.6504 46.5892 44.5407 45.392 46.6718 43.261C48.8028 41.13 50 38.2397 50 35.226C50 32.2122 48.8028 29.3219 46.6718 27.1909C44.5407 25.0599 41.6504 23.8627 38.6367 23.8627C35.623 23.8627 32.7327 25.0599 30.6017 27.1909C28.4706 29.3219 27.2734 32.2122 27.2734 35.226Z" fill="#43A047"/>
+                                        <path d="M36.3594 28.4096H40.9047V42.0455H36.3594V28.4096Z" fill="white"/>
+                                        <path d="M31.8203 32.9543H45.4562V37.4997H31.8203V32.9543Z" fill="white"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <label for="category">Category<span class="text-red-600">*</span></label>
+                        <select name="category" id="category" required>
+                            <option>---</option>
+                            {% for category in stock_categories%}
+                                <option value={{category.pk}}>{{category}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="hidden">
+                        <label for="store" ></label>
+                        <select name="store" id="store" value={{restaurant_store.pk}} readonly>
+                            <option value={{restaurant_store.pk}} selected>{{restaurant_store}}</option>
+                        </select>
+                    </div>
+                    <div class="">
+                        <label>Purchasing Price<span class="text-red-600">*</span></label>
+                        <input name="purchasing_price" id="purchasing_price" value="{{restaurant_stocks.purchasing_price.value}}" type="text" required>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-4 w-full">
+                    <div class="">
+                        <label>Expiry Date<span class="text-red-600">*</span></label>
+                        <input type="date" name="expiry_date" id="expiry_date" value="{{restaurant_stocks.expiry_date}}" class="rounded-md border-gray-300 shadow-sm" required>
+                    </div>
+                    <div class="">
+                        <label>Quantity<span class="text-red-600">*</span></label>
+                        <input name="quantity" id="quantity" value="{{restaurant_stocks.quantity.value}}" type="text" required>
+                    </div>
+                    <div class="">
+                        <label>Measuring Unit<span class="text-red-600">*</span></label>
+                        <input name="measuring_unit" id="measuring_unit" value="{{restaurant_stocks.measuring_unit.value}}" type="text" required>
+                    </div>
+                    <div class="">
+                        <label>Low Stock Alert Unit<span class="text-red-600"><span class="text-red-400 text-[80%] italic">(when item is below a number in quantity)</span>*</span></label>
+                        <input type="text" name="low_stock_alert_unit" id="low_stock_alert_unit" value="{{restaurant_stocks.low_stock_alert_unit.value}}" required>
+                    </div>
+                    <div>
+                        <p class="text-red-600 text-[85%] text-end">Details of added stock items cannot be updated.</p>
+                    </div>
+                    
+                    {% comment %} hidden but important {% endcomment %}
+                    
+                    
+                </div>
+                
+            </div>
+            {% block buttons %}
+                <div class="flex justify-end mt-8">
+                {# Add buttons here #}
+                {% block submit_btn %}
+                    <button type="submit" class="bg-primary disabled:bg-gray-700 disabled:cursor-not-allowed text-lg text-white ml-4 add !w-fit">Add Stock</button>
+                {% endblock %}
+                </div>
+            {% endblock %}
+
+        {% endblock %}
+        
+    </form>
+    
+</div>
+    
+{% comment %} <div id="create-store-form" hx-get="{% url 'restaurant-invite-employee' restaurant.custom_link %}" hx-swap="outerHTML" hx-trigger="load">
+</div> {% endcomment %}
+{% endblock %}

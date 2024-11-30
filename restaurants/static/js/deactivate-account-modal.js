@@ -26,7 +26,6 @@ passwordInputField.addEventListener(
         }, 2000)
     }, 500)
 )
-
 triggerBtn.addEventListener('click', () => {
     modal.classList.remove('hidden')
     modal.classList.add('flex')

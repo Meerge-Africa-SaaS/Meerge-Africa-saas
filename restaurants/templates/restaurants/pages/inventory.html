@@ -1,0 +1,36 @@
+{% extends 'restaurants/layout.html' %}
+{% load static %}
+
+{% block title %}Inventory{% endblock %}
+
+{% block sidebar %}
+  {% include 'restaurants/components/sidebar.html' with active_tab='inventory' %}
+{% endblock %}
+
+{% block navbar %}
+  {% include 'restaurants/components/navbar.html' with page_name='Inventory' show_searchbar=True %}
+{% endblock %}
+
+{% block extra_js %}
+{{block.super}}
+<script src="{% static 'js/dashboard.js' %}" defer></script>
+{% comment %} <script src="{% static 'js/create-store-modal.js' %}"></script> {% endcomment %}
+{% endblock %}
+
+{% block main_class %}
+  w-full space-y-6 bg-slate-200 overflow-y-auto p-4 lg:p-10
+{% endblock %}
+
+{% block main %}
+  {% comment %} {% include 'restaurants/components/create-store.html' with name='NAME' title='TITLE' %} {% endcomment %}
+  <div class="header flex justify-between">
+    <h1 class="text-xl">
+      <span class="">Stores</span>
+    </h1>
+    <input type="search" placeholder="in-progress">
+  </div>
+  
+  {% include 'restaurants/components/restaurantstore_list.html' with pk=object.id  %}
+
+    
+{% endblock %}
