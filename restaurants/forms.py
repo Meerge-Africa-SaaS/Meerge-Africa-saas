@@ -340,16 +340,25 @@ class GeneralViewRestaurantForm(forms.ModelForm):
         return custom_link
 
 
-class RestauarantStoreForm(forms.ModelForm):
+class RestaurantStoreForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStore
         fields = ["restaurant", "name", "description", "image", "section_name"]
+        
+    def __init__(self, *args, **kwargs):
+        if "instance" not in kwargs or kwargs["instance"] is None:
+            kwargs["instance"] = models.RestaurantStore()
+        super().__init__(*args, **kwargs)
+    
+    def save(self, restaurant, name, description, section_name, image=None) -> models.RestaurantStore:
+        return models.RestaurantStore.objects.create(restaurant=restaurant, name=name, description=description, section_name=section_name, image=image)
 
 
-class RestauarantStockForm(forms.ModelForm):
+class RestaurantStockForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStock
         fields = [
+            "store",
             "category",
             "name",
             "image",
@@ -357,10 +366,17 @@ class RestauarantStockForm(forms.ModelForm):
             "purchasing_price",
             "quantity",
             "measuring_unit",
-            "restaurant",
+            "manufacturers_name",
+            "low_stock_alert_unit",
+            "expiry_date",
+            #"restaurant",
         ]
-
-
+    '''     
+    def save(self, store, category, name, purchasing_price, quantity, measuring_unit, low_stock_alert_unit, expiry_date, stock_type=None, image=None) -> models.RestaurantStock:
+        return models.RestaurantStock.objects.create(store=store, category=category, name=name, image=image, stock_type=stock_type, purchasing_price=purchasing_price, quantity=quantity, measuring_unit=measuring_unit, low_stock_alert_unit=low_stock_alert_unit, expiry_date=expiry_date)
+ '''
+ 
+ 
 """ 
 
 class ChefForm(forms.ModelForm):
@@ -519,3 +535,5 @@ class InvitationRegistrationForm(forms.ModelForm):
         invitation.delete()
         setup_user_email(request, staff, [EmailAddress(email=staff.email)])
         return staff
+
+

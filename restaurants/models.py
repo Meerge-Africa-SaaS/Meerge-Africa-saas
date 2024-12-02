@@ -304,17 +304,22 @@ class MenuItem(models.Model):
 
 class RestaurantStock(models.Model):
     # Relationships
-    category = models.ForeignKey("inventory.Category", on_delete=models.DO_NOTHING)
-    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE)
+    category = models.ForeignKey("inventory.Category", on_delete=models.DO_NOTHING, related_name="stocks")
+    store = models.ForeignKey("restaurants.RestaurantStore", on_delete=models.CASCADE, related_name="stocks")
+    #restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE, related_name="stocks")
 
     # Fields
     name = models.CharField(max_length=128)
     image = models.URLField(blank=True, null=True)
     # image = models.ImageField(upload_to='images/restaurant/Stock')
-    stock_type = models.CharField(max_length=128)
+    stock_type = models.CharField(max_length=128, null=True, blank=True)
     purchasing_price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.IntegerField()
     measuring_unit = models.IntegerField()
+    manufacturers_name = models.CharField(max_length = 128, null=True, blank=True)
+    low_stock_alert_unit = models.DecimalField(max_digits=10, decimal_places = 2, null=True, blank=True)
+    expiry_date = models.DateField()
+    mode = models.BooleanField(default=True)
 
     # Time
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -462,7 +467,7 @@ class Restaurant(models.Model):
 
 class RestaurantStore(models.Model):
     # Relationships
-    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE)
+    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE, related_name="stores")
 
     # Fields
     name = models.CharField(max_length=128)

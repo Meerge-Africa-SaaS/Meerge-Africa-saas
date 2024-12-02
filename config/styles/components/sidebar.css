@@ -60,11 +60,11 @@
 
 
 #sidebar-list {
-    @apply flex flex-col items-start justify-start w-full gap-5
+    @apply flex flex-col items-start justify-between w-full gap-5 h-[80%];
 }
 
 .sidebar__item {
-    @apply w-full
+    @apply w-full h-40 flex
 }
 
 .sidebar__item > a {
