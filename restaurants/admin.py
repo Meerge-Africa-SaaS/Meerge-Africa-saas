@@ -183,13 +183,13 @@ class RestaurantStoreAdmin(admin.ModelAdmin):
         "name",
         "restaurant"
     ]
-    readonly_fields = [
+    ''' readonly_fields = [
         "restaurant",
         "name",
         "description",
         "image",
         "section_name"
-    ]
+    ] '''
     
 
 class RestaurantStockAdminForm(forms.ModelForm):
@@ -203,18 +203,20 @@ class RestaurantStockAdmin(admin.ModelAdmin):
     list_display = [
         "category",
         "name",
-        "restaurant",
+        #"restaurant",
+        "store",
     ]
-    readonly_fields = [
-        "category",
-        "name",
-        "image",
-        "stock_type",
-        "purchasing_price",
-        "quantity",
-        "measuring_unit",
-        "restaurant",
-    ]
+    ''' readonly_fields = [
+        #"category",
+        #"name",
+        #"image",
+        #"stock_type",
+        #"purchasing_price",
+        #"quantity",
+        #"measuring_unit",
+        #"restaurant",
+        #"store",
+    ] '''
     
     
 ''' 
