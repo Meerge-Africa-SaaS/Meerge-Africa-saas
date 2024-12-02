@@ -1,0 +1,65 @@
+{% extends 'components/modal.html' %}
+{% load static %}
+
+{% block main %}
+<script src="{% static 'js/create-store-modal.js' %}"></script>
+{% with name="create-store" title="Create Store" %}
+  {{block.super}}
+{% endwith %}
+{% endblock %}
+
+{% block content %}
+{% comment %} {% block url_link %}
+restaurant_RestaurantStore_create
+{% endblock %} {% endcomment %}
+
+<div class="w-full h-full">
+    <p>Start managing orders, menus, and customers with ease</p>
+    <form hx-post="{% url 'restaurant_RestaurantStore_create' %}">
+        {% csrf_token %}
+    {% block form_fields %}
+        <div clas="hidden">
+            <label for="restaurant" ></label>
+            <select name="restaurant" id="restaurant" value={{restaurant}} hidden="hidden" readonly>
+                <option value={{restaurant.pk}} selected>{{restaurant}}</option>
+            </select>
+        </div>
+        <div class="flex flex-wrap justify-between">
+            <div class="w-[45%]">
+                <label for="name">Store Name<span class="text-red-600">*</span></label>
+                <input type="text" name="name" id="name" value="{{restaurant_store_form.name.value|default:''}}" class="w-20" required>
+            </div>
+            <div class="w-[45%]">
+                <label for="section_name">Business Section Name<span class="text-red-600">(Optional)*</span></label>
+                <input name="section_name" id="section_name" value="{{restaurant_store_form.section_name.value|default:''}}" type="text">
+            </div>
+            <div class="w-[45%]">
+                <label for="description">Store Description<span class="text-red-600">*</span></label>
+                <textarea name="description" id="description" value="{{restaurant_store_form.description.value|default:''}}" class="" required></textarea>
+                
+            </div>
+            <div class="w-[45%]">
+                <label for="image">Store Image<span class="text-red-600">*</span></label>
+                <div class="border-2 border-gray-400 h-[70%] w-full rounded">
+                    <input name="image" id="image" value="{{restaurant_store_form.image.value|default:''}}" type="file">
+                </div>
+            </div>
+        </div>
+        {% block buttons %}
+            <div class="flex justify-end mt-8">
+            {# Add buttons here #}
+            {% block cancel_btn %}
+                <button type="button" id="cancel" class="text-lg cancel">Back</button>
+            {% endblock %}
+            {% block submit_btn %}
+                <button type="submit" class="bg-primary disabled:bg-gray-700 disabled:cursor-not-allowed text-lg text-white ml-4 add !w-fit">Create</button>
+            {% endblock %}
+            </div>
+        {% endblock %}
+        
+    {% endblock %}
+    
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'components/modal.html' %}
+{% load static %}
+
+{% block main %}
+<script src="{% static 'js/view-or-deactivate-stock-item-modal.js' %}"></script>
+{% with name="view-or-deactivate-stock-item" title="Create Store" %}
+  {{block.super}}
+{% endwith %}
+{% endblock %}
+
+{% block content %}
+{% comment %} {% block url_link %}
+restaurant_RestaurantStore_create
+{% endblock %} {% endcomment %}
+
+<div class="w-full h-full">
+    <button id="view" hx-get="{% url 'restaurant_RestaurantStock_detail' 20 %}">View</button>
+    <button id="deactivate">Deactivate</button>
+</div>
+
+{% endblock %}

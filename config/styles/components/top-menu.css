@@ -16,7 +16,7 @@ section#top-menu {
 
 .top-menu__item {
     @apply relative w-[19%] min-w-56 flex
-    flex-col items-start justify-start
+    flex-col items-start justify-start;
 }
 
 .top-menu__item > .item-image > img {
