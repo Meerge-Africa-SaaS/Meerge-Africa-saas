@@ -56,6 +56,7 @@ INSTALLED_APPS = [
                      'django_htmx',
                      'rest_framework_swagger',
                      'rest_framework_simplejwt'
+                     'django_bridge',
                  ] + [
                      # core
                      "core.apps.CoreConfig",
@@ -88,11 +89,18 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "django_bridge.middleware.DjangoBridgeMiddleware"
     # "allauth.usersessions.middleware.UserSessionsMiddleware", May need installation before we use.
 ]
 
 ROOT_URLCONF = "config.urls"
-
+VITE_BUNDLE_DIR = os.path.join(BASE_DIR, "build")
+DJANGO_BRIDGE = {
+    "CONTEXT_PROVIDERS": {},
+    "VITE_DEVSERVER_URL": "http://localhost:5173/static",
+    # for production, you can set this to the public URL of your Vite server
+    # "VITE_BUNDLE_DIR": VITE_BUNDLE_DIR,
+}
 
 ##### Django stuff continues from here.
 
@@ -166,6 +174,8 @@ STATICFILES_FINDERS = [
 ]
 
 STATICFILES_DIRS = [
+    # for production, you can uncooment this
+    # VITE_BUNDLE_DIR,
     os.path.join(PROJECT_DIR, "static"),
 ]
 
