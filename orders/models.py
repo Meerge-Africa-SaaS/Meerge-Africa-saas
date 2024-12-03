@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from ninja import Form
+from cloudinary.models import CloudinaryField
 
 from phonenumber_field.modelfields import PhoneNumberField
 from customers.models import Order
