@@ -1,4 +1,5 @@
 from datetime import timedelta as datetime_timedelta
+import cloudinary.uploader
 
 from cities_light.models import Country
 from django.conf import settings
@@ -58,6 +59,16 @@ User = get_user_model()
 router = Router()
 
 
+def upload_media(media_file):
+    try:
+        file_upload = cloudinary.uploader.upload(media_file)
+        file_url = file_upload["url"]
+        
+        return {"status": True, "data_url": file_url}
+    except:
+        return {"status": False, "data_url": None}
+
+
 @router.post("/deliveryagent-step1", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema = Form(...), NIN_doc: UploadedFile = File(...), drivers_license_DOC: Optional[UploadedFile] = File(None), voters_card_DOC: Optional[UploadedFile] = File(None)):
     try:
@@ -72,6 +83,35 @@ def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema =
         return 404, {"message": "Voters card document/image is required for motorcycles."}
     
     try:
+        nin_document = upload_media(NIN_doc)
+        if nin_document["status"] == True:
+            NIN_doc = nin_document["data_url"]
+        else:
+            return 404, {"message": "We ran into an error while uploading your nin document"}
+    except:
+        return 404, {"message": "Error in uploading NIN document"}
+    
+    try:
+        if ((data.vehicle_type == "motorcycle") or (data.vehicle_type == "truck")):
+            drivers_license_document = upload_media(drivers_license_DOC)
+        if drivers_license_document["status"] == True:
+            drivers_license_DOC = drivers_license_document["data_url"]
+        else:
+            return 404, {"message": "We ran into an error while uploading your drivers license document"}
+    except:
+        return 404, {"message": "Error in uploading drivers license document"}
+    
+    try:
+        if (data.vehicle_type == "bicycle"):
+            voters_card_document = upload_media(voters_card_DOC)
+        if voters_card_document["status"] == True:
+            voters_DOC = voters_card_document["data_url"]
+        else:
+            return 404, {"message": "We ran into an error while uploading your voters card document"}
+    except:
+        return 404, {"message": "Error in uploading voters card document"}
+    
+    try:
         deliveryagent.vehicle_type = data.vehicle_type
         deliveryagent.vehicle_brand = data.vehicle_brand 
         deliveryagent.plate_number = data.plate_number
@@ -83,7 +123,7 @@ def onboard_deliveryagent_step1(request, data: DeliveryAgentOnboardStep1Schema =
         deliveryagent.nin_number = data.NIN_ID
         deliveryagent.save()
             
-        return 200, {"message": "Driving details done"}
+        return 200, {"message": "Driving details registered"}
     except Exception as e:
         return 404, {"message": f"We ran into an error {e}"}
 
@@ -115,6 +155,16 @@ def onboard_deliveryagent_step3(request, data: DeliveryAgentOnboardStep3Schema, 
         return 404, {"message": "User does not exist"}
     except Exception as e:
         return 500, {"message": "Error while querying user"}
+    
+    try:
+        face_capture_document = upload_media(face_capture)
+        if face_capture_document["status"] == True:
+            face_capture = face_capture_document["data_url"]
+        else:
+            return 404, {"message": "We ran into an error while uploading your face capture"}
+    except:
+        return 404, {"message": "Error in uploading face capture"}
+    
     try:
         deliveryagent.work_shift = data.work_shift.dict()
         deliveryagent.face_capture = face_capture
