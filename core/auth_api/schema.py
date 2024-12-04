@@ -268,3 +268,4 @@ class RefreshTokenResponseSchema(Schema):
     
 class CategorySchema(Schema):
     name: str
+    
