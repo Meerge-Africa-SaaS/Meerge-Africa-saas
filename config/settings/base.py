@@ -56,6 +56,7 @@ INSTALLED_APPS = [
                      'django_htmx',
                      'rest_framework_swagger',
                      'rest_framework_simplejwt',
+                     "drf_spectacular",
                      'django_bridge',
                  ] + [
                      # core
