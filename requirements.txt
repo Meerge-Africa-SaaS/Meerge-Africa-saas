@@ -27,3 +27,4 @@ drf-spectacular
 django-invitations
 sentry-sdk
 django-bridge
+cloudinary

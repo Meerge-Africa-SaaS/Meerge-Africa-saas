@@ -18,6 +18,8 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 
 from invitations import signals
+from cloudinary.models import CloudinaryField
+
 
 User = get_user_model()
 
@@ -270,8 +272,8 @@ class MenuItem(models.Model):
     nutritional_info_summary = models.CharField(max_length=256, blank=True, null=True)
     ready_in = models.TimeField(blank=True, null=True)
     discount_percentage = models.PositiveIntegerField(blank=True, null=True)
-    image = models.URLField(blank=True, null=True)
-    video = models.URLField(blank=True, null=True)
+    image = CloudinaryField("restaurant_menuitem_image", blank=True, null=True)
+    video = CloudinaryField("restaurant_menuitem_video", blank=True, null=True)
     # image = models.ImageField(upload_to='images/restaurant/Menu/MenuItem')
     # video = models.FileField(upload_to='video/Menu/MenuItem')
 
@@ -310,7 +312,7 @@ class RestaurantStock(models.Model):
 
     # Fields
     name = models.CharField(max_length=128)
-    image = models.URLField(blank=True, null=True)
+    image = CloudinaryField("restaurant_stock_image", blank=True, null=True)
     # image = models.ImageField(upload_to='images/restaurant/Stock')
     stock_type = models.CharField(max_length=128, null=True, blank=True)
     purchasing_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -421,14 +423,14 @@ class Restaurant(models.Model):
         max_length=12, choices=BUSINESS_REGISTRATION_CHOICE
     )
     cac_reg_number = models.CharField(max_length=20, null=True, blank=True)
-    cac_certificate = models.URLField(blank=True, null=True)
-    business_license = models.URLField(blank=True, null=True)
+    cac_certificate = CloudinaryField("restaurant_cac_certificate", blank=True, null=True)
+    business_license = CloudinaryField("restaurant_business_license", blank=True, null=True)
     # cac_certificate = models.FileField(upload_to="images/restaurant/cac_certificates")
     # business_license = models.FileField(upload_to="images/restaurant/business_license", null=True, blank=True)
 
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    profile_img = models.URLField(blank=True, null=True)
-    cover_img = models.URLField(blank=True, null=True)
+    profile_img = CloudinaryField("restaurant_profile_image", blank=True, null=True)
+    cover_img = CloudinaryField("restaurant_cover_image", blank=True, null=True)
     # profile_img = models.ImageField(upload_to="images/restaurant/profile_images")
     # cover_img = models.ImageField(upload_to="images/restaurant/cover_images")
 
@@ -472,7 +474,7 @@ class RestaurantStore(models.Model):
     # Fields
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=256, blank=True, null=True)
-    image = models.URLField(blank=True, null=True)
+    image = CloudinaryField("restaurant_store_image", blank=True, null=True)
     # image = models.ImageField(upload_to='images/restaurant/Store')
     section_name = models.CharField(max_length=128, blank=True, null=True)
 
