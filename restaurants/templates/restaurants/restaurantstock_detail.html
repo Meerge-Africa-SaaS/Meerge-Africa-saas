@@ -1,0 +1,46 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+<div class="flex flex-wrap gap-6 lg:gap-8 justify-between">
+    <div class="flex justify-center w-full h-40">
+        <img class="bg-blue-200 w-[80%] lg:w-[40%] h-full" alt="image"></img>
+    </div>
+    <div class="flex w-full">
+        <p class="w-1/2">Product Name:</p>
+        <p class="w-1/2">{{object.name}}</p>
+    </div>
+    <div class="flex w-full">
+        <p class="w-1/2">Manufacturers Name:</p>
+        <p class="w-1/2">Value FMN (Flour Mills of Nigeria)</p>
+    </div>
+    <div class="flex w-full">
+        <p class="w-1/2">Price:</p>
+        <p class="w-1/2">{{object.purchasing_price}}</p>
+    </div>
+    <div class="flex w-full">
+        <p class="w-1/2">Units Available:</p>
+        <p class="w-1/2">{{object.quantity}}</p>
+    </div>
+    <div class="flex w-full">
+        <p class="w-1/2">Size:</p>
+        <p class="w-1/2">{{object.id}}</p>
+    </div>
+    <div class="flex w-full">
+        <p class="w-1/2">Weight:</p>
+        <p class="w-1/2">{{object.measuring_unit}}</p>
+    </div>
+    <div class="flex w-full">
+        <p class="w-1/2">Expiry Date:</p>
+        <p class="w-1/2">{{object.expiry_date}}</p>
+    </div>
+    <div class="flex w-full">
+        <p class="w-1/2">Availability:</p>
+        <p class="w-1/2">{% if object.quantity > 0 %}In-stock{% else %}Out-of-stock{% endif %}</p>
+    </div>
+
+</div>
+
+{% endblock %}

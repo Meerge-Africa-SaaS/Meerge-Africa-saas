@@ -84,6 +84,7 @@ target/
 *.pyc
 db.sqlite3
 __pycache__
+/migrations/
 node_modules
 .env
 .env.*
@@ -102,4 +103,6 @@ terraform.tfstahzte.backup
 # IDE
 .vscode
 
-static
+/static
+/.vscode/
+poetry.lock

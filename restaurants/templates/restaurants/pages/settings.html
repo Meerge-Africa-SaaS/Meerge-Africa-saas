@@ -26,13 +26,13 @@
 {% block main %}
   {% include 'restaurants/components/deactivate-account-modal.html' %}
   {% include 'restaurants/components/change-password-modal.html' %}
-  <div class="flex items-start p-8 gap-8 h-full w-full">
-    <div class="bg-white flex-[0.2] h-full pl-10 py-6">
+  <div class="flex items-stretch p-8 gap-8 overflow-y-auto min-h-full w-full">
+    <div class="bg-white flex-[0.2] min-h-full pl-10 py-6">
       <ul class="space-y-2 text-secondary text-xl">
         <li>Account & Security</li>
       </ul>
     </div>
-    <div class="bg-white flex-[0.8] h-full py-6 px-10 space-y-14">
+    <div class="bg-white flex-[0.8] min-h-full py-6 px-10 space-y-14">
       <div class="mt-14">
         <h1 class="text-4xl font-light mt-14">Account & Security</h1>
         <p class="text-gray-400">Manage your account and security information</p>

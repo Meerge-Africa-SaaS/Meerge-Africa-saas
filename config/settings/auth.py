@@ -1,13 +1,5 @@
 # ruff: noqa: F403,F405
-from .base import *
 
-INSTALLED_APPS += [
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.facebook",
-    "allauth.socialaccount.providers.google",
-]
 ###################################################
 ############    ALLAUTH SETTINGS     ##############
 ###################################################
@@ -16,13 +8,7 @@ SITE_ID = 1
 MOBILE_APP_SCHEME = "app://localhost:5000/"
 WEB_APP_SCHEME = "http://localhost:8000/"
 
-AUTHENTICATION_BACKENDS = [
-    "core.CustomFiles.CustomBackend.EmailAuthBackend",
-    "core.CustomFiles.CustomBackend.PhoneAuthBackend",
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-    "core.backends.EmailBackend"
-]
+
 
 ACCOUNT_ADAPTER = "core.CustomFiles.CustomAdapterFile.CustomAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "core.CustomFiles.CustomSocialAdapter.MyCustomSocialAccountAdapter"
@@ -36,11 +22,25 @@ ACCOUNT_EMAIL_CONFIRMATION_URL = (
         WEB_APP_SCHEME + "api/authenticate/auth-api/confirm-email/"
 )
 ACCOUNT_AUTHENTICATION_METHOD = "email"
+INVITATIONS_INVITATION_MODEL = "restaurants.StaffInvitation"
+INVITATIONS_SIGNUP_REDIRECT = "actor_redirect"
+INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
+INVITATIONS_INVITATION_EXPIRY = 7
+INVITATIONS_ADAPTER = "core.CustomFiles.CustomAdapterFile.CustomAccountAdapter"
+INVITATIONS_CONFIRMATION_URL_NAME = "restaurant_accept_invite"
 
-ACCOUNT_FORMS = {
-    "login": "core.forms.UserSigninForm",
-}
+# ACCOUNT_FORMS = {
+# #     "login": "core.forms.UserSigninForm",
+#     "signup": "restaurants.registration.RegistrationForm",
+# }
 
+# ACCOUNT_SIGNUP_FORM_CLASS = "restaurants.registration.RegistrationForm"
+
+
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ######### ALL-AUTH PROVIDERS   ########
 # Google provider details
 client_id = ""
@@ -92,18 +92,4 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-######################################################
-############   REST-FRAMEWORK SETTINGS  ##############
-######################################################
-
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
-
-SIMPLE_JWT = {
-    # ... other settings ...
-    'AUTH_TOKEN_CLASSES': ('core.auth_api.token_management.CustomRefreshToken',),
-}
+print(f"loading. .. {__file__}")

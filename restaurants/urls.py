@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from restaurants import onboarding, registration
+from restaurants import onboarding, pages, registration
 
 from . import api, htmx, views
 
@@ -20,13 +20,18 @@ urlpatterns = (
     path("api/v1/", include(router.urls)),
     path(
         "signup/",
-        registration.RegistrationView.as_view(),
+        registration.signup,
         name="restaurant_signup",
     ),
     path(
-        "email_verification/",
-        registration.EmailVerificationSentView.as_view(),
-        name="restaurant_email_verification_sent",
+        "signup/<str:invite_key>/",
+        registration.InvitationRegistrationView.as_view(),
+        name="restaurant_staff_registration",
+    ),
+    path(
+        "invitation/accept/<str:key>/",
+        onboarding.AcceptInviteView.as_view(),
+        name="restaurant_accept_invite",
     ),
     path(
         "email_verification/done/",
@@ -43,6 +48,8 @@ urlpatterns = (
         onboarding.OnboardingWizardView.as_view(),
         name="restaurant_onboarding_wizard",
     ),
+    
+    
     path(
         "Ingredient/",
         views.IngredientListView.as_view(),
@@ -169,6 +176,28 @@ urlpatterns = (
         name="restaurant_MenuItem_delete",
     ),
     path(
+        "RestaurantStock/create/",
+        views.RestaurantStockCreateView.as_view(),
+        name="restaurant_RestaurantStock_create",
+    ),
+    path(
+        "RestaurantStock/detail/<int:pk>/",
+        views.RestaurantStockDetailView.as_view(),
+        name="restaurant_RestaurantStock_detail",
+    ),
+    path(
+        "RestaurantStore/<int:pk>/",
+        views.RestaurantStoreListView.as_view(),
+        name="restaurant_RestaurantStore_list",
+    ),
+    path(
+        "RestaurantStore/create/",
+        views.RestaurantStoreCreateView.as_view(),
+        name="restaurant_RestaurantStore_create",
+    ),
+    
+        
+    path(
         "Restaurant/",
         views.RestaurantListView.as_view(),
         name="restaurant_Restaurant_list",
@@ -177,11 +206,6 @@ urlpatterns = (
         "Restaurant/create/",
         views.RestaurantCreateView.as_view(),
         name="restaurant_Restaurant_create",
-    ),
-    path(
-        "Restaurant/detail/<int:pk>/",
-        views.RestaurantDetailView.as_view(),
-        name="restaurant_Restaurant_detail",
     ),
     path(
         "Restaurant/update/<int:pk>/",
@@ -345,5 +369,7 @@ urlpatterns = (
     #     htmx.HTMXStaffDeleteView.as_view(),
     #     name="restaurant_Staff_htmx_delete",
     # ),
+    path("", pages.RestaurantRedirectView.as_view(), name="restaurant_redirect"),
+    path("<slug:restaurant>/invite", onboarding.SendInviteView.as_view(), name="restaurant-invite-employee"),
     path("<slug:restaurant>/", include("restaurants.pages", namespace="pages")),
 )

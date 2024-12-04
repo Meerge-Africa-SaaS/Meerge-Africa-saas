@@ -6,9 +6,21 @@
   <div class="flex flex-col items-center justify-center w-full h-full text-center mt-6">
     <img src="{% static 'images/mail.png' %}" alt="mail icon" class="w-20 h-auto" />
     <h1 class="text-2xl font-bold mt-4">Verify Your Email</h1>
-    <p class="text-sm font-light max-w-sm">We just sent an email to daniel@email.com Click the link in the email to verify your account</p>
+    <p class="text-sm font-light max-w-sm">We just sent an email to {{email}} Click the link in the email to verify your account</p>
     <p class="text-xs font-light max-w-sm mt-6">You might need to check your spam folder</p>
   </div>
+{% endblock %}
+
+{% block form_fields %}
+  <input type="hidden" name="email" value="{{ email }}" />
+{% endblock %}
+
+{% block form_title %}
+  <p class="text-2xl font-bold">Email Verification Sent</p>
+{% endblock %}
+
+{% block form_action %}
+  {% url 'account_login' %}
 {% endblock %}
 
 {% block form_btns %}

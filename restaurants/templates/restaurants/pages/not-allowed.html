@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Access Denied{% endblock %}
+
+{% block body_class %}
+  w-full space-y-6 bg-slate-200 overflow-y-auto p-4 lg:p-10
+{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <h1 class="text-xl text-red-600 text-center">
+      <span class="">Access Denied</span>
+    </h1>
+  </div>
+  <div class="flex items-center justify-center w-full h-full">
+    <div class="bg-white p-8 rounded-md shadow-md text-center">
+      <h2 class="text-2xl font-semibold mb-4">You are not allowed to access this page</h2>
+      <p class="text-gray-600 mb-6">It appears that you do not have the necessary permissions to view this page. Please contact your administrator if you believe this is a mistake.</p>
+      <a href="/" class="btn btn-primary">Return to Home</a>
+    </div>
+  </div>
+{% endblock %}

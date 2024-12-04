@@ -1,0 +1,175 @@
+{% extends 'restaurants/layout.html' %}
+{% load static %}
+
+{% block title %}Inventory{% endblock %}
+
+{% block sidebar %}
+  {% include 'restaurants/components/sidebar.html' with active_tab='inventory' %}
+{% endblock %}
+
+{% block navbar %}
+  {% include 'restaurants/components/navbar.html' with page_name='Inventory' show_searchbar=True %}
+{% endblock %}
+
+{% block extra_js %}
+{{block.super}}
+<script src="{% static 'js/dashboard.js' %}" defer></script>
+<script src="{% static 'js/create-store-modal.js' %}"></script>
+<script src="{% static 'js/add-stock-item-modal.js' %}"></script>
+<script src="{% static 'js/view-stock-item-modal.js' %}"></script>
+<script src="{% static 'js/view-or-deactivate-stock-item-modal.js' %}"></script>
+<script>
+  (() => {
+   
+
+})();
+</script>
+  
+<script>
+  /**@type {HTMLDivElement} */
+  const allstocksitems_trigger = document.getElementById('restaurant_stock_item_check_alltrigger')
+  const eachstockitem_trigger = document.querySelectorAll('.restaurant_stock_item_check')
+  allstocksitems_trigger.addEventListener("change", (event) => {
+    for (let i = 0; i < eachstockitem_trigger.length; i++){
+      eachstockitem_trigger[i].checked = allstocksitems_trigger.checked
+    }
+  })
+  
+  eachstockitem_trigger.forEach((eachstockitem) => {
+    eachstockitem.addEventListener("change", (event) => {
+        if (eachstockitem.checked === false){
+          allstocksitems_trigger.checked = false
+        }
+        else{
+          let toggleAll = true;
+          for (let i = 0; i < eachstockitem_trigger.length; i++){
+             if (eachstockitem_trigger[i].checked === false){
+                toggleAll = false
+             }
+          }
+          if (toggleAll === true){
+            allstocksitems_trigger.checked = true
+          }
+        }
+    })
+  })
+   
+</script>
+{% endblock %}
+
+{% block main_class %}
+  w-full space-y-6 bg-slate-200 overflow-y-auto p-4 lg:p-10
+{% endblock %}
+
+{% block main %}
+  {% comment %} {% include 'restaurants/components/create-store.html' with name='NAME' title='TITLE' %} {% endcomment %}
+  {% comment %} Modal {% endcomment %}
+  {% include 'restaurants/components/add-stock-item.html' %}
+  {% include 'restaurants/components/view-stock-item.html' %}
+  {% include 'restaurants/components/view-or-deactivate-stock-item.html' %}
+  
+  
+  <div class="header flex justify-between">
+    <h1 class="text-xl">
+      <span class="font-semibold font-poppins">{{ restaurant_store.name }}</span>
+    </h1>
+    <div class="flex gap-4">
+      <button data-modal-trigger="add-stock-item-modal" class="bg-primary text-lg text-white ml-4">Add stock</button>
+      <button hx-get="{% url 'pages:inventory' restaurant.custom_link %}" hx-target="body" class="bg-white">Stores</button>
+      <input type="search" placeholder='<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M25.15 26.1625C25.725 26.7375 26.6125 25.85 26.0375 25.2875L21.35 20.5875C22.9947 18.7684 23.9037 16.4024 23.9 13.95C23.9 8.4625 19.4375 4 13.95 4C8.4625 4 4 8.4625 4 13.95C4 19.4375 8.4625 23.9 13.95 23.9C16.425 23.9 18.7125 22.9875 20.4625 21.475L25.15 26.1625ZM5.24875 13.95C5.24875 9.15 9.16125 5.25 13.9487 5.25C18.7487 5.25 22.6488 9.15 22.6488 13.95C22.6488 18.75 18.7487 22.65 13.9487 22.65C9.16125 22.65 5.24875 18.75 5.24875 13.95Z" fill="#878686"/>
+      </svg>'
+      class="w-10">
+    </div>    
+  </div>
+
+  <div class="min-h-[73vh] bg-white relative">
+    {% if restaurant_stocks %}
+    <table class="w-full table table-fixed">
+      <thead class="h-20">
+        <tr>
+          <th class="w-14"><input id="restaurant_stock_item_check_alltrigger" type="checkbox"></th>
+          <th class="text-start w-[12%]">Item Image</th>
+          <th class="text-start w-[15%]">Item Name</th>
+          <th class="text-start">Category</th>
+          <th class="text-start">Stock Type</th>
+          <th class="text-start">Price</th>
+          <th class="text-start">Quantity</th>
+          <th class="text-start w-[12%]">Measuring Unit</th>
+          <th class="w-10"></th>
+        </tr>
+        <tr class="h-[1px] bg-gray-300">
+          <td class="" colspan="9">
+          </td>
+        </tr>
+      </thead>
+      <tbody class="">
+        {% for restaurant_stock in restaurant_stocks %}
+        
+        <tr class="h-28">
+          <td class="w-14 text-center"><input type="checkbox" class="restaurant_stock_item_check"></td>
+          <td class="">{{restaurant_stock.image|truncatechars:'10'}}</td>
+          <td class="">{{restaurant_stock.name}}</td>
+          <td class="">{{restaurant_stock.category}}</td>
+          <td class="">{{restaurant_stock.stock_type}}</td>
+          <td class="">{{restaurant_stock.purchasing_price}}</td>
+          <td class="">{{restaurant_stock.quantity}}</td>
+          <td class="">{{restaurant_stock.measuring_unit|default:''}}</td>
+          <td class="text-center w-10">
+            <button data-popover-target="store_stockitem_actions-{{restaurant_stock.id}}" data-popover-trigger="{hover|click}" data-popover-placement="left" class="w-10 px-0 focus:ring-0"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M13.125 6.25C13.125 5.75272 13.3225 5.27581 13.6742 4.92417C14.0258 4.57254 14.5027 4.375 15 4.375H15.0125C15.5098 4.375 15.9867 4.57254 16.3383 4.92417C16.69 5.27581 16.8875 5.75272 16.8875 6.25V6.2625C16.8875 6.75978 16.69 7.23669 16.3383 7.58833C15.9867 7.93996 15.5098 8.1375 15.0125 8.1375H15C14.5027 8.1375 14.0258 7.93996 13.6742 7.58833C13.3225 7.23669 13.125 6.75978 13.125 6.2625V6.25ZM13.125 15C13.125 14.5027 13.3225 14.0258 13.6742 13.6742C14.0258 13.3225 14.5027 13.125 15 13.125H15.0125C15.5098 13.125 15.9867 13.3225 16.3383 13.6742C16.69 14.0258 16.8875 14.5027 16.8875 15V15.0125C16.8875 15.5098 16.69 15.9867 16.3383 16.3383C15.9867 16.69 15.5098 16.8875 15.0125 16.8875H15C14.5027 16.8875 14.0258 16.69 13.6742 16.3383C13.3225 15.9867 13.125 15.5098 13.125 15.0125V15ZM15 21.875C14.5027 21.875 14.0258 22.0725 13.6742 22.4242C13.3225 22.7758 13.125 23.2527 13.125 23.75V23.7625C13.125 24.2598 13.3225 24.7367 13.6742 25.0883C14.0258 25.44 14.5027 25.6375 15 25.6375H15.0125C15.5098 25.6375 15.9867 25.44 16.3383 25.0883C16.69 24.7367 16.8875 24.2598 16.8875 23.7625V23.75C16.8875 23.2527 16.69 22.7758 16.3383 22.4242C15.9867 22.0725 15.5098 21.875 15.0125 21.875H15Z" fill="black"/>
+              </svg>
+            </button>
+            <div data-popover id="store_stockitem_actions-{{restaurant_stock.id}}" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+              <div class="flex flex-col py-2">
+                  <button hx-get="{% url 'restaurant_RestaurantStock_detail' restaurant_stock.id %}" hx-swap="outerHTML" hx-trigger="load" hx-target="#restaurantstock_detail" data-modal-trigger='view-stock-item-modal' id="view-stock-item-button" class="text-start focus:ring-0 text-black opacity-100">View</button>
+                  <button class="text-start focus:ring-0 text-black opacity-100">Deactivate</button>
+              </div>
+              <div data-popper-arrow></div>
+            </div>
+            {% comment %} <button hx-get="{% url 'restaurant_RestaurantStock_detail' restaurant_stock.id %}" hx-swap="outerHTML" hx-trigger="load" hx-target="#restaurantstock_detail" data-modal-trigger='view-stock-item-modal' id="view-stock-item-button" class="w-10 px-0 focus:ring-0"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M13.125 6.25C13.125 5.75272 13.3225 5.27581 13.6742 4.92417C14.0258 4.57254 14.5027 4.375 15 4.375H15.0125C15.5098 4.375 15.9867 4.57254 16.3383 4.92417C16.69 5.27581 16.8875 5.75272 16.8875 6.25V6.2625C16.8875 6.75978 16.69 7.23669 16.3383 7.58833C15.9867 7.93996 15.5098 8.1375 15.0125 8.1375H15C14.5027 8.1375 14.0258 7.93996 13.6742 7.58833C13.3225 7.23669 13.125 6.75978 13.125 6.2625V6.25ZM13.125 15C13.125 14.5027 13.3225 14.0258 13.6742 13.6742C14.0258 13.3225 14.5027 13.125 15 13.125H15.0125C15.5098 13.125 15.9867 13.3225 16.3383 13.6742C16.69 14.0258 16.8875 14.5027 16.8875 15V15.0125C16.8875 15.5098 16.69 15.9867 16.3383 16.3383C15.9867 16.69 15.5098 16.8875 15.0125 16.8875H15C14.5027 16.8875 14.0258 16.69 13.6742 16.3383C13.3225 15.9867 13.125 15.5098 13.125 15.0125V15ZM15 21.875C14.5027 21.875 14.0258 22.0725 13.6742 22.4242C13.3225 22.7758 13.125 23.2527 13.125 23.75V23.7625C13.125 24.2598 13.3225 24.7367 13.6742 25.0883C14.0258 25.44 14.5027 25.6375 15 25.6375H15.0125C15.5098 25.6375 15.9867 25.44 16.3383 25.0883C16.69 24.7367 16.8875 24.2598 16.8875 23.7625V23.75C16.8875 23.2527 16.69 22.7758 16.3383 22.4242C15.9867 22.0725 15.5098 21.875 15.0125 21.875H15Z" fill="black"/>
+              </svg>
+              </button> {% endcomment %}
+          </td>
+        </tr>
+        
+        <tr class="h-[1px] bg-gray-300">
+          <td class="" id="restaurant_stock_id" value="{{restaurant_stock.id}}" colspan="9">
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+
+    
+
+    {% else %}
+    <div class="absolute w-full h-full flex items-center justify-center">
+      <p class="text-gray-400 text-2xl">All stock items added will be displayed here</p>
+    </div>
+    
+    {% endif %}
+    {% comment %} {% for stock_category in stock_categories %}
+    {{ stock_category }}
+    {% endfor %} {% endcomment %}
+  </div>
+
+  {% comment %} <div>
+    <form class="flex flex-col">
+      <div class="hidden form-control">
+        <label for="restaurant" ></label>
+        <select name="restaurant" id="restaurant" value={{restaurant}} hidden="hidden">
+            <option value={{restaurant.pk}} selected>{{restaurant}}</option>
+        </select>
+    </div>
+    <div>
+      <label>
+    </div>
+    
+    </form>
+  </div> {% endcomment %}
+  
+  
+{% endblock %}

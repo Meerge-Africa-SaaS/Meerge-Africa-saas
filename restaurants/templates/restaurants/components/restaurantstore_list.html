@@ -1,0 +1,20 @@
+{% load static %}
+{% block extra_js %}
+{% comment %} <script src="{% static 'js/create-store-modal.js' %}"></script> {% endcomment %}
+<script src="{% static 'js/restaurantstore_detail-modal.js' %}"></script>
+{% endblock %}
+<div class="flex flex-wrap justify-between w-full max-w-full max-md:flex-col">
+  {% comment %} Modals to display below {% endcomment %}
+  {% include 'restaurants/components/create-store.html' %}
+  {% comment %} Modal stop here, content below {% endcomment %}
+
+  {% include 'components/card.html' with title='Create Store' description='Create and view your store...' card_type='modal' modal_name='create-store' %}
+  
+  {% for restaurant_store in restaurant_stores %}
+    {% include 'components/card.html' with title=restaurant_store.name description=restaurant_store.description modal_name='restaurantstore_detail' restaurant=restaurant object=restaurant_store %}
+    {% empty %}
+    {% include 'components/card.html' with title='Stores' description='Default store created for...' modal_name='create-store'  %}
+  {% endfor %}
+  
+  {% include 'components/card.html' with title='Store settings' description='Manage and update store...' card_type='restaurantstore_settings' %}
+</div>

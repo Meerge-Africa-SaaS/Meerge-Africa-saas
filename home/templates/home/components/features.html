@@ -1,0 +1,64 @@
+{% load static %}
+<style type="text/tailwindcss">
+  .feature-card {
+    @apply p-8 rounded-lg grid grid-cols-1 grid-rows-[3fr,3fr] lg:grid-rows-[1fr,2fr] xl:grid-rows-[2fr,2fr] gap-4;
+  }
+  .feature-card > div {
+    @apply flex-grow flex flex-col justify-start;
+  }
+  .feature-card img {
+    @apply mb-6 flex-shrink-0;
+  }
+  .feature-card h3 {
+    @apply text-2xl font-medium mb-4;
+  }
+  .feature-card p {
+    @apply text-base;
+  }
+</style>
+
+<section class="px-6 container mx-auto" id="features">
+  <section class="mx-auto container rounded-lg py-16 relative bg-no-repeat bg-cover" style="
+        background-image: url('{% static 'assets/chef-chopping-tomatoes.png' %}');
+        background-position: center top">
+    <div class="bg-black bg-opacity-50 h-full w-full top-0 right-0 absolute z-10 rounded-2xl"></div>
+    <div class="z-20 relative container mx-auto px-4">
+      <button class="text-sm font-bold text-white py-1.5 px-2 bg-secondary rounded-md">Features</button>
+      <p class="text-base text-white font-bold my-4">
+        Maximize your resturant's <span>revenue</span> with our streamlined operations
+      </p>
+      <!-- Features Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Feature Cards -->
+        <div class="bg-[#86cdeb] feature-card">
+          <img src="{% static 'assets/archers-icon.svg' %}" alt="Point of sale" />
+          <div>
+            <h3>Point of sale</h3>
+            <p>Enable card and mobile transactions by processing payments with our POS system that helps you track sales at the restaurants and over the checkout counter.</p>
+          </div>
+        </div>
+        <div class="bg-[#EBDED6] feature-card">
+          <img src="{% static 'assets/desktop-icon.svg' %}" alt="Custom Site" />
+          <div>
+            <h3>Custom site</h3>
+            <p>Create a unique link where information about your restaurant, such as menu variety, and cuisine types can be seen when they visit you.</p>
+          </div>
+        </div>
+        <div class="bg-[#C8E6FF] feature-card">
+          <img src="{% static 'assets/ops-control-icon.svg' %}" alt="custom-site" />
+          <div>
+            <h3>Ops-Control</h3>
+            <p>Manage all in-person and online orders procurements and inventory, and staff itinerary all in one place, making your restaurant operations smoother and more organized for you.</p>
+          </div>
+        </div>
+        <div class="bg-[#D1A753] feature-card">
+          <img src="{% static 'assets/mobile-app-icon.svg' %}" alt="Mobile App" />
+          <div>
+            <h3>Mobile App</h3>
+            <p>Plug in to our mobile app channel that allows customers to place orders online, make reservations, and access your restaurant offerings conveniently from their smartphones anywhere.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>

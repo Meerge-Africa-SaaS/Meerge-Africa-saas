@@ -1,0 +1,74 @@
+{% load static %}
+<style type="text/tailwindcss">
+  .growth-card {
+    @apply p-8 rounded-lg grid grid-cols-1 grid-rows-2 md:grid-rows-[2fr,3fr]
+    lg:grid-rows-2 xl:grid-rows-[2fr,3fr] 2xl:grid-rows-[3fr,5fr]
+  }
+  
+  .growth-card > div {
+    @apply flex-grow flex flex-col justify-start;
+  }
+  
+  .growth-card img {
+    @apply block flex-shrink-0 my-auto;
+  }
+  
+  .growth-card h3 {
+    @apply text-2xl font-medium mb-4;
+  }
+  
+  .growth-card p {
+    @apply text-base;
+  }
+</style>
+<section class="z-20 relative container mx-auto px-6 py-16" id="growth-card">
+  <div>
+    <button class="text-sm font-bold text-white py-1.5 px-2 bg-secondary rounded-md">Growth</button>
+    <p class="text-base text-black font-bold my-4">Enhance Your Restaurant's Profitability with Strategic Solutions</p>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="bg-[#D1A753] growth-card">
+        <div>
+          <h3>Stock Manager</h3>
+          <p>Set up your inventory, and monitor stock levels, get warnings when supplies are running low, and streamline restocking with supplier integration.</p>
+        </div>
+        <img src="{% static 'assets/truck-icon.svg' %}" alt="stock manager" />
+      </div>
+
+      <div class="bg-[#EBDED6] growth-card">
+        <div>
+          <h3>InsightPro</h3>
+          <p>Dive into past and present details with insights into sales trends, customer preferences, and performance data, helping you make informed decisions to grow your business.</p>
+        </div>
+        <img src="{% static 'assets/insight-pro.svg' %}" alt="Insight pro" />
+      </div>
+      <div class="bg-[#AD92E3] growth-card">
+        <div>
+          <h3>SyncBudget</h3>
+          <p>Looking for ways to control costs on expenses? Our budgeting tool helps you set and track budgets for expenses, making financial planning and resource management easier.</p>
+        </div>
+        <img src="{% static 'assets/syncbudget-icon.svg' %}" alt="custom-site" />
+      </div>
+      <div class="bg-[#AD92E3] growth-card">
+        <div>
+          <h3>CreditPlus</h3>
+          <p>Scale your food business to serve more customers with our flexible financing options for growth and expansion, access food grants and support capital when you need it.</p>
+        </div>
+        <img src="{% static 'assets/cash-img.svg' %}" alt="credit plus" />
+      </div>
+      <div class="bg-[#505050] growth-card !text-white">
+        <div>
+          <h3>Buy now/ pay after</h3>
+          <p>Enjoy the flexibility to source for ingredients now and pay at a later date, increasing your purchasing power and keeping your restaurant adequately stocked for customer requests.</p>
+        </div>
+        <img src="{% static 'assets/wallet-img.svg' %}" alt="Buy now pay later" />
+      </div>
+      <div class="bg-[#505050] growth-card !text-white">
+        <div>
+          <h3>Auto re-order</h3>
+          <p>Based on your recent procurements, you can automatically generate new purchase orders or restocking requests with predefined criteria.</p>
+        </div>
+        <img src="{% static 'assets/auto-reoder-img.svg' %}" alt="Auto reoder" />
+      </div>
+    </div>
+  </div>
+</section>

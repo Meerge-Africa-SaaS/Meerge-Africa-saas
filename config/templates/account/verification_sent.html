@@ -1,0 +1,53 @@
+{% extends 'auth-base.html' %}
+{% load static wagtailadmin_tags %}
+
+{% block header %}
+  {{ block.super }}
+  <div class="flex flex-col items-center justify-center w-full h-full text-center mt-6">
+    <img src="{% static 'images/mail.png' %}" alt="mail icon" class="w-20 h-auto" />
+    <h1 class="text-2xl font-bold mt-4">Verify Your Email</h1>
+    <p class="text-sm font-light max-w-sm">We just sent an email to {{email}} Click the link in the email to verify your account</p>
+    <p class="text-xs font-light max-w-sm mt-6">You might need to check your spam folder</p>
+  </div>
+{% endblock %}
+
+{% block form_fields %}
+  <input type="hidden" name="email" value="{{ email }}" />
+{% endblock %}
+
+{% block form_title %}
+  <p class="text-2xl font-bold">Email Verification Sent</p>
+{% endblock %}
+
+{% block form_action %}{% url 'account_email' %}{% endblock %}
+
+{% block form_method %}post{% endblock %}
+
+{% block form_btns %}
+  <p class="text-xs text-gray-700 font-medium mt-6 text-center">Didn't receive the email? Just click below</p>
+  <button type="submit" name="action_send" class="block btn btn-primary max-w-xs mx-auto">Resend Email</button>
+{% endblock %}
+
+{% block social_signin %}
+  <div class="flex w-full items-center gap-6 justify-center my-6">
+    <a href="https://mail.google.com" target="_blank" class="flex gap-2 items-center">
+      <svg class="w-5 h-auto" width="30" height="23" viewBox="0 0 30 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 5.8584L26.4287 7.82262L22.8574 11.2154V22.8578H27.8572C29.0408 22.8578 30 21.8986 30 20.715V5.8584Z" fill="#4CAF50" />
+        <path d="M0 5.8584L2.58134 7.07978L7.14261 11.2154V22.8578H2.14278C0.959253 22.8578 0 21.8986 0 20.715V5.8584Z" fill="#1E88E5" />
+        <path d="M22.8538 2.28516L14.9969 8.17781L7.14004 2.28516L6.42578 6.42787L7.14004 11.2134L14.9969 17.1061L22.8538 11.2134L23.568 6.42787L22.8538 2.28516Z" fill="#E53935" />
+        <path d="M0 3.06989V5.85694L7.14261 11.2139V2.28564L4.91126 0.61355C4.37985 0.214993 3.73416 0 3.06989 0C1.37424 0 0 1.37424 0 3.06989Z" fill="#C62828" />
+        <path d="M30 3.06989V5.85694L22.8574 11.2139V2.28564L25.0888 0.61355C25.6202 0.214993 26.2659 0 26.9301 0C28.6258 0 30 1.37424 30 3.06989Z" fill="#FBC02D" />
+      </svg>
+      <p class="text-xs font-light">Open Gmail</p>
+    </a>
+    <a href="https://outlook.com" target="_blank" class="flex gap-2 items-center">
+      <svg class="w-5 h-auto" width="25" height="30" viewBox="0 0 25 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10.416 21.2829C10.416 22.2029 11.0382 22.9495 11.8049 22.9495H23.6105C24.3771 22.9495 24.9993 22.2029 24.9993 21.2829V8.78288C24.9993 7.86288 24.3771 7.11621 23.6105 7.11621H11.8049C11.0382 7.11621 10.416 7.86288 10.416 8.78288V21.2829Z" fill="#03A9F4" />
+        <path d="M25.0013 9.59534V8.78284C25.0013 8.42617 24.9062 8.09701 24.7464 7.82617L16.9242 13.6028L11.6867 9.72284L11.1992 11.2828L17.0735 15.4495L25.0013 9.59534Z" fill="#B3E5FC" />
+        <path d="M14.5833 30L0 26.6667V3.33333L14.5833 0V30Z" fill="#0277BD" />
+        <path d="M10.5669 10.7094C9.80438 9.6469 8.79883 9.11523 7.56133 9.11523C6.24744 9.11523 5.19466 9.67273 4.39883 10.7844C3.60438 11.8986 3.20508 13.3577 3.20508 15.1561C3.20508 16.8602 3.59675 18.2511 4.37869 19.3111C5.16063 20.3719 6.17869 20.9027 7.41897 20.9027C8.69674 20.9027 9.73216 20.3594 10.5259 19.2569C11.3197 18.1627 11.7148 16.7211 11.7148 14.9244C11.7148 13.1844 11.3322 11.7794 10.5669 10.7094ZM9.06202 17.7294C8.66758 18.3702 8.13216 18.6894 7.45577 18.6894C6.80369 18.6894 6.27591 18.3611 5.86897 17.7002C5.4655 17.0461 5.2648 16.1494 5.2648 15.0244C5.2648 13.9111 5.4655 13.0127 5.86897 12.3369C6.27591 11.6619 6.81897 11.3277 7.50438 11.3277C8.17244 11.3277 8.69744 11.6552 9.07869 12.3094C9.46411 12.9719 9.65716 13.8886 9.65716 15.0677C9.65786 16.2052 9.45716 17.0902 9.06202 17.7294Z" fill="white" />
+      </svg>
+      <p class="text-xs font-light">Open Outlook</p>
+    </a>
+  </div>
+{% endblock %}

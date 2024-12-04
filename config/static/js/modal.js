@@ -1,10 +1,26 @@
 (() => {
     document.querySelectorAll('.modal').forEach(modal => {
-        const triggerBtn = document.querySelector(`[data-modal-trigger="${modal.id}"]`)
+        const modalHide = document.querySelectorAll(`[data-modal-hide="${modal.id}"]`)
+        const modalTrigger = document.querySelectorAll(`[data-modal-trigger="${modal.id}"]`)
+        const modalToggle = document.querySelectorAll(`[data-modal-toggle="${modal.id}"]`)
         const modalContent = modal.querySelector('.modal-content')
 
-        triggerBtn?.addEventListener('click', () => {
-            modal.classList.add('active')
+        modalTrigger.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                modal.classList.add('active')
+            })
+        })
+
+        modalToggle.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                modal.classList.toggle('active')
+            })
+        })
+
+        modalHide.forEach(close => {
+            close.addEventListener('click', () => {
+                modal.classList.remove('active')
+            })
         })
 
         modalContent?.addEventListener('click', e => {

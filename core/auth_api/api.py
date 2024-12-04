@@ -1,4 +1,4 @@
-
+import os
 import secrets
 from random import randint
 
@@ -21,6 +21,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -33,8 +34,10 @@ from django.utils import timezone as django_timezone
 from django.utils.http import urlsafe_base64_decode
 from ninja import Router
 from ninja.security import HttpBearer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.auth_api.schema import CustomerSignupRequestSchema
+from core.auth_api.token_management import AuthBearer
 from core.CustomFiles.CustomBackend import EmailAuthBackend, PhoneAuthBackend
 from core.models import EmailVerification
 from customers.models import Customer
@@ -51,6 +54,7 @@ from .schema import (
     EmailVerificationSchema,
     JWTLoginResponseSchema,
     LoginResponseSchema,
+    LogoutResponseSchema,
     NotFoundSchema,
     PasswordChangeRequestDoneSchema,
     PasswordChangeRequestSchema,
@@ -67,7 +71,7 @@ from .schema import (
     StaffSignupResponseSchema,
     SuccessMessageSchema,
 )
-from .token_management import create_token, CustomRefreshToken
+from .token_management import create_token, CustomRefreshToken, generate_code
 
 User = get_user_model()
 router = Router()
@@ -97,6 +101,30 @@ def emailAddressExist(email):
         
     except Exception as e:
         return {"status": False, "message": e}
+    
+
+def getActorType(email):
+    User = get_user_model()
+    try:
+        user = User.objects.get(email = email)
+        if "customer" in user.groups.all():
+            return "customer"
+        elif "deliveryagent" in user.groups.all():
+            return 'deliveryagent'
+        elif "staff" in user.groups.all():
+            return "staff"
+        elif "supplymanager" in user.groups.all():
+            return "supplymanager"
+        elif "SupplierOwner" in user.groups.all():
+            return "SupplierOwner"
+        elif "Restaurant Owner" in user.groups.all():
+            return "RestaurantOwner"
+        else:
+            return "unknown_actortype"
+        
+    except User.DoesNotExist:
+        return None
+
 
 
 #############      SIGNALS EMITTED        ############
@@ -110,12 +138,18 @@ def create_email_token(sender, instance, created, **kwargs):
                 EmailVerification.objects.create(user = instance, expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
                 instance.is_active = False
                 instance.save()
+            else:
+                email_instance = EmailVerification.objects.get(user = instance)
+                email_instance.email_code = generate_code(6)
+                email_instance.expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10)
+                email_instance.save()
+                
             email_token = EmailVerification.objects.filter(user = instance).last()
             subject =  "Email Verification"
             message = f"""
                     Hello, here is your one time email verification code {email_token.email_code}
                     """
-            business_email_sender ="dev@kittchens.com"
+            business_email_sender=os.getenv("EMAIL_HOST_USER", "dev@kittchens.com")
             receiver = [instance.email]
             try:
                 email_send = send_mail(subject, message, business_email_sender, receiver)
@@ -137,41 +171,43 @@ SOCIAL ACCOUNTS NOT SETUP YET.
 
 
 
-@receiver(user_signed_up)
-def socialaccount_user_signup(request, user, **kwargs):
-    print("\n"*5,request.session, "\n"*5)
-    if request.session.get("actor_type"):
-        print("Session is here", request.session.get("actor_type"))
-        actor_type = request.session.get("actor_type")  # noqa: F841
-        # Get the actor type from the session that was stored during the signup.
-        if actor_type == 'customer':
-            user = User.objects.get(email = user.email)
-            
-            if not isinstance(user, Customer): 
-                # Retrieve existing Customer instance
-            
-                 # Create a new Customer instance associated with this User
-                customer = Customer(user_ptr=user, address="abuja")
-                customer.set_password(user.password)
-                user.delete()
-                customer.save()
-            
-        elif actor_type == 'supplymanager':
-            SupplyManager.objects.create_user(user=user)
-        """ if actor_type == 'chef':
-            Chef.objects.create_user(user=user) ""
-        "" elif actor_type == 'deliveryagent':
-            DeliveryAgent.objects.create_user(user=user) """
-
-        del request.session["actor_type"]
-        
-    else:
-        print("Session is not here")
+# @receiver(user_signed_up)
+# def socialaccount_user_signup(request, user, **kwargs):
+#     print("\n"*5,request.session, "\n"*5)
+#     if request.session.get("actor_type"):
+#         print("Session is here", request.session.get("actor_type"))
+#         ''' actor_type = request.session.get("actor_type")  # noqa: F841
+#         # Get the actor type from the session that was stored during the signup.
+#         if actor_type == 'customer':
+#             user = User.objects.get(email = user.email)
+#
+#             if not isinstance(user, Customer) or not user.customer:
+#                 # Retrieve existing Customer instance
+#
+#                  # Create a new Customer instance associated with this User
+#                 customer = Customer(user_ptr=user, address="abuja")
+#                 customer.set_password(user.password)
+#                 customer.is_active = True
+#                 user.save() '''
+#                 #user.delete()
+#                 #customer.save()
+#
+#         ''' elif actor_type == 'supplymanager':
+#             SupplyManager.objects.create_user(user=user) '''
+#         """ if actor_type == 'chef':
+#             Chef.objects.create_user(user=user) ""
+#         "" elif actor_type == 'deliveryagent':
+#             DeliveryAgent.objects.create_user(user=user) """
+#
+#         del request.session["actor_type"]
+#
+#     else:
+#         print("Session is not here")
 
 
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
 
-
+# Both restaurant owners and supplier owners signup endpoint/function.
 @router.post("/owner-signup", tags=["Default Signup"], auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def owner_signup(request, data: SignupRequestSchema):
     # Model signup
@@ -196,6 +232,10 @@ def owner_signup(request, data: SignupRequestSchema):
             )
             owner.set_password(data.password)
             owner.is_active = False
+            owner_grp, _ = Group.objects.get_or_create(name="owner")
+            owner_sys_grp, _ = Group.objects.get_or_create(name="SupplierOwner")
+            owner.groups.add(owner_grp)
+            owner.groups.add(owner_sys_grp)
             owner.save()
         else:
             return 404, {"message": "User already exists"}
@@ -212,7 +252,6 @@ def owner_signup(request, data: SignupRequestSchema):
                 defaults={"verified": False, "primary": True},
             )
                 email_send_func = create_email_token(sender = None, instance = owner, created = True)
-                print(email_send_func)
                 if email_send_func["status_code"] == 200:
                     return 200, {"message": "Email verification code has been sent"}
                 else:
@@ -222,23 +261,23 @@ def owner_signup(request, data: SignupRequestSchema):
                 print(e)
                 return {"message": "error sending email"}
             
-            ''' 
-            subject =  "Email Verification"
-            message = f"""
-                    Hello, here is your one time email verification code {email_token.email_code}
-                    """
-            sender ="dev@kittchens.com"
-            receiver = [owner.email]
-            
-            email_send = send_mail(subject, message, sender, receiver)
-            
-            if email_send:
-                return JsonResponse({"message": "email sent"})
-                #return 200, EmailVerificationSchema(email = data.email)
-            else:
-                #return 404, NotFoundSchema(message = "Not verified")
-                
-                return JsonResponse({"message": "email not sent"}) '''
+            # '''
+            # subject =  "Email Verification"
+            # message = f"""
+            #         Hello, here is your one time email verification code {email_token.email_code}
+            #         """
+            # sender ="dev@kittchens.com"
+            # receiver = [owner.email]
+            #
+            # email_send = send_mail(subject, message, sender, receiver)
+            #
+            # if email_send:
+            #     return JsonResponse({"message": "email sent"})
+            #     #return 200, EmailVerificationSchema(email = data.email)
+            # else:
+            #     #return 404, NotFoundSchema(message = "Not verified")
+            #
+            #     return JsonResponse({"message": "email not sent"}) '''
         
         else:
             # Get the model instance for allauth implementation.
@@ -259,36 +298,6 @@ def owner_signup(request, data: SignupRequestSchema):
     except Exception as e:
         return 500, {"message": e}
 
-''' 
-
-@router.post("/supply-owner-signup", tags = ["Default Signup"])
-def supply_owner_signup(request, data: SignupRequestSchema):
-    # Model signup
-    if data.actor_type != "owner":
-        return JsonResponse({"message": "Not an owner."})
-    
-    owner = User.objects.create(first_name = data.first_name, last_name = data.last_name, email = data.email, phone_number = data.phone_number, username = data.username)
-    owner.set_password(data.password)
-    owner.is_active = False
-    owner.save()
-    
-    # Get the model instance for allauth implementation.
-    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
-        user=owner,
-        email=data.email,
-        defaults={'verified': False, 'primary': True}
-    )
-
-    # Create EmailConfirmation instance and send verification mail
-    confirmation = allauthEmailConfirmation.create(email_address = allauthemail_address)
-    confirmation.send(request = request, signup=True)
-    confirmation.sent = django_timezone.now()
-    confirmation.save()
-    
-    # Return info.
-    return {"message": registration_successful}
-
- '''
 
 @router.post("/add-employee", tags=["Accept and Invite"], response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
 def add_employee(request, data: AddEmployeeSchema):
@@ -383,6 +392,10 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
         email=data.email,
     )
     customer.set_password(data.password)
+    
+    customer_grp, _ = Group.objects.get_or_create(name="customer")
+    customer.groups.add(customer_grp)
+    
     customer.is_active = False
     customer.save()
     
@@ -398,6 +411,7 @@ def customer_signup(request, data: CustomerSignupRequestSchema):
 def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
     if data.actor_type != "deliveryagent":
         return 403, {"message": "Not a deliveryagent."}
+    
     try:
         country = Country.objects.get(name=data.address)
     except Country.DoesNotExist:
@@ -412,14 +426,19 @@ def deliveryagent_signup(request, data: DeliveryAgentSignupRequestSchema):
         return 404, {"message": "User with this email address already exists"}
 
     deliveryagent = DeliveryAgent.objects.create(
-        first_name=data.first_name,
-        last_name=data.last_name,
-        phone_number=data.phone_number,
-        email=data.email,
-        address=country,
+            first_name=data.first_name,
+            last_name=data.last_name,
+            phone_number=data.phone_number,
+            email=data.email,
+            address=country,
+            terms_and_condition=data.terms_and_condition,
     )
     deliveryagent.set_password(data.password)
     deliveryagent.is_active = False
+    
+    deliveryagent_grp, _ = Group.objects.get_or_create(name="deliveryagent")
+    deliveryagent.groups.add(deliveryagent_grp)
+    
     deliveryagent.save()
     return 200, {"message": "Delivery agent account registered, check your email for verification"}
 
@@ -467,7 +486,8 @@ def verify_email(request, data: EmailVerificationSchema):
     verify_model = EmailVerification.objects.get(user = user)#.last()
     if verify_model.expires_at > django_timezone.now():
         if verify_model.email_code == email_token:
-            allauthEmailAddress.objects.get_or_create(user = user, email = data.email, defaults={"verified": True, "primary": True})
+            allauthuser = allauthEmailAddress.objects.get_or_create(user = user, email = data.email, defaults={"verified": True, "primary": True})
+            #allauthuser.save()
             user.is_active = True
             user.save()
             login(request, user, backend="EmailAuthBackend")
@@ -513,71 +533,74 @@ def check_phonenumber(request, data: PhoneNumberVerificationRequestSchema):
     except Exception as e:
         return 500, {"message": f"{e}"}
 
+@router.post("/verify-password", auth=AuthBearer(), response={200: SuccessMessageSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def verify_password(request, data: LoginResponseSchema):
+    try:
+        user_id = request.auth["user_id"]
+        user = User.objects.get(id = user_id)
+        user.check_password(data.token)
+        return 200, {"message": "Password verified."}
+        
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+        
+    
 #### RESEND-EMAIL VERIFICATION CODE ####
 
 @router.post("/resend-emailcode", auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema})
 def resend_emailcode(request, data: ResendEmailCodeSchema):
     try:
-        allauthemail_address = allauthEmailAddress.objects.get(email=data.email)
-        allauthEmailConfirmation.objects.get(
-            email_address=allauthemail_address
-        ).delete()
+        if data.is_mobile == True:
+            try:
+                user = User.objects.get(email = data.email)
+            except User.DoesNotExist:
+                return 404, {"message": "User does not exist"}
+            email_send_func = create_email_token(sender = None, instance = user, created = True)
+            if email_send_func["status_code"] == 200:
+                return 200, {"message": "Email verification code has been sent"}
+            else:
+                return 404, {"message": "Email not sent"}
+            
+        else:
+            try:
+                allauthemail_address = allauthEmailAddress.objects.get(email=data.email)
+            except Exception as e:
+                return 404, {"message": "Error fetching user"}
+            allauthEmailConfirmation.objects.get(
+                email_address=allauthemail_address
+            ).delete()
 
-        confirmation = allauthEmailConfirmation.create(
-            email_address=allauthemail_address
-        )
-        confirmation.send(request=request, signup=True)
-        confirmation.sent = django_timezone.now()
-        confirmation.save()
-        return 200, {"message": "Email verification resent"}
+            confirmation = allauthEmailConfirmation.create(
+                email_address=allauthemail_address
+            )
+            confirmation.send(request=request, signup=True)
+            confirmation.sent = django_timezone.now()
+            confirmation.save()
+            return 200, {"message": "Email verification resent"}
 
     except allauthEmailAddress.DoesNotExist:
         return 404, {"message": "User does not exist in the database"}
 
 
 @login_required
-@router.post("/logout")
-def logout(request):
-    print(request.auth)
+@router.post("/logout", auth=AuthBearer(), response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def logout(request, data: LogoutResponseSchema):
+    print("Printing from api.py",request.auth)
     try:
-        if request.auth is not None:
-            user = User.objects.get(id=str(request.auth))
-            django_logout(request, user)
-            return JsonResponse({"message": "User has been logged out."})
-        else:
-            return JsonResponse({"message": "User has been logged out."})
-
-    except User.DoesNotExist:
-        return JsonResponse({"message": "User does not exist in our database"})
-
+        token = CustomRefreshToken(data.refresh_token)
+        if request.auth["email"] == token["email"]:
+            user = User.objects.get(id = token["user_id"])
+            if user.is_authenticated:
+                token.blacklist()
+                django_logout(request)
+                return 200, {"message": "User has been logged out."}
+            else:
+                return 404, {"message": "User need to be logged in before performing this action"}
+        return 403, {"message": "Error in user's details"}
     except Exception as e:
-        return JsonResponse(
-            {"message": f"An error occurred while processing your exist.\n{e}\n"}
-        )
-
-
-def getActorType(email):
-    User = get_user_model()
-    try:
-        user = User.objects.get(email = email)
-        if isinstance(user, Customer):
-            return "customer"
-        elif isinstance(user, DeliveryAgent):
-            return 'deliveryagent'
-        elif isinstance(user, Staff):
-            return "staff"
-        elif isinstance(user, SupplyManager):
-            return "supplymanager"
-        elif Supplier.objects.filter(owner = user).exists():
-            return "supplyowner"
-        elif Restaurant.objects.filter(owner = user).exists():
-            return "restaurantowner"
-        else:
-            return "unknown_actortype"
-        
-    except User.DoesNotExist:
-        return None
-
+        return 404, {"message": "Invalid Token"}
+            
+   
 
 #### SIGN IN ENDPOINTS ##########
 # Sign in with email
