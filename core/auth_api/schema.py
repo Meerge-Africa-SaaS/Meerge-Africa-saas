@@ -8,6 +8,19 @@ email_regex = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
 phone_number_regex = r'^\+?[1-9]\d{1,14}$'
 
 # This userschema is used across other apps, not necessarily used only for the core app, so it makes sense to add it here, from which other apps can just use.
+
+##### PROVIDER SCHEMAS
+class SocialAuthSchema(Schema):
+    access_token: str
+    actor_type: str
+
+class AuthResponseSchema(Schema):
+    refresh: str
+    access: str
+    user_id: str
+    actor_type: str
+    is_new_user: Optional[bool]
+
 class UserSchema(Schema):
     first_name: str
     last_name: str
@@ -268,3 +281,4 @@ class RefreshTokenResponseSchema(Schema):
     
 class CategorySchema(Schema):
     name: str
+    
