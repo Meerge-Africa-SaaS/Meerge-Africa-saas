@@ -211,8 +211,14 @@ class RestaurantOnboardStep1Schema(Schema):
     
     
 class RestaurantOnboardStep2Schema(Schema):
+    restaurant_id: str
     business_registration_status: Literal["registered", "unregistered"]
-    cac_registration_number: str
+    cac_registration_number: Optional[str] = None
+    
+    @validator("cac_registration_number")
+    def validate_cac_registration_number(cls, cac_reg_num, values):
+        if values.get("business_registration_status") == "registered" and not cac_reg_num:
+            raise ValueError('CAC registration number is required for registered restaurants')
     
 class SupplierOnboardSchema(Schema):
     business_name: str

@@ -11,6 +11,7 @@ from django.db.models.signals import post_save
 from django.utils import timezone as django_timezone
 from django.utils.http import urlsafe_base64_decode
 from django.core.files.storage import default_storage
+from django.db import transaction
 
 from ninja import Router, File, Form, Field
 from ninja.files import UploadedFile
@@ -237,12 +238,61 @@ def onboard_restaurant_step1(request, data: RestaurantOnboardStep1Schema):
             owner=restaurant_owner, email=data.business_email, name=data.business_name, phone_number = data.business_phone_number,
             address=data.business_address, business_category=data.business_category
         )
-        return 200, {"message", "Restaurant onboarding step 1 has been done."}
+        return 200, {"message", f"Restaurant onboarding step 1 has been done. Restaurant ID = {restaurant.id}"}
         
     except Exception as e:
         return 404, {"message": "Error in onboarding a new restaurant"}
     
-   
+
+@transaction.atomic
+@router.post("/restaurant_onboard-step2", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_restaurant_step2(request, data: RestaurantOnboardStep2Schema, cac_document: Optional[UploadedFile] = File(None), business_premise_license: Optional[UploadedFile] = File(None)):
+    if (data.business_registration_status == "registered" and not cac_document):
+        return 404, {"message": "CAC document is required for registered restaurants"}
+    
+    try:
+        restaurant_owner = User.objects.get(id = request.auth["user_id"])
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+    except Exception as e:
+        return 500, {"message": "Error while querying user"}
+    
+    try:
+        restaurant = Restaurant.objects.get(id=data.restaurant_id)
+    except Restaurant.DoesNotExist:
+        return 404 {"message": "Restaurant does not exist"}
+    
+    try:
+        with transaction.atomic():
+            if cac_document:
+                try:
+                    cac_document_file = upload_media(cac_document)
+                    if cac_document_file["status"] == True:
+                        cac_document = cac_document_file["data_url"]
+                    else:
+                        return 404, {"message": "We ran into an error while uploading your cac document"}
+                except:
+                    return 404, {"message": "Error in uploading cac document"}
+            if business_premise_license:
+                try:
+                    business_premise_license_file = upload_media(business_premise_license)
+                    if business_premise_license_file["status"] == True:
+                        business_premise_license = business_premise_license_file["data_url"]
+                    else:
+                        return 404, {"message": "We ran into an error while uploading your business premise license document"}
+                except:
+                    return 404, {"message": "Error in uploading business premise license document"}
+                
+            restaurant.business_reg_details = data.business_registration_status
+            restaurant.cac_reg_number = data.cac_registration_number
+            restaurant.cac_certificate = cac_document
+            restaurant.business_license = business_premise_license
+            restaurant.save()
+            
+    except Exception as e:
+        return 500, {"message": "We ran into error while process your request."}
+            
+        
 
 @router.put("deactivate-my-account", auth=AuthBearer(), tags=["Deactivate Account"], response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def deactivate_personal_account(request, data: DeactivateAccountRequestSchema):
