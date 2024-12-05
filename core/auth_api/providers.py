@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from ninja import Router
 from allauth.socialaccount.models import SocialToken, SocialAccount
-from schema import SocialAuthSchema, AuthResponseSchema, NotFoundSchema
+from .schema import SocialAuthSchema, AuthResponseSchema, NotFoundSchema
 
 from customers.models import Customer
 from orders.models import DeliveryAgent
@@ -179,8 +179,6 @@ def facebook_authenticate(request, data: SocialAuthSchema):
                 
             else:
                 return 404, {"message": "Invalid actor type"}
-                
-                
                 
             # Create social account
             social_account = SocialAccount.objects.create(

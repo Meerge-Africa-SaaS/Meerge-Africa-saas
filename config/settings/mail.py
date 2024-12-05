@@ -1,5 +1,5 @@
 from .base import *
-LOCAL = os.getenv("LOCAL", False)
+LOCAL = os.getenv("LOCAL", True)
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 if LOCAL:
