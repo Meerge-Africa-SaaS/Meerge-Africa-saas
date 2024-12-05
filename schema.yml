@@ -293,6 +293,178 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomTokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomTokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomTokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomTokenRefresh'
+          description: ''
   /api/v1/Category/:
     get:
       operationId: api_v1_Category_list
@@ -473,7 +645,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/Customer'
-        required: true
       security:
       - jwtAuth: []
       responses:
@@ -530,7 +701,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/Customer'
-        required: true
       security:
       - jwtAuth: []
       responses:
@@ -624,7 +794,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/DeliveryAgent'
-        required: true
       security:
       - jwtAuth: []
       responses:
@@ -681,7 +850,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/DeliveryAgent'
-        required: true
       security:
       - jwtAuth: []
       responses:
@@ -2418,7 +2586,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/Customer'
-        required: true
       security:
       - jwtAuth: []
       responses:
@@ -2475,7 +2642,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/Customer'
-        required: true
       security:
       - jwtAuth: []
       responses:
@@ -3568,11 +3734,27 @@ paths:
       operationId: inventory_supplier_profile_update_update
       tags:
       - inventory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Supplier'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Supplier'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Supplier'
+        required: true
       security:
       - jwtAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+          description: ''
   /orders/api/v1/DeliveryAgent/:
     get:
       operationId: orders_api_v1_DeliveryAgent_list
@@ -3606,7 +3788,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/DeliveryAgent'
-        required: true
       security:
       - jwtAuth: []
       responses:
@@ -3663,7 +3844,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/DeliveryAgent'
-        required: true
       security:
       - jwtAuth: []
       responses:
@@ -4788,33 +4968,58 @@ components:
       - created
       - last_updated
       - name
+    CustomTokenRefresh:
+      type: object
+      properties:
+        refresh:
+          type: string
+        access:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - refresh
     Customer:
       type: object
       properties:
-        last_name:
-          type: string
-          maxLength: 150
-        last_updated:
-          type: string
-          format: date-time
-          readOnly: true
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        address:
-          type: string
-          maxLength: 130
         first_name:
           type: string
           maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 256
+        phone_number:
+          type: string
+          nullable: true
+          maxLength: 128
+        alt_phone_number:
+          type: string
+          nullable: true
+          title: Phone number
+          maxLength: 128
+        address:
+          type: string
+          maxLength: 130
+        allergies:
+          type: string
+          nullable: true
+          maxLength: 250
+        first_time_food_tryouts:
+          type: string
+          nullable: true
+          maxLength: 250
+        healthy_diet_goals:
+          type: string
+          nullable: true
+          maxLength: 250
         city:
           type: integer
           nullable: true
-      required:
-      - address
-      - created
-      - last_updated
     DeliveryAgent:
       type: object
       properties:
@@ -4840,8 +5045,8 @@ components:
           type: integer
         face_capture:
           type: string
-          format: uri
           nullable: true
+          title: Delivery_agent_face_capture
         work_shift:
           nullable: true
         vehicle_type:
@@ -4896,9 +5101,6 @@ components:
           type: string
           nullable: true
           maxLength: 30
-      required:
-      - address
-      - email
     Ingredient:
       type: object
       properties:
@@ -5052,23 +5254,41 @@ components:
     PatchedCustomer:
       type: object
       properties:
-        last_name:
-          type: string
-          maxLength: 150
-        last_updated:
-          type: string
-          format: date-time
-          readOnly: true
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        address:
-          type: string
-          maxLength: 130
         first_name:
           type: string
           maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 256
+        phone_number:
+          type: string
+          nullable: true
+          maxLength: 128
+        alt_phone_number:
+          type: string
+          nullable: true
+          title: Phone number
+          maxLength: 128
+        address:
+          type: string
+          maxLength: 130
+        allergies:
+          type: string
+          nullable: true
+          maxLength: 250
+        first_time_food_tryouts:
+          type: string
+          nullable: true
+          maxLength: 250
+        healthy_diet_goals:
+          type: string
+          nullable: true
+          maxLength: 250
         city:
           type: integer
           nullable: true
@@ -5097,8 +5317,8 @@ components:
           type: integer
         face_capture:
           type: string
-          format: uri
           nullable: true
+          title: Delivery_agent_face_capture
         work_shift:
           nullable: true
         vehicle_type:
@@ -5297,9 +5517,11 @@ components:
           maxLength: 128
         image:
           type: string
-          format: uri
+          nullable: true
+          title: Restaurant_stock_image
         stock_type:
           type: string
+          nullable: true
           maxLength: 128
         purchasing_price:
           type: string
@@ -5307,15 +5529,13 @@ components:
           pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
         quantity:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         measuring_unit:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
-        restaurant:
+          maximum: 2147483647
+          minimum: -2147483648
+        store:
           type: integer
     PatchedRestaurantStore:
       type: object
@@ -5331,7 +5551,8 @@ components:
           maxLength: 256
         image:
           type: string
-          format: uri
+          nullable: true
+          title: Restaurant_store_image
         section_name:
           type: string
           nullable: true
@@ -5355,9 +5576,8 @@ components:
       properties:
         quantity:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         last_updated:
           type: string
           format: date-time
@@ -5385,7 +5605,7 @@ components:
           maxLength: 60
         product_image:
           type: string
-          format: uri
+          title: Inventory_stocks
         product_category:
           type: string
           nullable: true
@@ -5459,23 +5679,20 @@ components:
           maxLength: 20
         cac_certificate:
           type: string
-          format: uri
+          nullable: true
+          title: Supplier_cac_certificates
         business_license:
           type: string
-          format: uri
           nullable: true
-        category:
-          type: array
-          items:
-            type: integer
+          title: Supplier_business_license
         profile_img:
           type: string
-          format: uri
           nullable: true
+          title: Supplier_profile_image
         cover_img:
           type: string
-          format: uri
           nullable: true
+          title: Supplier_cover_image
         address:
           type: string
           maxLength: 130
@@ -5515,19 +5732,6 @@ components:
     PatchedUser:
       type: object
       properties:
-        last_updated:
-          type: string
-          format: date-time
-          readOnly: true
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        email:
-          type: string
-          format: email
-          title: Email address
-          maxLength: 256
         id:
           type: string
           format: uuid
@@ -5537,6 +5741,29 @@ components:
           nullable: true
           pattern: ^[a-zA-Z0-9.@_]*$
           maxLength: 50
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 256
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          nullable: true
+          maxLength: 128
+        last_updated:
+          type: string
+          format: date-time
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
     Restaurant:
       type: object
       properties:
@@ -5584,9 +5811,11 @@ components:
           maxLength: 128
         image:
           type: string
-          format: uri
+          nullable: true
+          title: Restaurant_stock_image
         stock_type:
           type: string
+          nullable: true
           maxLength: 128
         purchasing_price:
           type: string
@@ -5594,25 +5823,21 @@ components:
           pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
         quantity:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         measuring_unit:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
-        restaurant:
+          maximum: 2147483647
+          minimum: -2147483648
+        store:
           type: integer
       required:
       - category
-      - image
       - measuring_unit
       - name
       - purchasing_price
       - quantity
-      - restaurant
-      - stock_type
+      - store
     RestaurantStore:
       type: object
       properties:
@@ -5627,13 +5852,13 @@ components:
           maxLength: 256
         image:
           type: string
-          format: uri
+          nullable: true
+          title: Restaurant_store_image
         section_name:
           type: string
           nullable: true
           maxLength: 128
       required:
-      - image
       - name
       - restaurant
     Staff:
@@ -5658,9 +5883,8 @@ components:
       properties:
         quantity:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         last_updated:
           type: string
           format: date-time
@@ -5688,7 +5912,7 @@ components:
           maxLength: 60
         product_image:
           type: string
-          format: uri
+          title: Inventory_stocks
         product_category:
           type: string
           nullable: true
@@ -5727,6 +5951,7 @@ components:
       - id
       - item
       - last_updated
+      - product_image
       - quantity
     Supplier:
       type: object
@@ -5768,30 +5993,25 @@ components:
           maxLength: 20
         cac_certificate:
           type: string
-          format: uri
+          nullable: true
+          title: Supplier_cac_certificates
         business_license:
           type: string
-          format: uri
           nullable: true
-        category:
-          type: array
-          items:
-            type: integer
+          title: Supplier_business_license
         profile_img:
           type: string
-          format: uri
           nullable: true
+          title: Supplier_profile_image
         cover_img:
           type: string
-          format: uri
           nullable: true
+          title: Supplier_cover_image
         address:
           type: string
           maxLength: 130
       required:
       - address
-      - cac_certificate
-      - category
       - city
       - created
       - email
@@ -5841,19 +6061,6 @@ components:
     User:
       type: object
       properties:
-        last_updated:
-          type: string
-          format: date-time
-          readOnly: true
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        email:
-          type: string
-          format: email
-          title: Email address
-          maxLength: 256
         id:
           type: string
           format: uuid
@@ -5863,6 +6070,29 @@ components:
           nullable: true
           pattern: ^[a-zA-Z0-9.@_]*$
           maxLength: 50
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 256
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          nullable: true
+          maxLength: 128
+        last_updated:
+          type: string
+          format: date-time
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
       required:
       - created
       - email
