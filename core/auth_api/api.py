@@ -252,13 +252,13 @@ def owner_signup(request, data: SignupRequestSchema):
                         email=data.email,
                         defaults={"verified": False, "primary": True},
                     )
-                        return 200, {"message": "Saved without email"}
+                        #return 200, {"message": "Saved without email"}
                         
-                        '''  email_send_func = create_email_token(sender = None, instance = owner, created = True)
+                        email_send_func = create_email_token(sender = None, instance = owner, created = True)
                         if email_send_func["status_code"] == 200:
                             return 200, {"message": "Email verification code has been sent"}
                         else:
-                            return 404, {"message": "Email not sent"} '''
+                            return 404, {"message": "Email not sent"}
                         
                     except Exception as e:
                         print(e)
