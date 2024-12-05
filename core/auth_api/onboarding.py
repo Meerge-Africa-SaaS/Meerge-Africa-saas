@@ -26,6 +26,7 @@ from customers.models import Customer
 from orders.models import DeliveryAgent
 from banking.models import Bank, AccountDetail
 from inventory.models import Supplier, Category
+from restaurants.models import Restaurant
 
 from .schema import (
     DeactivateAccountRequestSchema,
@@ -44,6 +45,8 @@ from .schema import (
     PhoneNumberLoginRequestSchema,
     PhoneNumberVerificationRequestSchema,
     ResendEmailCodeSchema,
+    RestaurantOnboardStep1Schema,
+    RestaurantOnboardStep2Schema,
     SignupRequestSchema,
     SignupResponseSchema,
     SocialAccountSignupSchema,
@@ -187,7 +190,7 @@ def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: Uploade
     try:
         if User.objects.filter(email = data.business_email).exists():
             return 404, {"message": "Email has been used for personal account."}
-        if Supplier.objects.filter(email = data.business_email).exists():
+        if Supplier.objects.filter(email = data.business_email).exists() or Restaurant.objects.filter(email = data.business_email).exists():
             return 404, {"mesage": "Email already exists"}
         
     except Exception as e:
@@ -199,7 +202,7 @@ def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: Uploade
             cac_reg_number=data.cac_registration_number, cac_certificate=cac_document, business_license = business_premise_license, 
             )
         try:
-            category_instances = Category.objects.filter(name__in = data.category)
+            category_instances = Category.objects.filter(id__in = data.category)
             supplier.category.set(category_instances)
             supplier.save()
                
@@ -209,7 +212,37 @@ def onboard_supplier(request, data: SupplierOnboardSchema, cac_document: Uploade
         
     except Exception as e:
         return 400, {"message": e}
+     
+# Restaurant onboarding endpoint/function
+@router.post("/restaurant_onboard-step1", tags=["Onboarding"], auth=AuthBearer(), response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
+def onboard_restaurant_step1(request, data: RestaurantOnboardStep1Schema):
+    try:
+        restaurant_owner = User.objects.get(id = request.auth["user_id"])
+    except User.DoesNotExist:
+        return 404, {"message": "User does not exist"}
+    except Exception as e:
+        return 500, {"message": "Error while querying user"}
+    
+    try:
+        if User.objects.filter(email = data.business_email).exists():
+            return 404, {"message": "Email has been used for personal account."}
+        if Restaurant.objects.filter(email = data.business_email).exists() or Supplier.objects.filter(email = data.business_email).exists():
+            return 404, {"mesage": "Email already exists"}
         
+    except Exception as e:
+        return 500, {"message": e}
+    
+    try:
+        restaurant = Restaurant.objects.create(
+            owner=restaurant_owner, email=data.business_email, name=data.business_name, phone_number = data.business_phone_number,
+            address=data.business_address, business_category=data.business_category
+        )
+        return 200, {"message", "Restaurant onboarding step 1 has been done."}
+        
+    except Exception as e:
+        return 404, {"message": "Error in onboarding a new restaurant"}
+    
+   
 
 @router.put("deactivate-my-account", auth=AuthBearer(), tags=["Deactivate Account"], response={200: SuccessMessageSchema, 400: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def deactivate_personal_account(request, data: DeactivateAccountRequestSchema):
