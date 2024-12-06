@@ -16,6 +16,7 @@ User = get_user_model()
 class Category(models.Model):
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
+    id = models.UUIDField(primary_key=True)
     name = models.CharField(max_length=30)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
