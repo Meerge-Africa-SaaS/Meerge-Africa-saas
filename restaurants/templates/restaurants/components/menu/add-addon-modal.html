@@ -1,0 +1,53 @@
+{% extends 'components/modal.html' %}
+{% load static %}
+{% load wagtailadmin_tags %}
+
+{% block main %}
+  {% with name='add-menu' title='Add Add-On' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+  <div class="px-6 py-4">
+    <!-- Tabs -->
+    <div class="border-b mb-4">
+      <div class="flex space-x-4">
+        <button type="button" class="tab-btn active px-4 py-2 border-b-2 border-blue-500" data-tab="existing">Existing Add-ons</button>
+        <button type="button" class="tab-btn px-4 py-2" data-tab="new">Create New Add-on</button>
+      </div>
+    </div>
+
+    <!-- Existing Add-ons Tab -->
+    <div id="existing-tab" class="tab-content">
+      <div class="mb-4">
+        <input type="text" id="addon-search" class="w-full border rounded px-3 py-2" placeholder="Search add-ons..." />
+      </div>
+      <div id="addon-list" class="space-y-2 max-h-60 overflow-y-auto">
+        <!-- Add-ons will be loaded here -->
+      </div>
+    </div>
+
+    <!-- New Add-on Tab -->
+    <div id="new-tab" class="tab-content hidden">
+      <form id="new-addon-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Name</label>
+          <input type="text" name="name" class="w-full border rounded px-3 py-2" required />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Price</label>
+          <input type="number" name="price" step="0.01" class="w-full border rounded px-3 py-2" required />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Description</label>
+          <textarea name="description" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="border-t px-6 py-4 flex justify-end space-x-3">
+    <button type="button" class="px-4 py-2 border rounded hover:bg-gray-50" id="cancel-btn">Cancel</button>
+    <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" id="save-btn">Save</button>
+  </div>
+{% endblock %}

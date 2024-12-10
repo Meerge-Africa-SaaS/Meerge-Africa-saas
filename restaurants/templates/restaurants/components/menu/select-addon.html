@@ -1,0 +1,89 @@
+{% extends 'components/modal.html' %}
+{% load static %}
+{% load wagtailadmin_tags %}
+
+{% block main %}
+  {% with name='add-addon' title='Add Add-On' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+  <div class="px-6 py-4">
+    <!-- Tabs -->
+    <div class="border-b mb-4">
+      <div class="flex space-x-4 overflow-x-auto">
+        <button type="button" class="tab-btn active px-4 py-2 border-b-2 border-blue-500 !rounded-none text-nowrap no-ring" data-tab="existing" hx-get="{% url 'restaurant_existing_addons' restaurant.id %}" hx-target="#tab-content" hx-trigger="load" hx-swap="afterbegin">Existing Add-ons</button>
+        <button type="button" class="tab-btn px-4 py-2 border-b-2 !rounded-none text-nowrap no-ring" data-tab="new">Create New Add-on</button>
+      </div>
+    </div>
+
+    <div id="tab-content">
+      <!-- Initial content will be loaded via HTMX -->
+      <div id="addon-existing-tab" class="tab-content">
+        <div class="mb-4">
+          <input type="text" name="q" class="w-full border rounded px-3 py-2" placeholder="Search add-ons..." hx-get="{% url 'restaurant_search_addons' restaurant.id %}" hx-trigger="keyup changed delay:500ms" hx-target="#addon-list"/>
+        </div>
+        <div id="addon-list" class="space-y-2 max-h-60 overflow-y-auto">
+          <!-- Add-ons will be loaded here -->
+        </div>
+      </div>
+
+      <div id="addon-new-tab" class="tab-content hidden">
+        <form hx-post="{% url 'restaurant_create_addon' restaurant.id %}" hx-target="#selected-addons" class="space-y-4">
+          {% csrf_token %}
+          <div class="form-group">
+            {% formattedfield field=add_addon_form.name %}
+          </div>
+          <div class="form-group">
+            {% formattedfield field=add_addon_form.price %}
+          </div>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="border-t px-6 py-4 flex justify-end space-x-3">
+    <button type="button" class="px-4 py-2 border rounded hover:bg-gray-50" data-modal-hide="add-addon-modal">Cancel</button>
+    <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" id="save-btn">Save</button>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal = document.getElementById('add-addon-modal')
+      const saveBtn = document.getElementById('save-btn')
+      const tabBtns = modal.querySelectorAll('.tab-btn')
+      const tabContents = modal.querySelectorAll('.tab-content')
+      const addonSearch = document.getElementById('addon-search')
+      const addonList = document.getElementById('addon-list')
+      const newAddonForm = document.getElementById('new-addon-form')
+      const selectedAddonsContainer = document.getElementById('selected-addons')
+      const selectedAddonsInput = document.getElementById('selected-addons-input')
+    
+      let selectedAddons = new Set()
+    
+      console.log('selectedAddons', selectedAddons)
+      console.log('selectedAddonsInput', selectedAddonsInput)
+      console.log('tabBtns', tabBtns)
+      console.log('tabContents', tabContents)
+    
+      // Tab switching
+      tabBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          // Update active tab button
+          tabBtns.forEach((b) => b.classList.remove('active', 'border-blue-500'))
+          btn.classList.add('active', 'border-blue-500')
+    
+          // Show corresponding content
+          const tabName = btn.getAttribute('data-tab')
+          tabContents.forEach((content) => {
+            content.classList.add('hidden')
+          })
+          document.getElementById(`addon-${tabName}-tab`)?.classList.remove('hidden')
+        })
+      })
+    })
+  </script>
+{% endblock %}

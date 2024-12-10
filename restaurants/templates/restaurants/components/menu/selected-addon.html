@@ -1,0 +1,10 @@
+<div class="flex items-center justify-between p-2 bg-gray-50 rounded border" data-addon-id="{{ addon.id }}">
+  <span>{{ addon.name }} - ${{ addon.price }}</span>
+  {% csrf_token %}
+  <input type="hidden" name="selected_addons[]" value="{{ addon.id }}" />
+  <button type="button" class="text-red-500 hover:text-red-700" hx-post="{% url 'restaurant_remove_addon' addon.id %}" hx-target="closest div" hx-swap="outerHTML" hx-confirm="Are you sure you want to remove this addon?" hx-include="previous input">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+</div>
