@@ -1,0 +1,133 @@
+{% load wagtailadmin_tags %}
+{% rawformattedfield field=field show_label=False %}
+<div class="flex items-center justify-center w-full form-group">
+    <div class="w-full">
+      <label for="file-input-{{field.id_for_label}}" id="dropzone-{{field.id_for_label}}" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 relative">
+        <!-- Default upload state -->
+        <div id="upload-prompt-{{field.id_for_label}}" class="flex flex-col items-center justify-center pt-5 pb-6">
+          <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+          </svg>
+          <p class="mb-2 text-sm text-gray-500">
+            <span class="font-semibold">Click to upload</span> or drag and drop
+          </p>
+          <p class="text-xs text-gray-500">{{help_text}}</p>
+        </div>
+        
+        <input type="file" id="file-input-{{field.id_for_label}}" accept="image/*" class="!hidden" />
+        
+        <!-- Image preview container -->
+        <div id="image-preview-{{field.id_for_label}}" class="hidden absolute inset-0">
+          <img id="preview-image-{{field.id_for_label}}" class="w-full h-full object-cover rounded-lg" src="" alt="Preview">
+          <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white rounded-full p-1 remove-file">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+    </label>
+    {% formattedfield field=field classname="hidden" %}
+    </div>
+  </div>
+  {% endrawformattedfield %}
+  <script type="text/javascript">
+    function attachDropzone() {
+      const dropzone = document.getElementById('dropzone-{{field.id_for_label}}');
+      const fileInput = document.getElementById('{{field.id_for_label}}');
+      const uploadPrompt = document.getElementById('upload-prompt-{{field.id_for_label}}');
+      const imagePreview = document.getElementById('image-preview-{{field.id_for_label}}');
+      const previewImage = document.getElementById('preview-image-{{field.id_for_label}}');
+      const customFileInput = document.getElementById('file-input-{{field.id_for_label}}');
+
+      customFileInput.addEventListener('click', (e) => {
+        console.log('customFileInput clicked', e);
+        e.stopPropagation();
+      });
+  
+      // Prevent default drag behaviors
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, preventDefaults, false);
+      });
+  
+      // Highlight drop zone when dragging over it
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, highlight, false);
+      });
+  
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, unhighlight, false);
+      });
+  
+      // Handle dropped files
+      dropzone.addEventListener('drop', handleDrop, false);
+  
+      // Handle clicked files
+      customFileInput.addEventListener('change', handleFiles, false);
+  
+      // Handle remove file button
+      imagePreview.querySelector('.remove-file').addEventListener('click', removeFile, false);
+  
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+  
+      function highlight(e) {
+        dropzone.classList.add('border-blue-500');
+        dropzone.classList.remove('border-gray-300');
+      }
+  
+      function unhighlight(e) {
+        dropzone.classList.remove('border-blue-500');
+        dropzone.classList.add('border-gray-300');
+      }
+  
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles({ target: { files: files } });
+      }
+  
+      function handleFiles(e) {
+        const files = e.target.files;
+        if (files.length > 0) {
+          const file = files[0];
+          
+          // Check if file is an image
+          if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file');
+            return;
+          }
+          
+          fileInput.files = files;
+          showImage(file);
+        }
+      }
+  
+      function showImage(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImage.src = e.target.result;
+          uploadPrompt.classList.add('hidden');
+          imagePreview.classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+      }
+  
+      function removeFile(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        fileInput.value = '';
+        customFileInput.value = '';
+        previewImage.src = '';
+        imagePreview.classList.add('hidden');
+        uploadPrompt.classList.remove('hidden');
+      }
+    }
+  
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attachDropzone);
+    } else {
+      attachDropzone();
+    }
+  </script>

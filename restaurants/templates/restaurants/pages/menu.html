@@ -1,0 +1,60 @@
+{% extends 'restaurants/layout.html' %}
+{% load static %}
+
+{% block title %}
+  Menu
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'js/searchable-multiselect.js' %}"></script>
+{% endblock %}
+
+
+{% block sidebar %}
+  {% include 'restaurants/components/sidebar.html' with active_tab='menu' %}
+{% endblock %}
+
+{% block navbar %}
+  {% include 'restaurants/components/navbar.html' with page_name='Menu' %}
+{% endblock %}
+
+{% block main_class %}
+  w-full h-full space-y-6 bg-slate-200 overflow-y-auto container mx-auto px-4 py-4
+{% endblock %}
+
+{% block main %}
+  {% include 'restaurants/components/menu/add-menu-modal.html' %}
+  <div class="p-6 bg-white">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-semibold text-gray-900">Menu Items</h1>
+      {% include 'restaurants/components/menu/search-filter.html' %}
+    </div>
+
+    <div class="relative overflow-x-auto">
+      <table class="w-full mt-6">
+        <thead>
+          <tr class="border-b">
+            <th class="px-6 py-4 font-semibold">
+              <span class="sr-only">Select</span>
+            </th>
+            <th class="px-6 py-4 font-semibold">
+              <span class="sr-only">Image</span>
+            </th>
+            <th class="px-6 py-4 font-semibold text-nowrap text-left">Name</th>
+            <th class="px-6 py-4 font-semibold text-nowrap text-left">Price</th>
+            <th class="px-6 py-4 font-semibold text-nowrap text-left">Category</th>
+            <th class="px-6 py-4 font-semibold text-nowrap text-center">Status</th>
+            <th class="px-6 py-4 font-semibold text-nowrap text-right">Ready In</th>
+            <th class="px-2 py-2 font-semibold text-nowrap text-center w-5">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        {% for item in menu_items %}
+          {% include 'restaurants/components/menu/menu-item.html' with item=item %}
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

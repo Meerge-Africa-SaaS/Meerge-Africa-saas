@@ -1,0 +1,72 @@
+{% extends 'components/modal.html' %}
+{% load static %}
+{% load wagtailadmin_tags %}
+
+{% block main %}
+  {% with name='add-menu' title='Add Menu Item' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+ {% include 'restaurants/components/menu/select-addon.html' %}
+  <div class="container mx-auto max-w-4xl">
+    <form class="bg-white rounded-lg shadow-sm">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          {% formattedfield field=add_menu_item_form.restaurant classname='!hidden' %}
+          {% formattedfield field=add_menu_item_form.category classname='hidden' %}
+          {% include 'restaurants/components/menu/form-input.html' with id='menu_item_name' name='menu_item_name' label='Menu Item Name' required=True %}
+
+          {% include 'restaurants/components/menu/form-input.html' with id='price' name='price' label='Price' type='number' required=True %}
+
+          {% include 'restaurants/components/menu/form-input.html' with id='portion' name='portion' label='Portion' type='number' required=True %}
+
+          {% include 'restaurants/components/menu/form-input.html' with id='size' name='size' label='Size' required=True %}
+
+          {% include 'restaurants/components/menu/form-textarea.html' with id='ingredients_details' name='ingredients_details' label='Ingredients Details' required=True %}
+          <div class="grid grid-cols-2 gap-4">
+            {% include 'restaurants/components/menu/form-select.html' with id='item_status' name='item_status' label='Item Status' options=status_options required=True %}
+
+            {% include 'restaurants/components/menu/form-select.html' with id='ready_in' name='ready_in' label='Ready In' options=time_options required=True %}
+          </div>
+        </div>
+
+        <div>
+          <div class="mb-6">
+            <h3 class="text-sm font-medium text-gray-700">Best Paired with</h3>
+            {% include 'components/searchable-multiselect.html' with id='best_paired_with' name='best_paired_with' options=drinks placeholder='Search drinks...' create_label='Add new drink' create_event='create-drink' search_results_event='search-drinks' %}
+          </div>
+
+          <div class="mb-6">
+            <h3 class="text-sm font-medium text-gray-700 mb-2">Add-ons</h3>
+            <!-- Selected Add-ons List -->
+            <div id="selected-addons" class="mb-4 space-y-2">
+              {% for addon in selected_addons %}
+                <div class="flex items-center justify-between p-2 bg-gray-50 rounded border" data-addon-id="{{ addon.id }}">
+                  <span>{{ addon.name }} - ${{ addon.price }}</span>
+                  <button type="button" class="remove-addon text-red-500 hover:text-red-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </div>
+              {% endfor %}
+            </div>
+            <button data-modal-trigger="add-addon-modal" type="button" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary/80">+ Add</button>
+            <input type="hidden" name="selected_addons" id="selected-addons-input" value="" />
+          </div>
+
+          <div class="mb-6">
+            <h3 class="text-sm font-medium text-gray-700 mb-2">Menu Item Image</h3>
+            {% include 'components/image-dropzone.html' with field=add_menu_item_form.image %}
+          </div>
+          <div class="mt-6 flex justify-end space-x-3">
+            <button type="button" class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Customize</button>
+            <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Save</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

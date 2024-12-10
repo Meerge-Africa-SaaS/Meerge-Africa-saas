@@ -1,0 +1,58 @@
+<div class="multiselect-wrapper relative" data-multiselect data-multiselect-create-event="{{ create_event|default:'create-item' }}" data-multiselect-search-results-event="{{ search_results_event|default:'search-items' }}">
+  <!-- Hidden original select - this maintains form compatibility -->
+  <select name="{{ name }}" multiple class="hidden" id="original-{{ id }}">
+    {% for option in options %}
+      <option value="{{ option.id }}"
+        {% if option.id in selected_ids %}selected{% endif %}
+      >{{ option.name }}</option>
+    {% endfor %}
+  </select>
+
+  <!-- Custom multiselect interface -->
+  <div class="border rounded-lg shadow-sm bg-white">
+    <!-- Selected items -->
+    <div data-multiselect-selected>
+      {% for option in selected_options %}
+        <div class="inline-flex items-center bg-slate-50 text-primary rounded-md px-3 py-1 text-sm m-1" data-value="{{ option.id }}">
+          <span>{{ option.name }}</span>
+          <button type="button" class="ml-1 !p-0 no-ring no-outline no-shadow text-blue-400 hover:text-blue-600" data-multiselect-edit>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </button>
+          <button type="button" class="ml-1 !p-0 no-ring no-outline no-shadow text-red-400 hover:text-red-600" data-multiselect-remove>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Search and dropdown trigger -->
+    <div class="flex relative items-center rounded-md">
+      <input type="text" class="flex-1 p-2 outline-none text-sm !pr-10" placeholder="{{ placeholder|default:'Search items...' }}" data-multiselect-search />
+      <button type="button" class="absolute right-2 p-2 text-gray-400 hover:text-gray-600 focus:ring-0 focus:shadow-none" data-multiselect-toggle>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Dropdown list -->
+    <div class="absolute left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto hidden" data-multiselect-dropdown>
+      <div class="p-2" data-multiselect-options>
+        {% for option in options %}
+          <div class="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer text-sm" data-multiselect-option data-value="{{ option.id }}">
+            <span>{{ option.name }}</span>
+          </div>
+        {% endfor %}
+      </div>
+      <!-- No results message -->
+      <div class="p-4 text-center text-gray-500 hidden" data-multiselect-empty>
+        No results found
+        <button type="button" class="block mx-auto mt-2 text-blue-500 hover:text-blue-700" data-multiselect-create>{{ create_label|default:'Create new item' }}</button>
+      </div>
+    </div>
+  </div>
+</div>
