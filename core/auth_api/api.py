@@ -32,6 +32,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone as django_timezone
 from django.utils.http import urlsafe_base64_decode
+from django.db import transaction
 from ninja import Router
 from ninja.security import HttpBearer
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -208,6 +209,7 @@ SOCIAL ACCOUNTS NOT SETUP YET.
 ### MANUAL SIGNUPS WITH EMAIL AND OTHER CREDENTIALS  ###
 
 # Both restaurant owners and supplier owners signup endpoint/function.
+@transaction.atomic
 @router.post("/owner-signup", tags=["Default Signup"], auth=None, response={200: SuccessMessageSchema, 403: NotFoundSchema, 404: NotFoundSchema, 500: NotFoundSchema})
 def owner_signup(request, data: SignupRequestSchema):
     # Model signup
@@ -224,76 +226,90 @@ def owner_signup(request, data: SignupRequestSchema):
     
     try:
         if not (User.objects.filter(email = data.email).exists()):
-            owner = User.objects.create(
-                first_name=data.first_name,
-                last_name=data.last_name,
-                email=data.email,
-                phone_number=data.phone_number,
-            )
-            owner.set_password(data.password)
-            owner.is_active = False
-            owner_grp, _ = Group.objects.get_or_create(name="owner")
-            owner_sys_grp, _ = Group.objects.get_or_create(name="SupplierOwner")
-            owner.groups.add(owner_grp)
-            owner.groups.add(owner_sys_grp)
-            owner.save()
+            with transaction.atomic():
+                owner = User.objects.create(
+                    first_name=data.first_name,
+                    last_name=data.last_name,
+                    email=data.email,
+                    phone_number=data.phone_number,
+                )
+                owner.set_password(data.password)
+                owner.is_active = False
+                owner_grp, _ = Group.objects.get_or_create(name="owner")
+                owner_sys_grp, _ = Group.objects.get_or_create(name="SupplierOwner")
+                owner.groups.add(owner_grp)
+                owner.groups.add(owner_sys_grp)
+                owner.save()
+            
+                if (data.is_mobile == True):
+                    owner = User.objects.get(email = data.email)
+                    EmailVerification.objects.create(user = owner, expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
+                    
+                    #email_token = EmailVerification.objects.filter(user = owner).last()
+                    try:
+                        allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
+                        user=owner,
+                        email=data.email,
+                        defaults={"verified": False, "primary": True},
+                    )
+                        #return 200, {"message": "Saved without email"}
+                        
+                        email_send_func = create_email_token(sender = None, instance = owner, created = True)
+                        if email_send_func["status_code"] == 200:
+                            return 200, {"message": "Email verification code has been sent"}
+                        else:
+                            return 404, {"message": "Email not sent"}
+                        
+                    except Exception as e:
+                        print(e)
+                        return {"message": "error sending email"}
+                    
+                    # '''
+                    # subject =  "Email Verification"
+                    # message = f"""
+                    #         Hello, here is your one time email verification code {email_token.email_code}
+                    #         """
+                    # sender ="dev@kittchens.com"
+                    # receiver = [owner.email]
+                    #
+                    # email_send = send_mail(subject, message, sender, receiver)
+                    #
+                    # if email_send:
+                    #     return JsonResponse({"message": "email sent"})
+                    #     #return 200, EmailVerificationSchema(email = data.email)
+                    # else:
+                    #     #return 404, NotFoundSchema(message = "Not verified")
+                    #
+                    #     return JsonResponse({"message": "email not sent"}) '''
+                
+                else:
+                    # Get the model instance for allauth implementation.
+                    # Create EmailAddress instance
+                    email_address = allauthEmailAddress.objects.create(
+                        user=owner,
+                        email=data.email,
+                        primary=True,
+                        verified=False
+                    )
+
+                    # Send confirmation email
+                    send_email_confirmation(request, owner)
+                    ''' 
+                    owner = User.objects.get(email = data.email)
+                    allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
+                        user=owner, email=data.email, defaults={"verified": False, "primary": True}
+                    )
+
+                    # Create EmailConfirmation instance and send verification mail
+                    confirmation = allauthEmailConfirmation.create(email_address=allauthemail_address)
+                    confirmation.send(request=request, signup=True)
+                    confirmation.sent = django_timezone.now()
+                    confirmation.save() '''
+
+                    # Return info.
+                    return 200, {"message": registration_successful}
         else:
             return 404, {"message": "User already exists"}
-        
-        if (data.is_mobile == True):
-            owner = User.objects.get(email = data.email)
-            EmailVerification.objects.create(user = owner, expires_at=django_timezone.now() + django_timezone.timedelta(minutes = 10))
-            
-            #email_token = EmailVerification.objects.filter(user = owner).last()
-            try:
-                allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
-                user=owner,
-                email=data.email,
-                defaults={"verified": False, "primary": True},
-            )
-                email_send_func = create_email_token(sender = None, instance = owner, created = True)
-                if email_send_func["status_code"] == 200:
-                    return 200, {"message": "Email verification code has been sent"}
-                else:
-                    return 404, {"message": "Email not sent"}
-                
-            except Exception as e:
-                print(e)
-                return {"message": "error sending email"}
-            
-            # '''
-            # subject =  "Email Verification"
-            # message = f"""
-            #         Hello, here is your one time email verification code {email_token.email_code}
-            #         """
-            # sender ="dev@kittchens.com"
-            # receiver = [owner.email]
-            #
-            # email_send = send_mail(subject, message, sender, receiver)
-            #
-            # if email_send:
-            #     return JsonResponse({"message": "email sent"})
-            #     #return 200, EmailVerificationSchema(email = data.email)
-            # else:
-            #     #return 404, NotFoundSchema(message = "Not verified")
-            #
-            #     return JsonResponse({"message": "email not sent"}) '''
-        
-        else:
-            # Get the model instance for allauth implementation.
-            owner = User.objects.get(email = data.email)
-            allauthemail_address, _ = allauthEmailAddress.objects.get_or_create(
-                user=owner, email=data.email, defaults={"verified": False, "primary": True}
-            )
-
-            # Create EmailConfirmation instance and send verification mail
-            confirmation = allauthEmailConfirmation.create(email_address=allauthemail_address)
-            confirmation.send(request=request, signup=True)
-            confirmation.sent = django_timezone.now()
-            confirmation.save()
-
-            # Return info.
-            return 200, {"message": registration_successful}
 
     except Exception as e:
         return 500, {"message": e}

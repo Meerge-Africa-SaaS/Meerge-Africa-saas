@@ -15,9 +15,14 @@ REST_FRAMEWORK = {
     ),
 }
 
-SPECTACULAR_SETTING = {
-    "TITLE": "Meerge Africa SwaggerUI"
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Meerge Africa SwaggerUI",
+    'DESCRIPTION': 'This does not include the signup and the onboarding, every other endpoints should be here',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
+
 
 SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,

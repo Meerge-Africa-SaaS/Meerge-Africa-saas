@@ -1,5 +1,5 @@
 from ninja import Schema, Field, File, ModelSchema, Form, UploadedFile
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Literal
 from pydantic import BaseModel, constr, validator
 from inventory.models import Supplier
 
@@ -8,6 +8,19 @@ email_regex = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
 phone_number_regex = r'^\+?[1-9]\d{1,14}$'
 
 # This userschema is used across other apps, not necessarily used only for the core app, so it makes sense to add it here, from which other apps can just use.
+
+##### PROVIDER SCHEMAS
+class SocialAuthSchema(Schema):
+    access_token: str
+    actor_type: str
+
+class AuthResponseSchema(Schema):
+    refresh: str
+    access: str
+    user_id: str
+    actor_type: str
+    is_new_user: Optional[bool]
+
 class UserSchema(Schema):
     first_name: str
     last_name: str
@@ -187,7 +200,25 @@ class DeliveryAgentOnboardStep3Schema(Schema):
         if total_shifts < 6:
             raise ValueError('Must select at least 3 days in 2 out of 3 time periods')
         return v
+   
+   
+class RestaurantOnboardStep1Schema(Schema):
+    business_name: str
+    business_email: str = Field(pattern = email_regex)
+    business_phone_number: str = Field(pattern = phone_number_regex)
+    business_address: str
+    business_category: str
     
+    
+class RestaurantOnboardStep2Schema(Schema):
+    restaurant_id: str
+    business_registration_status: Literal["registered", "unregistered"]
+    cac_registration_number: Optional[str] = None
+    
+    @validator("cac_registration_number")
+    def validate_cac_registration_number(cls, cac_reg_num, values):
+        if values.get("business_registration_status") == "registered" and not cac_reg_num:
+            raise ValueError('CAC registration number is required for registered restaurants')
     
 class SupplierOnboardSchema(Schema):
     business_name: str
@@ -268,3 +299,4 @@ class RefreshTokenResponseSchema(Schema):
     
 class CategorySchema(Schema):
     name: str
+    

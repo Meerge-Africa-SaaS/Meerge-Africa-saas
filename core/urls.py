@@ -8,6 +8,7 @@ from core.auth_api.onboarding import router as onboarding_router
 from banking.ninja_api import router as banking_router
 from core.auth_api.token_management import AuthBearer
 from core.auth_api.temp_admin import router as temp_admin_router
+from core.auth_api.providers import router as providers_router
 
 from . import api, htmx, views
 
@@ -20,6 +21,7 @@ ninjaapi.add_router("auth-api", auth_router)
 ninjaapi.add_router("password", p_router)
 ninjaapi.add_router("onboarding", onboarding_router)
 ninjaapi.add_router("banking", banking_router)
+ninjaapi.add_router("provider", providers_router)
 ninjaapi.add_router("temp-admin", temp_admin_router)
 
 
