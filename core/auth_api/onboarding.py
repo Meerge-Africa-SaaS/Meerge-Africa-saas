@@ -260,7 +260,7 @@ def onboard_restaurant_step2(request, data: RestaurantOnboardStep2Schema, cac_do
     try:
         restaurant = Restaurant.objects.get(id=data.restaurant_id)
     except Restaurant.DoesNotExist:
-        return 404 {"message": "Restaurant does not exist"}
+        return 404, {"message": "Restaurant does not exist"}
     
     try:
         with transaction.atomic():
