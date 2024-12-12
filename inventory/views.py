@@ -454,3 +454,70 @@ class StockDetailViewApi(APIView):
 #             else:
 #                 # Step 9: Handle invalid item serializer data
 #                 return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ItemCreateAPIView(generics.CreateAPIView):
+    queryset = models.Item.objects.all()
+    serializer_class = ItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        # Get category from request data
+        category_id = request.data.get('category')
+        try:
+            category = models.Category.objects.get(id=category_id)
+        except models.Category.DoesNotExist:
+            return Response(
+                {"error": "Category not found"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Add supplier info if authenticated user is a supplier
+        try:
+            supplier = Supplier.objects.get(owner=request.user)
+            request.data['supplier'] = supplier.id
+        except Supplier.DoesNotExist:
+            return Response(
+                {"error": "User is not registered as a supplier"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            item = serializer.save()
+            return Response({
+                "message": "Item created successfully",
+                "data": ItemSerializer(item).data
+            }, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class ItemSearchAPIView(generics.ListAPIView):
+    serializer_class = ItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = models.Item.objects.all()
+        search_term = self.request.query_params.get('search', None)
+        
+        if search_term:
+            # Using icontains for case-insensitive partial matching
+            queryset = queryset.filter(name__icontains=search_term)
+        
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        if not queryset.exists():
+            return Response(
+                {"message": "No items found matching your search"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+            
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "message": "Items found",
+            "data": serializer.data
+        }, status=status.HTTP_200_OK)

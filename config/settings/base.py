@@ -50,12 +50,14 @@ INSTALLED_APPS = [
                      "django.contrib.sessions",
                      "django.contrib.messages",
                      "django.contrib.staticfiles",
+                     'phonenumber_field',
+                     'cities_light',
                  ]  + [
                      # packages
                      'rest_framework',
                      'django_htmx',
                      'rest_framework_swagger',
-                     'rest_framework_simplejwt'
+                     'rest_framework_simplejwt',
                      'django_bridge',
                  ] + [
                      # core

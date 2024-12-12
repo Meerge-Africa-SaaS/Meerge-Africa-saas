@@ -9,6 +9,7 @@ from .views import CreateCategoryAndItemView
 from .views import StockDetailViewApi
 from .views import SupplierProfileView
 from .views import SupplierUpdateProfileViewApi
+from .views import ItemSearchAPIView
 
 
 from . import api, htmx, views
@@ -260,4 +261,5 @@ urlpatterns = (
     ),
     path("api/stores/create/", CreateStoreView.as_view(), name="create-store"),
     path("api/stock-details/", StockViewApi.as_view(), name="product-stock"),
+    path("api/item-search/", ItemSearchAPIView.as_view(), name="item-search"),
 )

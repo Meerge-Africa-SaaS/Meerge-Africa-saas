@@ -1,7 +1,7 @@
 import uuid
 from cloudinary.models import CloudinaryField
 
-from cities_light.models import City
+from  cities_light.models import City
 from banking.models import AccountDetail
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
