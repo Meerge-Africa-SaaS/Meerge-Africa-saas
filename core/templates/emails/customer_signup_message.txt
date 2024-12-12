@@ -1,0 +1,23 @@
+{% load account %}
+{% load i18n %}
+
+{% blocktrans with site_name=current_site.name %}{% endblocktrans %}
+
+{% block content %}{% autoescape off %}
+
+Hi {{ user.first_name | capfirst }},
+
+We're excited to have you on board. You're a few steps from getting into started.
+
+Complete your registration by verifying your email to unlock the Kittchens experience.
+
+Here is your six-digit email verification code: {{ activate_url }}
+
+
+Cheers!
+
+Kittchens Team,
+Meerge Africa Team
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+{% endblocktrans %}
+{% endautoescape %}{% endblock content %}

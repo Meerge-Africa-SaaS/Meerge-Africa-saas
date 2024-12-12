@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 
+from core.models import generate_code, EmailVerification
 from restaurants.models import Staff
 from inventory.models import SupplyManager
 from customers.models import Customer
@@ -15,31 +16,48 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from allauth.account.signals import user_signed_up
 
+
 class CustomAccountAdapter(DefaultAccountAdapter):
     def send_confirmation_mail(self, request, emailconfirmation, signup):
         # current_site = request.site
         user = emailconfirmation.email_address.user
         if "owner" in [g.name.lower() for g in user.groups.all()]:
             user_type = "owner"
+        elif "deliveryagent" in [g.name.lower() for g in user.groups.all()]:
+            user_type = "deliveryagent"
+        elif "customer" in [g.name.lower() for g in user.groups.all()]:
+            user_type = "customer"
         # Choose template based on user type
         template_prefix = {
             'owner': 'emails/owner',
-            'type2': 'emails/type2',
+            'deliveryagent': 'emails/deliveryagent',
             'type3': 'emails/type3',
-            'type4': 'emails/type4',
+            'customer': 'emails/customer',
         }.get(user_type, '../templates/emails/default')
-
-        ctx = {
+        
+        if (user_type == "customer" or user_type == "deliveryagent"):
+            ctx = {
+            "user": user,
+            "activate_url": generate_code(6),
+            # "current_site": current_site,
+            # "current_site": get_current_site(globals()["context"].request),
+            # "key": emailconfirmation.key,
+        }
+        elif (user_type == "owner"):
+            ctx = {
             "user": user,
             "activate_url": self.get_email_confirmation_url(request, emailconfirmation),
             # "current_site": current_site,
             # "current_site": get_current_site(globals()["context"].request),
             "key": emailconfirmation.key,
         }
+        
 
-        subject = render_to_string(f'{template_prefix}_subject.txt', ctx)
+        
+
+        subject = render_to_string(f'{template_prefix}_signup_subject.txt', ctx)
         subject = " ".join(subject.splitlines()).strip()
-        body = render_to_string(f'{template_prefix}_message.txt', ctx)
+        body = render_to_string(f'{template_prefix}_signup_message.txt', ctx)
 
         email = EmailMessage(subject, body, settings.DEFAULT_FROM_EMAIL, [emailconfirmation.email_address.email])
         email.send()
