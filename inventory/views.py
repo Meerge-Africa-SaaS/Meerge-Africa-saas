@@ -465,8 +465,57 @@ class StockDetailViewApi(APIView):
 #                 # Step 9: Handle invalid item serializer data
 #                 return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class DeactivateStockView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, stock_id):
+        try:
+            # Get the stock object by ID
+            stock = get_object_or_404(Stock, id=stock_id)
+
+            # Deactivate the stock
+            stock.is_active = False
+            stock.save()
+
+            # Get all items associated with this stock and deactivate them
+            items = Item.objects.filter(stock=stock)
+            deactivated_items = []
+            for item in items:
+                item.is_active = False
+                item.save()
+                deactivated_items.append({
+                    'id': item.id,
+                    'name': item.name,
+                    'is_active': False
+                })
+
+            return Response({
+                'message': 'Stock and associated items deactivated successfully',
+                'stock': {
+                    'id': stock.id,
+                    'is_active': False
+                },
+                'deactivated_items': deactivated_items
+            }, status=status.HTTP_200_OK)
+
+        except Stock.DoesNotExist:
+            return Response({
+                'error': f'Stock with ID {stock_id} not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'error': f'Error deactivating stock: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class DeactivateItemView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, item_id):
+        item = get_object_or_404(Item, id=item_id)
+        item.is_active = False
+        item.save()
+        return Response({"message": "Item deactivated successfully"}, status=status.HTTP_200_OK)
 
 
 
@@ -536,6 +585,31 @@ class ItemSearchAPIView(generics.ListAPIView):
             "message": "Items found",
             "data": serializer.data
         }, status=status.HTTP_200_OK)
+    
+
+class GetAllItemsStockBasedOnSupplierCategorieView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            supplier = Supplier.objects.get(owner=request.user)
+            supplier_categories = supplier.category.all()
+            items = Item.objects.filter(category__in=supplier_categories)
+            serializer = ItemSerializer(items, many=True)
+            
+            return Response({
+                "message": "Items retrieved successfully",
+                "data": serializer.data
+            }, status=status.HTTP_200_OK)
+            
+        except Supplier.DoesNotExist:
+            return Response({
+                "error": "User is not registered as a supplier"
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                "error": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # ========================================================================================
 # STORE VIEWS 🏬🏬🏪🏪
@@ -619,10 +693,132 @@ class CreateStockApiView(APIView):
 
 
 
+class StockViewApi(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            # Get all stocks
+            stocks = models.Stock.objects.all()
+            serializer = StockSerializer(stocks, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": "Error retrieving stocks", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class StockDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        try:
+            # Get stock by ID
+            stock = get_object_or_404(models.Stock, pk=pk)
+            serializer = StockSerializer(stock)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except models.Stock.DoesNotExist:
+            return Response({"error": "Stock not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(
+                {"error": "Error retrieving stock", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class UpdateStockView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = StockSerializer
+
+    def put(self, request, pk):
+        try:
+            stock = get_object_or_404(models.Stock, pk=pk)
+            serializer = self.serializer_class(stock, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except models.Stock.DoesNotExist:
+            return Response({"error": "Stock not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(
+                {"error": "Error updating stock", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class DeleteStockView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        try:
+            stock = get_object_or_404(models.Stock, pk=pk)
+            stock.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except models.Stock.DoesNotExist:
+            return Response({"error": "Stock not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(
+                {"error": "Error deleting stock", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 
 
+class GetAllStocksBySupplierView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = StockSerializer
+
+    def get(self, request, supplier_id):
+        try:
+            # Verify supplier exists
+            supplier = get_object_or_404(models.Supplier, id=supplier_id)
+            
+            # Get all stocks for this supplier
+            stocks = models.Stock.objects.filter(supplier=supplier)
+            
+            # Serialize the stocks
+            serializer = self.serializer_class(stocks, many=True)
+            
+            return Response({
+                "message": "Stocks retrieved successfully",
+                "supplier": supplier.name,
+                "data": serializer.data
+            }, status=status.HTTP_200_OK)
+            
+        except models.Supplier.DoesNotExist:
+            return Response({
+                "error": "Supplier not found"
+            }, status=status.HTTP_404_NOT_FOUND)
+            
+        except Exception as e:
+            return Response({
+                "error": "Error retrieving stocks",
+                "details": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class GetAllStockByCategoryView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = StockSerializer
+
+    def get(self, request, category_id):
+        try:
+            # Verify category exists
+            category = get_object_or_404(models.ItemCategory, id=category_id)
+            
+            # Get all stocks for this category
+            stocks = models.Stock.objects.filter(category=category)
+            
+            # Serialize the stocks
+            serializer = self.serializer_class(stocks, many=True)
+            
+            return Response({
+                "message": "Stocks retrieved successfully",
+                "category": category.name,
+                "data": serializer.data
+            }, status=status.HTTP_200_OK)
+            
+        except models.ItemCategory.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 # ========================================================================================
@@ -674,8 +870,146 @@ class CreateItemView(APIView):
 
 
 
-       
-       
+class GetAllItemsView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+
+    def get(self, request):
+        items = models.Item.objects.all()
+        serializer = self.serializer_class(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class GetItemByIdView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+
+    def get(self, request, item_id):
+        try:
+            item = models.Item.objects.get(id=item_id)
+            serializer = self.serializer_class(item)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except models.Item.DoesNotExist:
+            return Response(
+                {"error": "Item not found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class UpdateItemView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+
+    def put(self, request, item_id):
+        try:
+            item = models.Item.objects.get(id=item_id)
+            
+            # Check if user is the supplier who created the item
+            if item.stock and item.stock.supplier.owner != request.user:
+                return Response(
+                    {"error": "Not authorized to update this item"},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+                
+            serializer = self.serializer_class(item, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        except models.Item.DoesNotExist:
+            return Response(
+                {"error": "Item not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class DeleteItemView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, item_id):
+        try:
+            item = models.Item.objects.get(id=item_id)
+            
+            # Check if user is the supplier who created the item
+            if item.stock and item.stock.supplier.owner != request.user:
+                return Response(
+                    {"error": "Not authorized to delete this item"},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+                
+            item.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+            
+        except models.Item.DoesNotExist:
+            return Response(
+                {"error": "Item not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class GetItemsByStockIdView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+
+    def get(self, request, stock_id):
+        try:
+            items = models.Item.objects.filter(stock_id=stock_id)
+            serializer = self.serializer_class(items, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class GetItemsBySupplierIdView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+
+    def get(self, request, supplier_id):
+        try:
+            items = models.Item.objects.filter(stock__supplier_id=supplier_id)
+            serializer = self.serializer_class(items, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class GetItemsByCategoryView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+
+    def get(self, request, category_id):
+        try:
+            # Verify category exists
+            category = get_object_or_404(models.ItemCategory, id=category_id)
+            
+            # Get all items for this category
+            items = models.Item.objects.filter(category=category)
+            
+            # Serialize the items
+            serializer = self.serializer_class(items, many=True)
+            
+            return Response({
+                "message": "Items retrieved successfully",
+                "category": category.name,
+                "data": serializer.data
+            }, status=status.HTTP_200_OK)
+            
+        except models.ItemCategory.DoesNotExist:
+            return Response({
+                "error": "Category not found"
+            }, status=status.HTTP_404_NOT_FOUND)
+            
+        except Exception as e:
+            return Response({
+                "error": "Error retrieving items",
+                "details": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # ========================================================================================
 # Supplier VIEWS 👩‍🌾👩‍🌾👩‍🌾👩‍🌾
@@ -708,13 +1042,96 @@ class onboardingSupplierView(APIView):
 # ========================================================================================
 # Item Categories 👩‍🌾👩‍🌾👩‍🌾👩‍🌾
 # ========================================================================================
-
 class CreateItemCategoryView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ItemCategorySerializer
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class GetAllItemCategoriesView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemCategorySerializer
+
+    def get(self, request):
+        try:
+            categories = models.ItemCategory.objects.all()
+            serializer = self.serializer_class(categories, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": "Error retrieving categories", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class ItemCategoryDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemCategorySerializer
+
+    def get(self, request, pk):
+        try:
+            category = get_object_or_404(models.ItemCategory, pk=pk)
+            serializer = self.serializer_class(category)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except models.ItemCategory.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(
+                {"error": "Error retrieving category", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class UpdateItemCategoryView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemCategorySerializer
+
+    def put(self, request, pk):
+        try:
+            category = get_object_or_404(models.ItemCategory, pk=pk)
+            serializer = self.serializer_class(category, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except models.ItemCategory.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(
+                {"error": "Error updating category", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class DeleteItemCategoryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        try:
+            category = get_object_or_404(models.ItemCategory, pk=pk)
+            category.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except models.ItemCategory.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(
+                {"error": "Error deleting category", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class GetItemsByCategoryView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+
+    def get(self, request, category_id):
+        try:
+            items = models.Item.objects.filter(category_id=category_id)
+            serializer = self.serializer_class(items, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": "Error retrieving items", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

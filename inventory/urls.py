@@ -7,20 +7,44 @@ from .views import CreateStoreView
 from .views import StockViewApi
 from .views import CreateCategoryAndItemView
 from .views import StockDetailViewApi
-from .views import SupplierProfileView
 from .views import SupplierUpdateProfileViewApi
 from .views import CreateItemCategoryView
 from .views import CreateItemView
-from .views import CreateStockView
-from .views import CreateSupplierView
-from .views import CreateSupplyManagerView
 from .views import CreateCategoryAndItemView
 from .views import CreateItemCategoryView
-from .views import CreateItemView
-from .views import CreateStockView
-from .views import CreateSupplierView
-from .views import CreateSupplyManagerView  
 from .views import ItemSearchAPIView
+from .views import DeactivateStockView
+from .views import GetItemsByCategoryView
+from .views import GetAllStockByCategoryView
+from .views import DeleteItemCategoryView
+from .views import DeleteItemView
+from .views import DeleteStockView
+from .views import DeactivateItemView
+from .views import ItemCreateAPIView
+from .views import GetAllItemsStockBasedOnSupplierCategorieView
+from .views import ViewStoreDetailByIDView
+from .views import GetAllStoresByOwnerView
+from .views import DeleteStoreByIDView
+from .views import UpdateStoreView
+from .views import CreateStockApiView
+from .views import StockDetailView
+from .views import UpdateStockView
+from .views import UpdateItemCategoryView
+from .views import GetAllStocksBySupplierView
+from .views import GetAllItemCategoriesView
+from .views import GetAllItemsView
+from .views import GetItemByIdView
+from .views import UpdateItemView
+from .views import GetItemsByStockIdView
+from .views import GetItemsBySupplierIdView
+from .views import CreateItemCategoryView
+from .views import ItemCategoryDetailView
+
+
+
+
+
+
 
 
 
@@ -274,11 +298,32 @@ urlpatterns = (
         name="inventory_SupplyManager_htmx_delete",
     ),
     path("api/stores/create/", CreateStoreView.as_view(), name="create-store"),
-    path("api/stock-details/", StockViewApi.as_view(), name="product-stock"),
     path("api/item-categories/create/", CreateItemCategoryView.as_view(), name="create-item-category"),
     path("api/items/create/", CreateItemView.as_view(), name="create-item"),
-    path("api/stocks/create/", CreateStockView.as_view(), name="create-stock"),
-    path("api/suppliers/create/", CreateSupplierView.as_view(), name="create-supplier"),
-    path("api/supply-managers/create/", CreateSupplyManagerView.as_view(), name="create-supply-manager"),
     path("api/item-search/", ItemSearchAPIView.as_view(), name="item-search"),
+    path("api/items/by-category/<int:category_id>/", GetItemsByCategoryView.as_view(), name="items-by-category"),
+    path("api/stocks/by-category/<int:category_id>/", GetAllStockByCategoryView.as_view(), name="stocks-by-category"),
+    path("api/items/by-supplier/<int:supplier_id>/", GetAllItemsStockBasedOnSupplierCategorieView.as_view(), name="items-by-supplier"),
+    path("api/stores/by-owner/<int:owner_id>/", GetAllStoresByOwnerView.as_view(), name="stores-by-owner"),
+    path("api/stores/delete/<int:pk>/", DeleteStoreByIDView.as_view(), name="delete-store"),
+    path("api/stores/update/<int:pk>/", UpdateStoreView.as_view(), name="update-store"),
+    path("api/stocks/create/", CreateStockApiView.as_view(), name="create-stock"),
+    path("api/stocks/view/", StockViewApi.as_view(), name="view-stock"),
+    path("api/stocks/detail/<int:pk>/", StockDetailView.as_view(), name="stock-detail"),
+    path("api/stocks/update/<int:pk>/", UpdateStockView.as_view(), name="update-stock"),
+    path("api/stocks/delete/<int:pk>/", DeleteStockView.as_view(), name="delete-stock"),
+    path("api/items/deactivate/<int:pk>/", DeactivateItemView.as_view(), name="deactivate-item"),
+    path("api/stocks/deactivate/<int:pk>/", DeactivateStockView.as_view(), name="deactivate-stock"),
+    path("api/items/create/", ItemCreateAPIView.as_view(), name="create-item"),
+    path("api/items/by-stock/<int:stock_id>/", GetItemsByStockIdView.as_view(), name="items-by-stock"),
+    path("api/items/by-supplier/<int:supplier_id>/", GetItemsBySupplierIdView.as_view(), name="items-by-supplier"),
+    path("api/item/updateItemCategory/<int:pk>/", UpdateItemCategoryView.as_view(), name="update-item-category"),
+    path("api/item/deleteItemCategory/<int:pk>/", DeleteItemCategoryView.as_view(), name="delete-item-category"),
+    path("api/item/getStockCategory/<int:pk>/", GetAllStocksBySupplierView.as_view(), name="get-item-category-by-id"),
+    path("api/item/getItemCategory/<int:pk>/", GetAllItemCategoriesView.as_view(), name="get-item-category-by-id"),
+    path("api/item/getItems/", GetAllItemsView.as_view(), name="get-items-by-category"),
+    path("api/item/getItemById/<int:pk>/", GetItemByIdView.as_view(), name="get-item-by-id"),
+    path("api/item/updateItem/<int:pk>/", UpdateItemView.as_view(), name="update-item"),
+    path("api/item/deleteItem/<int:pk>/", DeleteItemView.as_view(), name="delete-item"),
+    path("api/store/viewStoreDetail/<int:pk>/", ViewStoreDetailByIDView.as_view(), name="view-store-detail"),
 )
