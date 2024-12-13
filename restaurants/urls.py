@@ -48,6 +48,31 @@ urlpatterns = (
         onboarding.OnboardingWizardView.as_view(),
         name="restaurant_onboarding_wizard",
     ),
+    path(
+        "<int:restaurant>/addons/",
+        views.existing_addons,
+        name="restaurant_existing_addons",
+    ),
+    path(
+        "<int:restaurant>/addons/search/",
+        views.search_addons,
+        name="restaurant_search_addons",
+    ),
+    path(
+        "addon/<int:addon_id>/select/",
+        views.select_addon,
+        name="restaurant_select_addon",
+    ),
+    path(
+        "addon/<int:addon_id>/remove/",
+        views.remove_addon,
+        name="restaurant_remove_addon",
+    ),
+    path(
+        "<int:restaurant>/addon/create/",
+        views.create_addon,
+        name="restaurant_create_addon",
+    ),
     
     
     path(
