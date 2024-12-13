@@ -1114,7 +1114,7 @@ class DeleteItemCategoryView(APIView):
             category.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except models.ItemCategory.DoesNotExist:
-            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Category not found please try again"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response(
                 {"error": "Error deleting category", "details": str(e)},
