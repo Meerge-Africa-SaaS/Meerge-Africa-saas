@@ -14,7 +14,7 @@ from .serializers import CartItemSerializer
 from .models import CartItem
 from .serializers import AddItemToCartSerializer
 from .serializers import RemoveItemFromCartSerializer
-
+from inventory.models import Item
 
 from django.dispatch import receiver
 ''' 
@@ -151,24 +151,59 @@ class AddItemToCartView(APIView):
 
     def post(self, request):
         try:
-            cart = Cart.objects.get(customer=request.user)
-        except Cart.DoesNotExist:
-            cart = Cart.objects.create(
+            # Validate required fields
+            if 'item' not in request.data or 'product_quantity' not in request.data:
+                return Response(
+                    {"error": "Item and product quantity are required"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Get or create cart
+            cart, _ = Cart.objects.get_or_create(
                 customer=request.user,
-                product_quantity=0,
-                total_product_price=0,
-                created=timezone.now(),
+                defaults={
+                    'product_quantity': 0,
+                    'total_product_price': 0,
+                    'created': timezone.now()
+                }
             )
-        serializer = CartItemSerializer(data=request.data)
-        request.data['cart'] = cart.id
-        request.data['customer'] = request.user.id
-        request.data['total_product_price'] = request.data['item'].price * request.data['product_quantity']
-        request.data['product_quantity'] = request.data['product_quantity']
-        request.data['created'] = timezone.now()
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            # Prepare cart item data
+            cart_item_data = {
+                'cart': cart.id,
+                'customer': request.user.id,
+                'item': request.data['item'],
+                'product_quantity': request.data['product_quantity'],
+                'created': timezone.now()
+            }
+
+            # Get item price and calculate total
+            try:
+                item = Item.objects.get(id=request.data['item'])
+                cart_item_data['total_product_price'] = item.price * int(request.data['product_quantity'])
+            except Item.DoesNotExist:
+                return Response(
+                    {"error": "Item not found"}, 
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            except (ValueError, TypeError):
+                return Response(
+                    {"error": "Invalid product quantity"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Create cart item
+            serializer = CartItemSerializer(data=cart_item_data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response(
+                {"error": "Error adding item to cart", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class RemoveItemFromCartView(APIView):
     permission_classes = [permissions.IsAuthenticated]
