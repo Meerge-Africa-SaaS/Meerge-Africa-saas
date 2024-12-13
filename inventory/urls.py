@@ -9,6 +9,21 @@ from .views import CreateCategoryAndItemView
 from .views import StockDetailViewApi
 from .views import SupplierProfileView
 from .views import SupplierUpdateProfileViewApi
+from .views import CreateItemCategoryView
+from .views import CreateItemView
+from .views import CreateStockView
+from .views import CreateSupplierView
+from .views import CreateSupplyManagerView
+from .views import CreateCategoryAndItemView
+from .views import CreateItemCategoryView
+from .views import CreateItemView
+from .views import CreateStockView
+from .views import CreateSupplierView
+from .views import CreateSupplyManagerView  
+from .views import ItemSearchAPIView
+
+
+
 
 
 from . import api, htmx, views
@@ -260,4 +275,10 @@ urlpatterns = (
     ),
     path("api/stores/create/", CreateStoreView.as_view(), name="create-store"),
     path("api/stock-details/", StockViewApi.as_view(), name="product-stock"),
+    path("api/item-categories/create/", CreateItemCategoryView.as_view(), name="create-item-category"),
+    path("api/items/create/", CreateItemView.as_view(), name="create-item"),
+    path("api/stocks/create/", CreateStockView.as_view(), name="create-stock"),
+    path("api/suppliers/create/", CreateSupplierView.as_view(), name="create-supplier"),
+    path("api/supply-managers/create/", CreateSupplyManagerView.as_view(), name="create-supply-manager"),
+    path("api/item-search/", ItemSearchAPIView.as_view(), name="item-search"),
 )

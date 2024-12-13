@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ninja import Form
 from cloudinary.models import CloudinaryField
-
+from inventory.models import Item
 from phonenumber_field.modelfields import PhoneNumberField
 from customers.models import Order
 from banking.models import AccountDetail
@@ -146,3 +146,28 @@ class DeliveryRequest(models.Model):
         from .signals import delivery_request_created
         delivery_request_created.send(sender = self.__class__, instance = instance, created = True)
  '''
+
+ 
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    product_quantity = models.IntegerField(default=1)
+    total_product_price = models.DecimalField(max_digits=20, decimal_places=2)
+    created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cart for {self.customer.username}"
+
+
+class CartItem(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    product_quantity = models.IntegerField(default=1)
+    total_product_price = models.DecimalField(max_digits=20, decimal_places=2)
+    created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cart Item for {self.item.name}"

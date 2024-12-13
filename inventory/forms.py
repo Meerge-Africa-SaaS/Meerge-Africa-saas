@@ -4,7 +4,7 @@ from cities_light.models import City
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
 
-from inventory.models import Category, Item, Supplier
+from inventory.models import Category, Item, Stock, Supplier
 
 from . import models
 
@@ -151,19 +151,18 @@ class ItemForm(forms.ModelForm):
             "price",
             "expiry_date",
             "category",
-            "supplier",
+            "stock",
         ]
 
     def __init__(self, *args, **kwargs):
         super(ItemForm, self).__init__(*args, **kwargs)
         self.fields["category"].queryset = Category.objects.all()
-        self.fields["supplier"].queryset = Supplier.objects.all()
+        self.fields["stock"].queryset = Stock.objects.all()
 
 class StockForm(forms.ModelForm):
     class Meta:
         model = models.Stock
         fields = [
-            "item",
             "quantity",
             "SKU_number",
             "product_name",
