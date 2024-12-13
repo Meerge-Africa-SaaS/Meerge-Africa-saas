@@ -8,12 +8,16 @@
         modalTrigger.forEach(trigger => {
             trigger.addEventListener('click', () => {
                 modal.classList.add('active')
+                modal.scrollIntoView({ behavior: 'smooth' })
             })
         })
 
         modalToggle.forEach(toggle => {
             toggle.addEventListener('click', () => {
                 modal.classList.toggle('active')
+                if (modal.classList.contains('active')) {
+                    modal.scrollIntoView({ behavior: 'smooth' })
+                }
             })
         })
 
