@@ -1132,6 +1132,6 @@ class GetItemsByCategoryView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
-                {"error": "Error retrieving items", "details": str(e)},
+                {"error": "Error retrieving items please try again", "details": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
