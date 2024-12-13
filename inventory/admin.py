@@ -13,11 +13,13 @@ class CategoryAdminForm(forms.ModelForm):
 class CategoryAdmin(admin.ModelAdmin):
     form = CategoryAdminForm
     list_display = [
-        "created",
+        "id",
+        "created", 
         "name",
         "last_updated",
     ]
     readonly_fields = [
+        "id",
         "created",
         "last_updated",
     ]
@@ -32,11 +34,13 @@ class ItemCategoryAdminForm(forms.ModelForm):
 class ItemCategoryAdmin(admin.ModelAdmin):
     form = ItemCategoryAdminForm
     list_display = [
+        "id",
         "created",
-        "name",
+        "name", 
         "last_updated",
     ]
     readonly_fields = [
+        "id",
         "created",
         "last_updated",
     ]
@@ -51,22 +55,20 @@ class ItemAdminForm(forms.ModelForm):
 class ItemAdmin(admin.ModelAdmin):
     form = ItemAdminForm
     list_display = [
-        "last_updated",
-        "unit_of_measure",
-        "name",
         "id",
+        "name",
+        "category",
+        "stock",
+        "unit_of_measure",
         "price",
-        "created",
         "expiry_date",
+        "created",
+        "last_updated"
     ]
     readonly_fields = [
-        "last_updated",
-        "unit_of_measure",
-        "name",
         "id",
-        "price",
         "created",
-        "expiry_date",
+        "last_updated"
     ]
 
 
@@ -79,9 +81,21 @@ class StockAdminForm(forms.ModelForm):
 class StockAdmin(admin.ModelAdmin):
     form = StockAdminForm
     list_display = [
-        "quantity",
+        "id",
+        "supplier",
         "product_name",
-      
+        "SKU_number",
+        "product_category",
+        "quantity",
+        "unit_available",
+        "price",
+        "created",
+        "last_updated"
+    ]
+    readonly_fields = [
+        "id",
+        "created",
+        "last_updated"
     ]
 
 
@@ -95,28 +109,18 @@ class SupplierAdmin(admin.ModelAdmin):
     form = SupplierAdminForm
     list_display = [
         "id",
-        "created",
         "name",
         "owner",
         "email",
-        "last_updated",
+        "phone_number",
+        "address",
+        "created",
+        
     ]
     readonly_fields = [
         "id",
         "created",
-        "name",
-        "owner",
-        "last_updated",
-        "email",
-        "phone_number",
-        "cac_reg_number",
-        "cac_certificate",
-        "business_license",
-        "category",
-        "profile_img",
-        "cover_img",
-        "address",
-        "city"
+        
     ]
 
 
@@ -129,12 +133,16 @@ class SupplyManagerAdminForm(forms.ModelForm):
 class SupplyManagerAdmin(admin.ModelAdmin):
     form = SupplyManagerAdminForm
     list_display = [
-        "last_updated",
+        "id", 
+        "supply_business",
+        "account_details",
         "created",
+        "last_updated"
     ]
     readonly_fields = [
-        "last_updated",
+        "id",
         "created",
+        "last_updated"
     ]
 
 

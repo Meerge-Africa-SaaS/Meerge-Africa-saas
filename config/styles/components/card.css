@@ -1,7 +1,0 @@
-.default-card {
-    @apply min-h-[10rem] w-full md:w-[50%];
-}
-
-.default-card_inner{
-    @apply h-[35vh];
-}

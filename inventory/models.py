@@ -1,6 +1,5 @@
 import uuid
 from cloudinary.models import CloudinaryField
-
 from cities_light.models import City
 from banking.models import AccountDetail
 from django.contrib.auth import get_user_model
@@ -66,6 +65,7 @@ class ItemCategory(models.Model):
         return reverse("inventory_ItemCategory_htmx_delete", args=(self.pk,))
 
 
+
 class Item(models.Model):
     category = models.ForeignKey("inventory.ItemCategory", on_delete=models.DO_NOTHING)
     stock = models.ForeignKey("inventory.Stock", on_delete=models.CASCADE, null=True)
@@ -114,7 +114,6 @@ class Stock(models.Model):
     product_image = models.URLField(blank=True, null=True)
     # product_image = models.ImageField(upload_to="images/restaurant/cover_images", default="path/to/default/image.jpg")
     product_image = CloudinaryField("inventory_stocks")
-    #product_image = models.ImageField(upload_to="images/restaurant/cover_images", default="path/to/default/image.jpg")
     product_category = models.CharField(max_length=60, blank=True, null=True)
     manufacture_name = models.CharField(max_length=60, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -129,6 +128,7 @@ class Stock(models.Model):
     )
     discount_percentage = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)]
+    )
     )
     pickup_available = models.BooleanField(default=False, verbose_name="Pickup Available", blank=True, null=True)
 
@@ -188,7 +188,15 @@ class Supplier(models.Model):
     cover_img = CloudinaryField("supplier_cover_image", blank=True, null=True)
     #profile_img = models.ImageField(upload_to="images/restaurant/profile_images", blank=True, null=True)
     #cover_img = models.ImageField(upload_to="images/restaurant/cover_images", blank=True, null=True)
-
+    cac_reg_number = models.CharField(max_length=20, null=True, blank=True)
+    cac_certificate = models.URLField(blank=True, null=True)
+    business_license = models.URLField(blank=True, null=True)
+    # cac_certificate = models.FileField(upload_to="images/supplier/cac_certificates")
+    # business_license = models.FileField(upload_to="images/supplier/business_license", null=True, blank=True)
+    profile_img = models.URLField(blank=True, null=True)
+    cover_img = models.URLField(blank=True, null=True)
+    # profile_img = models.ImageField(upload_to="images/restaurant/profile_images", blank=True, null=True)
+    # cover_img = models.ImageField(upload_to="images/restaurant/cover_images", blank=True, null=True)
     address = models.CharField(max_length=130)
 
     def __str__(self):
