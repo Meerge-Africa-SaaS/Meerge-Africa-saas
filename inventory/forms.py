@@ -9,8 +9,7 @@ from inventory.models import Category, Item, Stock, Supplier
 from . import models
 
 from django.contrib.auth import get_user_model
-
-USER = get_user_model()
+User = get_user_model()
 
 SUPPLIER_CATEGORIES = [
     ("Fruits & Nuts", "Fruits & Nuts"),
