@@ -64,3 +64,40 @@ class DeliveryAgentSerializer(serializers.ModelSerializer):
             'guarantor_phone_number': {"required": False},
             'guarantor_occupation': {"required": False},
         }
+
+class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CartItem
+        fields = [
+            "cart",
+            "item",
+            "product_quantity",
+        ]
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Cart
+        fields = [
+            "customer",
+        ]
+
+class AddItemToCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CartItem
+        fields = [
+            "cart",
+            "item",
+            "customer",
+            "product_quantity",
+        ]   
+
+class RemoveItemFromCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CartItem
+        fields = [
+            "cartItem",
+            "item",
+            "customer",
+            "product_quantity",
+        ]
+

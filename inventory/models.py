@@ -9,12 +9,12 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+from django.utils import timezone
 
 User = get_user_model()
 
-
 class Category(models.Model):
-    # Fields
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     id = models.UUIDField(primary_key=True)
     name = models.CharField(max_length=30)
@@ -41,7 +41,7 @@ class Category(models.Model):
 
 
 class ItemCategory(models.Model):
-    # Fields
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     name = models.CharField(max_length=30)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -64,16 +64,13 @@ class ItemCategory(models.Model):
 
     def get_htmx_delete_url(self):
         return reverse("inventory_ItemCategory_htmx_delete", args=(self.pk,))
-    
+
 
 class Item(models.Model):
-    # Relationships
-    category = models.ForeignKey(
-        "inventory.ItemCategory", on_delete=models.DO_NOTHING
-    )
-    supplier = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
-
-    # Fields
+    category = models.ForeignKey("inventory.ItemCategory", on_delete=models.DO_NOTHING)
+    stock = models.ForeignKey("inventory.Stock", on_delete=models.CASCADE, null=True)
+    is_available = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     unit_of_measure = models.CharField(max_length=30)
     name = models.CharField(max_length=30)
@@ -81,9 +78,6 @@ class Item(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     expiry_date = models.DateField()
-
-    class Meta:
-        pass
 
     def __str__(self):
         return str(self.name)
@@ -103,71 +97,52 @@ class Item(models.Model):
 
 
 class Stock(models.Model):
-    item = models.ForeignKey("inventory.Item", on_delete=models.DO_NOTHING)
+    supplier = models.ForeignKey(
+        'Supplier',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     quantity = models.IntegerField()
-    last_updated = models.DateTimeField(
-        auto_now=True, editable=False, blank=True, null=True
-    )
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True, editable=False, blank=True, null=True
-    )
+    is_available = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    last_updated = models.DateTimeField(auto_now=True, editable=False, blank=True, null=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False, blank=True, null=True)
     SKU_number = models.CharField(max_length=60, blank=True, null=True)
     product_name = models.CharField(max_length=60, blank=True, null=True)
+    product_image = models.URLField(blank=True, null=True)
+    # product_image = models.ImageField(upload_to="images/restaurant/cover_images", default="path/to/default/image.jpg")
     product_image = CloudinaryField("inventory_stocks")
     #product_image = models.ImageField(upload_to="images/restaurant/cover_images", default="path/to/default/image.jpg")
     product_category = models.CharField(max_length=60, blank=True, null=True)
     manufacture_name = models.CharField(max_length=60, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     unit_available = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0)],
+        max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)]
     )
     size = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0)],
+        max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)]
     )
     weight = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0)],
+        max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)]
     )
+    discount_percentage = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)]
+    )
+    pickup_available = models.BooleanField(default=False, verbose_name="Pickup Available", blank=True, null=True)
+
     AVAILABILITY_CHOICES = [
         ("pre_order", "Pre-order"),
         ("in_stock", "In-stock"),
         ("out_of_stock", "Out of stock"),
     ]
-    discount_percentage = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0)],
-    )
     DELIVERY_CHOICES = [
         ("same_day", "Same day (Orders before 12 noon)"),
         ("number_of_days", "Number of days"),
     ]
-    pickup_available = models.BooleanField(
-        default=False, verbose_name="Pickup Available", blank=True, null=True
-    )
 
-    class Meta:
-        pass
-
-    def _str_(self):
+    def __str__(self):
         return str(self.pk)
 
     def get_absolute_url(self):
@@ -183,32 +158,12 @@ class Stock(models.Model):
     def get_htmx_delete_url(self):
         return reverse("inventory_Stock_htmx_delete", args=(self.pk,))
 
+
 class Supplier(models.Model):
-    # Choices
-    '''  SUPPLIER_CATEGORY = [
-        ("sea_food", "Sea Food"),
-        ("vegetables", "Vegetables"),
-        ("meat_and_poultry", "Meat and Poultry"),
-        ("grains", "Grain Products"),
-        ("soup_and_condiments", "Soups and Condiments"),
-        ("spices_and_seasoning", "Spices and Seasoning"),
-        ("oil_and_fat", "Oil and Fat"),
-        ("baking_products", "Baking Products"),
-        ("fruits_and_nuts", "Fruits and Nuts"),
-        ("diary_products", "Diary Products"),
-        ("spread_and_sweeteners", "Spread and Sweeteners"),
-        ("drinks_and_beverages", "Drinks and Beverages")
-    ] 
-    '''
-    
-    # Relationships
-    city = models.ManyToManyField(
-        City, related_name = "suppliers"
-    )  # , on_delete=models.SET_NULL, null=True, blank=True
+    city = models.ManyToManyField(City, related_name="suppliers")
     owner = models.ForeignKey('core.User', on_delete=models.CASCADE)
     category = models.ManyToManyField('inventory.Category', related_name='suppliers')
 
-    # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     name = models.CharField(max_length=30)
@@ -218,13 +173,9 @@ class Supplier(models.Model):
         unique=True
     )
     phone_number = PhoneNumberField(
-        blank=True,
-        null=True,
-        unique=True,
+        blank=True, null=True, unique=True,
         verbose_name=_("phone number"),
-        error_messages={
-            "unique": _("A restaurant with that phone number already exists."),
-        },
+        error_messages={"unique": _("A supplier with that phone number already exists.")},
     )
     cac_reg_number = models.CharField(max_length = 20, null=True, blank=True)
     cac_certificate = CloudinaryField("supplier_cac_certificates", blank=True, null=True)
@@ -239,9 +190,6 @@ class Supplier(models.Model):
     #cover_img = models.ImageField(upload_to="images/restaurant/cover_images", blank=True, null=True)
 
     address = models.CharField(max_length=130)
-
-    class Meta:
-        pass
 
     def __str__(self):
         return str(self.name)
@@ -260,17 +208,11 @@ class Supplier(models.Model):
         return reverse("inventory_Supplier_htmx_delete", args=(self.pk,))
 
 
-class SupplyManager(User):  # type: ignore
-    # Relationships
+class SupplyManager(User):
     supply_business = models.ForeignKey("inventory.Supplier", on_delete=models.CASCADE)
-    account_details = models.ForeignKey(AccountDetail, related_name="supplymanagers", on_delete=models.DO_NOTHING, null=True, blank=True)
-
-    # Fields
-    # last_updated = models.DateTimeField(auto_now=True, editable=False)
-    # created = models.DateTimeField(auto_now_add=True, editable=False)
-
-    class Meta:
-        pass
+    account_details = models.ForeignKey(
+        AccountDetail, related_name="supplymanagers", on_delete=models.DO_NOTHING, null=True, blank=True
+    )
 
     def __str__(self):
         return str(self.pk)
@@ -288,7 +230,10 @@ class SupplyManager(User):  # type: ignore
     def get_htmx_delete_url(self):
         return reverse("inventory_SupplyManager_htmx_delete", args=(self.pk,))
 
+
 class Store(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False, blank=True, null=True)
     name = models.CharField(max_length=255)
     business_section_name = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)

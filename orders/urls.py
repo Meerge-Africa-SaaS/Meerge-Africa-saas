@@ -4,6 +4,7 @@ from .views import DeliveryAgentUpdateProfileViewApi
 from . import api
 from . import views
 from . import htmx
+from . import views as cart_views
 
 
 router = routers.DefaultRouter()
@@ -21,5 +22,10 @@ urlpatterns = (
     path("orders/htmx/DeliveryAgent/", htmx.HTMXDeliveryAgentListView.as_view(), name="orders_DeliveryAgent_htmx_list"),
     path("orders/htmx/DeliveryAgent/create/", htmx.HTMXDeliveryAgentCreateView.as_view(), name="orders_DeliveryAgent_htmx_create"),
     path("orders/htmx/DeliveryAgent/delete/<int:pk>/", htmx.HTMXDeliveryAgentDeleteView.as_view(), name="orders_DeliveryAgent_htmx_delete"),
+
+    path("orders/cart/add/", cart_views.AddItemToCartView.as_view(), name="orders_cart_add"),
+    path("orders/cart/remove/", cart_views.RemoveItemFromCartView.as_view(), name="orders_cart_remove"),
+    path("orders/cart/get/", cart_views.GetCustomerCartView.as_view(), name="orders_cart_get"),
+    path("orders/cart/create/", cart_views.CreateCartView.as_view(), name="orders_cart_create"),
 
 )
