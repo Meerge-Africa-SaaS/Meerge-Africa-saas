@@ -1,28 +1,18 @@
 {% block main %}
-  <div id="{{ name }}-modal" class="modal bg-white" role="dialog" aria-modal="true" aria-labelledby="{{ name }}-modal-title">
-    <div class="{% block modal_width %}{% endblock %} rounded-lg p-8 transition-all ease-in-out space-y-4 modal-content">
+  <div id="{{ name }}-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="{{ name }}-modal-title">
+    <div class="modal-backdrop" id="modal-backdrop-{{ name }}">
+    </div>    
+    <div class="modal-content">
       {% block title %}
-      <div class="flex justify-between">
         <h1 id="{{ name }}-modal-title" class="text-2xl mb-6">{{ title }}</h1>
-        <button class="{% block close_modal_presence %}hidden{% endblock %} cancel border-none outline-0 focus:border-none focus:outline-0">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="20" cy="20" r="20" fill="#D9D9D9"/>
-            <path d="M13 27L20 20M20 20L27 13M20 20L13 13M20 20L27 27" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>            
-        </button>
-      </div>
-        
       {% endblock %}
       {% block content %}
         {# Add content here #}
         <form id="{{ name }}-form" class="space-y-4">
-
           {% csrf_token %}
           {% block form_fields %}
 
           {% endblock %}
-          
-          
         </form>
         {% block buttons %}
           <div class="flex justify-end mt-8">
@@ -31,11 +21,13 @@
               <button class="text-lg cancel">Cancel</button>
             {% endblock %}
             {% block submit_btn %}
-              <button type="submit" class="bg-primary disabled:bg-gray-700 disabled:cursor-not-allowed text-lg text-white ml-4 add !w-fit">'{% block button_name %} {% endblock %}'</button>
+              <button class="bg-primary disabled:bg-gray-700 disabled:cursor-not-allowed text-lg text-white ml-4 add">Update</button>
             {% endblock %}
           </div>
         {% endblock %}
       {% endblock %}
     </div>
   </div>
+  {% block scripts %}
+  {% endblock %}
 {% endblock %}

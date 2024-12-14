@@ -104,6 +104,8 @@ class AddOnForm(forms.ModelForm):
         return price
 
 
+
+
 class ViewAddOnForm(forms.ModelForm):
     class Meta:
         model = models.AddOn
@@ -113,14 +115,25 @@ class ViewAddOnForm(forms.ModelForm):
         super(ViewAddOnForm, self).__init__(*args, **kwargs)
         self.fields["restaurant"] = Restaurant.objects.filter(add_ons=self.instance.pk)
 
+class AddOnFormSet(forms.BaseFormSet):
+    def clean(self):
+        if any(self.errors):
+            return
+        names = []
+        for form in self.forms:
+            name = form.cleaned_data.get("name")
+            if name in names:
+                raise forms.ValidationError("Add-on names must be unique.")
+            names.append(name)
 
 class MenuItemForm(forms.ModelForm):
     # Adding the password field
-    password = forms.CharField(
-        widget=forms.PasswordInput,
-        label="Confirm Password",
-        help_text="Enter your password to confirm this action",
-    )
+    # password = forms.CharField(
+    #     widget=forms.PasswordInput,
+    #     label="Confirm Password",
+    #     help_text="Enter your password to confirm this action",
+    # )
+    restaurant = forms.ModelChoiceField(queryset=Restaurant.objects.all())
 
     class Meta:
         model = models.MenuItem
@@ -143,14 +156,9 @@ class MenuItemForm(forms.ModelForm):
             "video",
         ]
 
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop("user", None)
-        super(MenuItemForm, self).__init__(*args, **kwargs)
-        self.fields["restaurant"].queryset = Restaurant.objects.filter(owner=self.user)
-
-    def clean_restaurant(self):
-        restaurant = self.cleaned_data("restaurant")
-        if restaurant.owner != self.user:
+    def clean_restaurant(self) -> Restaurant:
+        restaurant: Restaurant = self.cleaned_data("restaurant")
+        if restaurant.owner.contains(self.user):
             raise forms.ValidationError("You do not own this restaurant")
         return restaurant
 
@@ -163,12 +171,12 @@ class MenuItemForm(forms.ModelForm):
     def clean_price(self):
         price = self.cleaned_data.get("price")
         if price < 0:
-            raise forms.ValidationError("Forms cannot be negative")
+            raise forms.ValidationError("Menu item price cannot be negative")
 
     def clean_discount_percentage(self):
         discount_percentage = self.cleaned_data.get("discount_percentage")
         if discount_percentage < 0:
-            raise forms.ValidationError("Discount Percentage cannot be negative")
+            raise forms.ValidationError("Discount percentage cannot be negative")
         return discount_percentage
 
 
@@ -340,25 +348,16 @@ class GeneralViewRestaurantForm(forms.ModelForm):
         return custom_link
 
 
-class RestaurantStoreForm(forms.ModelForm):
+class RestauarantStoreForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStore
         fields = ["restaurant", "name", "description", "image", "section_name"]
-        
-    def __init__(self, *args, **kwargs):
-        if "instance" not in kwargs or kwargs["instance"] is None:
-            kwargs["instance"] = models.RestaurantStore()
-        super().__init__(*args, **kwargs)
-    
-    def save(self, restaurant, name, description, section_name, image=None) -> models.RestaurantStore:
-        return models.RestaurantStore.objects.create(restaurant=restaurant, name=name, description=description, section_name=section_name, image=image)
 
 
-class RestaurantStockForm(forms.ModelForm):
+class RestauarantStockForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStock
         fields = [
-            "store",
             "category",
             "name",
             "image",
@@ -366,17 +365,10 @@ class RestaurantStockForm(forms.ModelForm):
             "purchasing_price",
             "quantity",
             "measuring_unit",
-            "manufacturers_name",
-            "low_stock_alert_unit",
-            "expiry_date",
-            #"restaurant",
+            "restaurant",
         ]
-    '''     
-    def save(self, store, category, name, purchasing_price, quantity, measuring_unit, low_stock_alert_unit, expiry_date, stock_type=None, image=None) -> models.RestaurantStock:
-        return models.RestaurantStock.objects.create(store=store, category=category, name=name, image=image, stock_type=stock_type, purchasing_price=purchasing_price, quantity=quantity, measuring_unit=measuring_unit, low_stock_alert_unit=low_stock_alert_unit, expiry_date=expiry_date)
- '''
- 
- 
+
+
 """ 
 
 class ChefForm(forms.ModelForm):
@@ -535,5 +527,3 @@ class InvitationRegistrationForm(forms.ModelForm):
         invitation.delete()
         setup_user_email(request, staff, [EmailAddress(email=staff.email)])
         return staff
-
-

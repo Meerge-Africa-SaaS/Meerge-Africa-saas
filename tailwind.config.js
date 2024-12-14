@@ -5,6 +5,7 @@ module.exports = {
         './inventory/templates/**/*.html',
         './restaurants/templates/**/*.html',
         './core/templates/**/*.html',
+        './config/static/**/*.js',
         './node_modules/flowbite/**/*.js'
     ],
     plugins: [

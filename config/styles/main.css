@@ -10,13 +10,25 @@
 @import "./components/sales-history.css";
 @import "./components/modal.css";
 @import "./pages/business-profile.css";
-@import "./components/card.css";
-
 
 
 *::-webkit-scrollbar {
     width: 1px;
 }
+
+.no-ring {
+    @apply focus:ring-0 focus-visible:ring-0
+}
+
+.no-outline {
+    @apply focus:outline-none
+}
+
+.no-shadow {
+    @apply shadow-none
+}
+
+
 
 body {
     @apply font-poppins;
