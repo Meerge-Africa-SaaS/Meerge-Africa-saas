@@ -365,7 +365,7 @@ class RestauarantStockForm(forms.ModelForm):
             "purchasing_price",
             "quantity",
             "measuring_unit",
-            "restaurant",
+            "store",
         ]
 
 
