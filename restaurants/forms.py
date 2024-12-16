@@ -348,7 +348,7 @@ class GeneralViewRestaurantForm(forms.ModelForm):
         return custom_link
 
 
-class RestauarantStoreForm(forms.ModelForm):
+class RestaurantStoreForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStore
         fields = ["restaurant", "name", "description", "image", "section_name"]
