@@ -20,8 +20,18 @@ urlpatterns = (
     path("api/v1/", include(router.urls)),
     path(
         "signup/",
-        registration.RegistrationView.as_view(),
+        registration.signup,
         name="restaurant_signup",
+    ),
+    path(
+        "signup/<str:invite_key>/",
+        registration.InvitationRegistrationView.as_view(),
+        name="restaurant_staff_registration",
+    ),
+    path(
+        "invitation/accept/<str:key>/",
+        onboarding.AcceptInviteView.as_view(),
+        name="restaurant_accept_invite",
     ),
     path(
         "email_verification/done/",
@@ -172,11 +182,6 @@ urlpatterns = (
         "Restaurant/create/",
         views.RestaurantCreateView.as_view(),
         name="restaurant_Restaurant_create",
-    ),
-    path(
-        "Restaurant/detail/<int:pk>/",
-        views.RestaurantDetailView.as_view(),
-        name="restaurant_Restaurant_detail",
     ),
     path(
         "Restaurant/update/<int:pk>/",
@@ -341,5 +346,6 @@ urlpatterns = (
     #     name="restaurant_Staff_htmx_delete",
     # ),
     path("", pages.RestaurantRedirectView.as_view(), name="restaurant_redirect"),
+    path("<slug:restaurant>/invite", onboarding.SendInviteView.as_view(), name="restaurant-invite-employee"),
     path("<slug:restaurant>/", include("restaurants.pages", namespace="pages")),
 )

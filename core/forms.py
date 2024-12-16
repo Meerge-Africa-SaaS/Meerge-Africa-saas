@@ -5,28 +5,6 @@ from django.contrib.auth.forms import (
 from allauth.account.forms import LoginForm
 
 from . import models
-from config.form_fields import PhoneNumberField
-
-
-class UserSignupForm(forms.Form):
-    first_name = forms.CharField(
-        label="First Name",
-        max_length=30,
-        widget=forms.TextInput(
-            attrs={"autofocus": True, "placeholder": "Enter your first name"}
-        ),
-    )
-    last_name = forms.CharField(
-        label="Last Name",
-        max_length=30,
-        widget=forms.TextInput(attrs={"placeholder": "Enter your last name"}),
-    )
-    phone_number = PhoneNumberField(
-        label="Phone Number",
-    )
-
-    def signup(self, request, user):
-        ...
 
 
 class UserSigninForm(LoginForm):

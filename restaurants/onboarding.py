@@ -7,11 +7,15 @@ from django.core.files.storage import FileSystemStorage
 from django.urls import reverse
 from django.views import generic
 from formtools.wizard.views import SessionWizardView
+import invitations
+import invitations.forms
+import invitations.views
 
 from config.form_fields import PhoneNumberField
-from restaurants.models import Restaurant
+from restaurants.models import Restaurant, StaffInvitation
 from phonenumber_field.phonenumber import PhoneNumber
 from django_htmx.http import HttpResponseClientRedirect
+from django.views.generic import DetailView
 
 # from world.models import City
 
@@ -195,9 +199,78 @@ class OnboardingWizardView(SessionWizardView):
             self.request, f"Your restaurant {restaurant.name} has been created"
         )
         return HttpResponseClientRedirect(
-            reverse("restaurants:dashboard", args=(restaurant.custom_link,))
+            reverse("restaurants:dashboard", args=(restaurant.custom_link,)) + "?empty"
         )
 
 
 class OnboardingView(generic.TemplateView):
     template_name = "restaurants/onboarding/onboarding.html"
+
+
+class StaffInviteForm(invitations.forms.InviteForm):
+    """Form for inviting staff to a restaurant."""
+
+    role = forms.ChoiceField(
+        choices=StaffInvitation.ROLE_CHOICES,
+        label="Role",
+    )
+
+    def save(self, user, email, role, restaurant) -> StaffInvitation:
+        return StaffInvitation.create(
+            email=email, role=role, restaurant=restaurant, inviter=user
+        )
+
+
+class SendInviteView(generic.FormView, generic.detail.SingleObjectMixin):
+    template_name = "restaurants/onboarding/invite-form.html"
+    form_class = StaffInviteForm
+    slug_field = "custom_link"
+    slug_url_kwarg = "restaurant"
+    model = Restaurant
+    context_object_name = "restaurant"
+
+    def get_queryset(self):
+        return super().get_queryset().filter(owner=self.request.user)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form: StaffInviteForm):
+        email = form.cleaned_data["email"]
+        role = form.cleaned_data["role"]
+        restaurant = self.get_object()
+        try:
+            invite = form.save(self.request.user, email, role, restaurant)
+            invite.send_invitation(self.request)
+            # Return success message template
+            return self.render_to_response(
+                {
+                    "success": True,
+                    "message": f"{email} has been invited",
+                    "restaurant": restaurant,
+                    "form": self.form_class(),  # Fresh form for reset
+                }
+            )
+        except Exception as e:
+            return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if "form" not in kwargs:
+            context["form"] = self.get_form()
+        context["restaurant"] = self.object
+        return context
+
+
+class AcceptInviteView(invitations.views.AcceptInvite):
+    model = StaffInvitation
+
+    def get_signup_redirect(self):
+        return reverse(
+            "restaurant_staff_registration",
+            kwargs={"invite_key": self.kwargs["key"]},
+        )

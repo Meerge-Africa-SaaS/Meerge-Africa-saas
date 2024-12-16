@@ -125,7 +125,7 @@ class DeliveryAgentOnboardStep1Schema(Schema):
     drivers_license_ID: Optional[str] = None
     #voters_card_DOC: Optional[str] = None 
     voters_card_ID: Optional[str] = None
-    #NIN_doc: str
+    NIN_ID: str
     
     @validator('vehicle_type')
     def validate_vehicle_type(cls, vehicle):

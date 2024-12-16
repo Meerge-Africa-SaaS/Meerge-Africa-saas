@@ -1,6 +1,14 @@
 import os
 
+from allauth.account.forms import SignupForm
 from django import forms
+from django.contrib.auth.models import Group
+from django.http import HttpRequest
+from django.shortcuts import get_object_or_404
+from config.form_fields import PhoneNumberField
+from phonenumber_field.phonenumber import PhoneNumber
+from allauth.account.utils import setup_user_email
+from allauth.account.models import EmailAddress
 
 # from world.models import City
 from core.models import User
@@ -10,6 +18,8 @@ from restaurants.models import (
     MenuItem,
     Restaurant,
     RestaurantCategory,
+    Staff,
+    StaffInvitation,
 )
 
 from . import models
@@ -330,19 +340,13 @@ class GeneralViewRestaurantForm(forms.ModelForm):
         return custom_link
 
 
-class RestauarantStoreForm(forms.ModelForm):
+class RestaurantStoreForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStore
-        fields = [
-            "restaurant",
-            "name",
-            "description",
-            "image",
-            "section_name"
-        ]
-        
+        fields = ["restaurant", "name", "description", "image", "section_name"]
 
-class RestauarantStockForm(forms.ModelForm):
+
+class RestaurantStockForm(forms.ModelForm):
     class Meta:
         model = models.RestaurantStock
         fields = [
@@ -373,7 +377,6 @@ class ChefForm(forms.ModelForm):
  """
 
 
-
 class StaffForm(forms.ModelForm):
     class Meta:
         model = models.Staff
@@ -396,3 +399,123 @@ class RestaurantCoverForm(forms.ModelForm):
     class Meta:
         model = models.Restaurant
         fields = ["cover_img"]
+
+
+class RegistrationForm(SignupForm):
+    first_name = forms.CharField(
+        label="First Name",
+        max_length=30,
+        widget=forms.TextInput(
+            attrs={"autofocus": True, "placeholder": "Enter your first name"}
+        ),
+    )
+    last_name = forms.CharField(
+        label="Last Name",
+        max_length=30,
+        widget=forms.TextInput(attrs={"placeholder": "Enter your last name"}),
+    )
+    phone_number = PhoneNumberField(
+        label="Phone Number",
+    )
+
+    def clean_phone_number(self) -> PhoneNumber:
+        phone_number: PhoneNumber = self.cleaned_data["phone_number"]
+        if User.objects.filter(
+            phone_number=phone_number.as_e164.replace(" ", "")
+        ).exists():
+            raise forms.ValidationError("User with this phone number already exists.")
+        return phone_number
+
+    def clean(self):
+        email = self.cleaned_data.get("email")
+        if email:
+            self.cleaned_data["username"] = email.split("@")[0]
+        return super().clean()
+
+    def save(self, request):
+        request.session["verification_email"] = self.cleaned_data["email"]
+        user = super().save(request)
+        user.phone_number = self.cleaned_data["phone_number"]
+        owner_grp, _ = Group.objects.get_or_create(name="Restaurant Owner")
+        owner_sys_grp, _ = Group.objects.get_or_create(name="owner")
+        user.groups.add(owner_grp)
+        user.groups.add(owner_sys_grp)
+        user.save()
+        request.session["verification_email"] = user.email
+        return user
+
+    # def signup(self, request: HttpRequest, user: User) -> None:
+    #     user.phone_number = self.cleaned_data["phone_number"]
+    #     owner_grp, _ = Group.objects.get_or_create(name="Restaurant Owner")
+    #     user.groups.add(owner_grp)
+    #     user.save()
+    #     request.session["verification_email"] = user.email
+    #     return super().signup(request, user)
+
+
+class InvitationRegistrationForm(forms.ModelForm):
+    first_name = forms.CharField(
+        label="First Name",
+        max_length=30,
+        widget=forms.TextInput(
+            attrs={"autofocus": True, "placeholder": "Enter your first name"}
+        ),
+    )
+    last_name = forms.CharField(
+        label="Last Name",
+        max_length=30,
+        widget=forms.TextInput(attrs={"placeholder": "Enter your last name"}),
+    )
+    phone_number = PhoneNumberField(label="Phone Number")
+    invite_key = forms.CharField(widget=forms.HiddenInput)
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={"placeholder": "Enter your password"}),
+    )
+
+    class Meta:
+        model = Staff
+        fields = [
+            "first_name",
+            "last_name",
+            "phone_number",
+            "password",
+            "invite_key",
+        ]
+
+    def clean_phone_number(self) -> PhoneNumber:
+        phone_number: PhoneNumber = self.cleaned_data["phone_number"]
+        if User.objects.filter(
+            phone_number=phone_number.as_e164.replace(" ", "")
+        ).exists():
+            raise forms.ValidationError("User with this phone number already exists.")
+        return phone_number
+
+    def clean(self):
+        email = self.cleaned_data.get("email")
+        if email:
+            self.cleaned_data["username"] = email.split("@")[0]
+        return super().clean()
+
+    def save(self, request):
+        invitation_key = self.cleaned_data["invite_key"]
+        invitation = get_object_or_404(StaffInvitation, key=invitation_key)
+        staff = Staff.objects.create(
+            first_name=self.cleaned_data["first_name"],
+            last_name=self.cleaned_data["last_name"],
+            email=invitation.email,
+            username=invitation.email.split("@")[0],
+            phone_number=self.cleaned_data["phone_number"],
+            role=invitation.role,
+            restaurants=invitation.restaurant,
+        )
+        staff.set_password(self.cleaned_data["password"])
+        staff.save()
+        sys_grp, _ = Group.objects.get_or_create(name="staff")
+        grp, _ = Group.objects.get_or_create(name=invitation.role)
+        staff.groups.add(sys_grp)
+        staff.groups.add(grp)
+        staff.save()
+        invitation.delete()
+        setup_user_email(request, staff, [EmailAddress(email=staff.email)])
+        return staff

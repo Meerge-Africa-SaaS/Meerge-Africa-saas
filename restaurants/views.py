@@ -186,12 +186,6 @@ class RestaurantCreateView(LoginRequiredMixin, generic.CreateView):
         kwargs["user"] = self.request.user
         return kwargs
 
-
-class RestaurantDetailView(generic.DetailView):
-    model = models.Restaurant
-    form_class = forms.RestaurantForm
-
-
 class RestaurantUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Restaurant
     form_class = forms.RestaurantForm
@@ -210,7 +204,7 @@ class RestaurantDeleteView(LoginRequiredMixin, generic.DeleteView):
     
 class RestaurantStoreCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.RestaurantStore
-    form_class = forms.RestauarantStoreForm
+    form_class = forms.RestaurantStoreForm
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -219,7 +213,7 @@ class RestaurantStoreCreateView(LoginRequiredMixin, generic.CreateView):
 
 class RestaurantStoreUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.RestaurantStore
-    form_class = forms.RestauarantStoreForm
+    form_class = forms.RestaurantStoreForm
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -228,15 +222,15 @@ class RestaurantStoreUpdateView(LoginRequiredMixin, generic.UpdateView):
     
 class RestaurantStoreListView(LoginRequiredMixin, generic.ListView):
     model = models.RestaurantStore
-    form_class = forms.RestauarantStoreForm
+    form_class = forms.RestaurantStoreForm
     
 class RestaurantStockListView(LoginRequiredMixin, generic.ListView):
     model = models.RestaurantStock
-    form_class = forms.RestauarantStockForm
+    form_class = forms.RestaurantStockForm
     
 class RestaurantStockCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.RestaurantStock
-    form_class = forms.RestauarantStockForm
+    form_class = forms.RestaurantStockForm
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -245,7 +239,7 @@ class RestaurantStockCreateView(LoginRequiredMixin, generic.CreateView):
 
 class RestaurantStockUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.RestaurantStock
-    form_class = forms.RestauarantStockForm
+    form_class = forms.RestaurantStockForm
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
